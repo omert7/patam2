@@ -1,7 +1,11 @@
-package test;
+package anomalyAlgo;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import test.AnomalyReport;
+import test.TimeSeries;
+import test.TimeSeriesAnomalyDetector;
 
 public class HybridAlgo implements TimeSeriesAnomalyDetector {
 

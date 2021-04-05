@@ -15,7 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import test.SimpleAnomalyDetector.time;
+import anomalyAlgo.SimpleAnomalyDetector;
+import anomalyAlgo.SimpleAnomalyDetector.time;
 
 public class Commands {
 	

@@ -15,10 +15,10 @@ import java.util.ListIterator;
 public class TimeSeries 
 {
 
-	 ArrayList<String> namesOfFeatures=new ArrayList<String>();
-	 ArrayList<float[]> data=new  ArrayList<float[]>();
-	 float coral;
-	 int totalTime;
+	 public ArrayList<String> namesOfFeatures=new ArrayList<String>();
+	 public ArrayList<float[]> data=new  ArrayList<float[]>();
+	 public float coral;
+	 public int totalTime;
 	public TimeSeries(String csvFileName) 
 	{
 		

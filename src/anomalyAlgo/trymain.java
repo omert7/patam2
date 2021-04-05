@@ -1,6 +1,11 @@
-package test;
+package anomalyAlgo;
 
 import java.util.ArrayList;
+
+import test.Circle;
+import test.Point;
+import test.SmallestEnclosingCircle;
+import test.TimeSeries;
 
 public class trymain {
 
