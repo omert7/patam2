@@ -1,4 +1,4 @@
-package test;
+package app;
 
 public class Point {
 	public final float x,y;

@@ -1,11 +1,11 @@
-package anomalyAlgo;
+package app.model.anomaly_algorithms;
 
 import java.util.ArrayList;
 
-import test.Circle;
-import test.Point;
-import test.SmallestEnclosingCircle;
-import test.TimeSeries;
+import app.Circle;
+import app.Point;
+import app.SmallestEnclosingCircle;
+import app.TimeSeries;
 
 public class trymain {
 
@@ -15,8 +15,8 @@ public class trymain {
 		TimeSeries ts=new TimeSeries("try1.csv");
 		ZScore z=new ZScore();
 		z.learnNormal(ts);
-		for(int i=0; i<z.maxZScorre.size();i++)
-			System.out.println("In colom: "+ ts.namesOfFeatures.get(i+1)+ " the max z score is "+z.maxZScorre.get(i));
+		for(int i = 0; i<z.maxZScore.size(); i++)
+			System.out.println("In colom: "+ ts.namesOfFeatures.get(i+1)+ " the max z score is "+z.maxZScore.get(i));
 		ArrayList<Point> p=new ArrayList<Point>();
 		p.add(new Point(5,-2));
 		p.add(new Point(-3,-2));

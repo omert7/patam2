@@ -1,15 +1,15 @@
-package anomalyAlgo;
+package app.model.anomaly_algorithms;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import test.AnomalyReport;
-import test.CorrelatedFeatures;
-import test.Line;
-import test.Point;
-import test.StatLib;
-import test.TimeSeries;
-import test.TimeSeriesAnomalyDetector;
+import app.AnomalyReport;
+import app.CorrelatedFeatures;
+import app.Line;
+import app.Point;
+import app.StatLib;
+import app.TimeSeries;
+import app.TimeSeriesAnomalyDetector;
 
 
 

@@ -1,11 +1,10 @@
-package anomalyAlgo;
+package app.model.anomaly_algorithms;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import test.AnomalyReport;
-import test.TimeSeries;
-import test.TimeSeriesAnomalyDetector;
+import app.AnomalyReport;
+import app.TimeSeries;
+import app.TimeSeriesAnomalyDetector;
 
 public class HybridAlgo implements TimeSeriesAnomalyDetector {
 

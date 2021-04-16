@@ -1,9 +1,9 @@
-package test;
+package app;
 
 import java.util.ArrayList;
 
-import test.Commands.Command;
-import test.Commands.DefaultIO;
+import app.Commands.Command;
+import app.Commands.DefaultIO;
 
 public class CLI {
 

@@ -1,4 +1,4 @@
-package test;
+package app;
 
 
 
@@ -6,8 +6,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.Scanner;
-import test.Commands.DefaultIO;
-import test.Server.ClientHandler;
+import app.Commands.DefaultIO;
+import app.Server.ClientHandler;
 
 public class AnomalyDetectionHandler implements ClientHandler{
 

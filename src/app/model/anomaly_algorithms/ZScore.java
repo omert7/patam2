@@ -1,16 +1,16 @@
-package anomalyAlgo;
+package app.model.anomaly_algorithms;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import test.AnomalyReport;
-import test.StatLib;
-import test.TimeSeries;
-import test.TimeSeriesAnomalyDetector;
+import app.AnomalyReport;
+import app.StatLib;
+import app.TimeSeries;
+import app.TimeSeriesAnomalyDetector;
 
 public class ZScore implements TimeSeriesAnomalyDetector {
 
-	ArrayList<Float> maxZScorre;
+	ArrayList<Float> maxZScore;
 
 	public float findZScore (float[] colom,int size){
 
@@ -42,13 +42,13 @@ public class ZScore implements TimeSeriesAnomalyDetector {
 
 	@Override
 	public void learnNormal(TimeSeries ts) {
-		maxZScorre=new ArrayList<>();
+		maxZScore =new ArrayList<>();
 		int size=ts.namesOfFeatures.size();//size of our coloms
 
 		for (int i=1;i<size;i++)//for each colom we calac the stia and avg
 		{
 			float[] temp=ts.dataOfFeaturerByNum(i);
-			maxZScorre.add(findZmax(temp));
+			maxZScore.add(findZmax(temp));
 		}
 
 
@@ -69,7 +69,7 @@ public class ZScore implements TimeSeriesAnomalyDetector {
 			for(int j=0;j<totalTime;j++)
 			{
 				tempZScore=findZScore(ts.dataOfFeaturerByNum(i),j);
-				if(tempZScore>maxZScorre.get(i))//we detect problem
+				if(tempZScore> maxZScore.get(i))//we detect problem
 				{
 					list.add(new AnomalyReport(ts.namesOfFeatures.get(i), j+1));
 				}
