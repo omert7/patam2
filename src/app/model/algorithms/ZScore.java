@@ -1,4 +1,4 @@
-package app.model.anomaly_algorithms;
+package app.model.algorithms;
 
 import java.util.ArrayList;
 import java.util.List;

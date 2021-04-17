@@ -1,10 +1,8 @@
-package app.model.anomaly_algorithms;
+package app.model.algorithms;
 
 import java.util.ArrayList;
 
-import app.Circle;
 import app.Point;
-import app.SmallestEnclosingCircle;
 import app.TimeSeries;
 
 public class trymain {

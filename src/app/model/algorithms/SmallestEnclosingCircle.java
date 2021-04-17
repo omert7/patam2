@@ -1,4 +1,7 @@
-package app;
+package app.model.algorithms;
+
+import app.Point;
+import app.model.algorithms.Circle;
 
 import java.util.ArrayList;
 import java.util.Collections;

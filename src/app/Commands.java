@@ -11,8 +11,8 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-import app.model.anomaly_algorithms.SimpleAnomalyDetector;
-import app.model.anomaly_algorithms.SimpleAnomalyDetector.time;
+import app.model.algorithms.SimpleAnomalyDetector;
+import app.model.algorithms.SimpleAnomalyDetector.time;
 
 public class Commands {
 	

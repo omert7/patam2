@@ -1,4 +1,6 @@
-package app;
+package app.model.algorithms;
+
+import app.Point;
 
 import java.util.Collection;
 
