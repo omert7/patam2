@@ -1,6 +1,6 @@
 package app.model.algorithms;
+import  app.*;
 
-import app.Point;
 
 import java.util.Collection;
 

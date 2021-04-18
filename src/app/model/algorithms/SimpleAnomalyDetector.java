@@ -1,29 +1,28 @@
 package app.model.algorithms;
+import  app.*;
+
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
-import app.AnomalyReport;
-import app.CorrelatedFeatures;
-import app.Line;
-import app.Point;
 import app.StatLib;
-import app.TimeSeries;
-import app.TimeSeriesAnomalyDetector;
 
 
 
 public class SimpleAnomalyDetector implements TimeSeriesAnomalyDetector {
 	
-	 ArrayList<CorrelatedFeatures> dataCoral=new  ArrayList<CorrelatedFeatures>();
+	 ArrayList<CorrelatedFeatures> dataCoral;
 	 
-	
-	 
+		// HashMap<CorrelationType,Line> hashMap=new HashMap<CorrelationType,Line>();
+	 public  SimpleAnomalyDetector() {
+		 dataCoral=new  ArrayList<CorrelatedFeatures>();
+	 }
 	@Override
 	public void learnNormal(TimeSeries ts) 
 	{
 		//we want to find the best pearson
-		//between to col i and col j
+		//between colom i and colom j
 		float maxp,t,maxdev,threshold;
 		float[] arrayX,arrayY;
 		int x,y,i,j;
@@ -32,7 +31,6 @@ public class SimpleAnomalyDetector implements TimeSeriesAnomalyDetector {
 		Line lin_reg; 
 		for( i=0;i<size;i++)
 		{
-			threshold=-1;
 			maxp=0;
 			x=i;
 			y=i;
@@ -49,6 +47,7 @@ public class SimpleAnomalyDetector implements TimeSeriesAnomalyDetector {
 				}
 			}
 	
+			threshold=-1;
 			if(maxp!=0)
 			{
 				 temp=StatLib.ArrayOfPoint(ts.dataOfFeaturerByNum(x), ts.dataOfFeaturerByNum(y));

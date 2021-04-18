@@ -1,20 +1,29 @@
 package app.model.algorithms;
-
+import  app.*;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
-import app.AnomalyReport;
+import app.CorrelationType;
 import app.StatLib;
-import app.TimeSeries;
-import app.TimeSeriesAnomalyDetector;
+import app.CorrelationType.typeAlgo;
 
 public class ZScore implements TimeSeriesAnomalyDetector {
 
-	ArrayList<Float> maxZScore;
-
+	
+	HashMap<String,Float> hashMap; 
+	
+	//fix Zscore!
+	
+	public ZScore() {
+		
+		hashMap=new HashMap<>();
+	}
+	
 	public float findZScore (float[] colom,int size){
 
-		if(size==1)
+		if(size<=1)
 			return 0;
 			float[] arr = new float[size];
 	        for(int j=0;j<size;j++){
@@ -42,17 +51,18 @@ public class ZScore implements TimeSeriesAnomalyDetector {
 
 	@Override
 	public void learnNormal(TimeSeries ts) {
-		maxZScore =new ArrayList<>();
-		int size=ts.namesOfFeatures.size();//size of our coloms
-
-		for (int i=1;i<size;i++)//for each colom we calac the stia and avg
-		{
-			float[] temp=ts.dataOfFeaturerByNum(i);
-			maxZScore.add(findZmax(temp));
+		
+		for (CorrelationType temp : ts.dataCoral) {
+			if(temp.type==typeAlgo.zScore)
+			{
+				float[] t1=ts.dataOfFeaturerByName(temp.CoralA);
+				float[] t2=ts.dataOfFeaturerByName(temp.CoralB);
+				float z1=findZmax(t1);
+				float z2=findZmax(t2);
+				hashMap.put(temp.CoralA, z1);
+				hashMap.put(temp.CoralB, z2);
+			}
 		}
-
-
-
 
 	}
 
@@ -61,20 +71,23 @@ public class ZScore implements TimeSeriesAnomalyDetector {
 		// TODO Auto-generated method stub
 		float tempZScore;
 	 List<AnomalyReport> list=new  ArrayList<AnomalyReport>();
-		int size=ts.namesOfFeatures.size();//size of our coloms
-		int totalTime=ts.totalTime;
-		for (int i=1;i<size;i++)//for each colom we calac the stia and avg
-		{
-
-			for(int j=0;j<totalTime;j++)
-			{
-				tempZScore=findZScore(ts.dataOfFeaturerByNum(i),j);
-				if(tempZScore> maxZScore.get(i))//we detect problem
+		int totalTime=ts.totalTime;		
+		for (String key : hashMap.keySet()) {
+			  
+				for(int j=0;j<totalTime;j++)
 				{
-					list.add(new AnomalyReport(ts.namesOfFeatures.get(i), j+1));
+					tempZScore=findZScore(ts.dataOfFeaturerByName(key),j);
+					if(tempZScore>hashMap.get(key))//we detect problem
+					{
+						list.add(new AnomalyReport(key, j+1));
+					}
+					
 				}
 			}
-		 }
+			
+	
+		
+	
 
 		return list;
 	}

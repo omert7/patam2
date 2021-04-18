@@ -1,6 +1,7 @@
 package app;
 
-
+import app.Line;
+import app.Point;
 
 public class StatLib {
 
@@ -28,10 +29,12 @@ public class StatLib {
 	{
 		float av=avg(x);
 		float sum=0;
+		float temp;
 		for(int i=0;i<x.length;i++){
-			sum+=x[i]*x[i];
+			temp=x[i]-av;
+			sum+=Math.pow(temp, 2);
 		}
-		return(( sum/x.length) - av*av);
+		return(( sum/x.length));
 	}
 
 
@@ -107,3 +110,4 @@ public class StatLib {
 		return p_array;
 	}
 }
+
