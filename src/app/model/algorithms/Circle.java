@@ -1,5 +1,5 @@
 package app.model.algorithms;
-import  app.*;
+import app.model.statlib.Point;
 
 
 import java.util.Collection;

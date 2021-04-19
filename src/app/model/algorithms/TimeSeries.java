@@ -1,249 +1,218 @@
 package app.model.algorithms;
+
 import java.io.BufferedReader;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
 
 import app.CorrelationType;
-import app.StatLib;
+import app.model.statlib.StatLib;
 import app.CorrelationType.typeAlgo;
 
-public class TimeSeries 
-{
+public class TimeSeries {
 
-	 public ArrayList<String> namesOfFeatures=new ArrayList<String>();
-	 public ArrayList<float[]> data=new  ArrayList<float[]>();
-	 public float coral;//the threashold we choose
-	 public int totalTime;
-	 public ArrayList<CorrelationType> dataCoral=new  ArrayList<CorrelationType>();
-	 
-	 
-	public TimeSeries(String Path) 
-	{
-		
-		this.coral=(float)0.9;
-		String line = "";
-		try {
-			
-			Path p = Paths.get(Path);
-			BufferedReader br = new BufferedReader(new FileReader(p.toString()));
-			if ((line = br.readLine()) != null) 
-			{
-				//Reading the file for the first time
-				//Creates new Feature for each column
-				
-				String[] s1 = line.split(",");
-				int len=s1.length;	
-				for (int c=0;c<len;c++) 
-				{
-					namesOfFeatures.add(s1[c]);//what will be the feature
-					
-				 }
-				int counter=0;
-			    while ((line = br.readLine()) != null) 
-			    {
-			    	
-			    	data.add(new float[len]);//add new line
-			    	totalTime++;
-			    	s1 = line.split(",");
-			    	for(int i=0;i<len;i++)
-			    	{
-			    		data.get(counter)[i]=(Float.parseFloat(s1[i]));//fill the line with data
+    public ArrayList<String> namesOfFeatures = new ArrayList<String>();
+    public ArrayList<float[]> data = new ArrayList<float[]>();
+    public float coral;//the threashold we choose
+    public int totalTime;
+    public ArrayList<CorrelationType> dataCoral = new ArrayList<CorrelationType>();
 
-			    	}	
-			    	counter++;
-			    } 
-			    this.totalTime=counter;
-			    dataCoral=this.CreateMaxListOfCoral();
-			}
-				} catch(FileNotFoundException e){
-					e.printStackTrace();
-				} catch(IOException e){
-					e.printStackTrace();
-				}
-	
-      }
 
-	public void addNewFeatureAndData(String fName, float[] values) 
-	{
-	
-		if(fName!=null&&values.length>0)
-		{
-			namesOfFeatures.add(fName);
-			data.add(values);
-		}
-	}
+    public TimeSeries(String Path) {
 
-	public  int featurePlace(String s) 
-	{
-		
-		return namesOfFeatures.indexOf(s);
-	}
-	
-	public  float[] dataOfFeaturerByName(String s)
-	{
-		int n=featurePlace(s);
-		float[] f=new float[data.size()];
-		int i=0;
-		for (float[] element : data) {
-			f[i]=element[n];
-			i++;			
-		}
-		
-		return f;
-	
-	}
-	
-	public float[] dataOfFeaturerByNum(int s)
-	{
-		float[] f=new float[data.size()];
-		int i=0;
-		for (float[] element : data) 
-		{
-			f[i]=element[s];
-			i++;			
-		}
-		
-		return f;
-	
-	}
-	
-	public float getValAtSepcifiTime(int time, String request)
-	//we get key and feature name 
-	//we return the feature at that time
-	{
-		
-		int  sPlace = featurePlace(request);
-		if(sPlace == -1){
-			return  -1;
-		}
-		else return data.get(time-1)[sPlace];
-	
-	}
+        this.coral = (float) 0.9;
+        String line = "";
+        try {
 
-	public float getCoral() {
-		return coral;
-	}
+            Path p = Paths.get(Path);
+            BufferedReader br = new BufferedReader(new FileReader(p.toString()));
+            if ((line = br.readLine()) != null) {
+                //Reading the file for the first time
+                //Creates new Feature for each column
 
-	public void setCoral(float coral) {
-		this.coral = coral;
-	}
+                String[] s1 = line.split(",");
+                int len = s1.length;
+                for (int c = 0; c < len; c++) {
+                    namesOfFeatures.add(s1[c]);//what will be the feature
 
-	
-	public 	ArrayList<CorrelationType> CreateMaxListOfCoral() {
-		
-		
-		float maxp,t;
-		float[] arrayX,arrayY;
-		int y,i,j;
-		ArrayList<CorrelationType> dataCoral=new  ArrayList<CorrelationType>();
-		int size=this.data.get(0).length;//size of our rows
-		
-		
-		for( i=0;i<size;i++)
-		{
-			
-			maxp=0;
-			y=i; //the feature with max pearson to feature i
-			arrayX=this.dataOfFeaturerByNum(i);
-			for(j=i+1;j<size;j++)
-			{
-				arrayY=this.dataOfFeaturerByNum(j);
-				t=Math.abs(StatLib.pearson(arrayX, arrayY));
-				
-				if (t>maxp)
-				{
-					y=j;
-					maxp=t;
-				}
-			}
-			
-			if(maxp>=0.95)
-			{
-			dataCoral.add(new CorrelationType( this.namesOfFeatures.get(i) ,this.namesOfFeatures.get(y)
-					,typeAlgo.Line,maxp));
-			
-			}
-			else if(0.5<=maxp&&maxp<0.95) {
-				dataCoral.add(new CorrelationType( this.namesOfFeatures.get(i) ,this.namesOfFeatures.get(y)
-						,typeAlgo.Circle,maxp));
-				
-			}
-			else {
-			dataCoral.add(new CorrelationType( this.namesOfFeatures.get(i) ,this.namesOfFeatures.get(y)
-						,typeAlgo.zScore,maxp));
-			}
-			
-			
-		}
-		return dataCoral;
-	}
-	
-	public float[] getCoralFeature(String fea) {
-	
-		float[]  t = null;
-		if(fea!=null) 
-		{
-			
-			for (CorrelationType temp : this.dataCoral) 
-			{
-				if(temp.CoralA.equals(fea))
-					t=this.dataOfFeaturerByName(temp.CoralB);
-			}
-			
-		}
-		return t;
-		
-	}
-	
-	public 	ArrayList<CorrelationType> findCoral() {
-		
-		
-		float t;
-		float[] arrayX,arrayY;
-		int y,i,j;
-		ArrayList<CorrelationType> dataCoral=new  ArrayList<CorrelationType>();
-		int size=this.data.get(0).length;//size of our rows
-		
-		
-		for( i=0;i<size;i++)
-		{
-			arrayX=this.dataOfFeaturerByNum(i);
-			for(j=i+1;j<size;j++)
-			{
-				arrayY=this.dataOfFeaturerByNum(j);
-				t=Math.abs(StatLib.pearson(arrayX, arrayY));
-				
-				if(t>=0.95)
-				{
-					dataCoral.add(new CorrelationType( this.namesOfFeatures.get(i) ,this.namesOfFeatures.get(j)
-							,typeAlgo.Line,t));
-					
-				}
-				else if(0.5<=t&&t<0.95) {
-					dataCoral.add(new CorrelationType( this.namesOfFeatures.get(i) ,this.namesOfFeatures.get(j)
-							,typeAlgo.Circle,t));
-					
-				}
-				else {
-					dataCoral.add(new CorrelationType( this.namesOfFeatures.get(i) ,this.namesOfFeatures.get(j)
-							,typeAlgo.zScore,t));
-				}
-				
-			}
-			
-			
-			
-		}
-		return dataCoral;
-	}
+                }
+                int counter = 0;
+                while ((line = br.readLine()) != null) {
+
+                    data.add(new float[len]);//add new line
+                    totalTime++;
+                    s1 = line.split(",");
+                    for (int i = 0; i < len; i++) {
+                        data.get(counter)[i] = (Float.parseFloat(s1[i]));//fill the line with data
+
+                    }
+                    counter++;
+                }
+                this.totalTime = counter;
+                dataCoral = this.CreateMaxListOfCoral();
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void addNewFeatureAndData(String fName, float[] values) {
+
+        if (fName != null && values.length > 0) {
+            namesOfFeatures.add(fName);
+            data.add(values);
+        }
+    }
+
+    public int featurePlace(String s) {
+
+        return namesOfFeatures.indexOf(s);
+    }
+
+    public float[] dataOfFeaturerByName(String s) {
+        int n = featurePlace(s);
+        float[] f = new float[data.size()];
+        int i = 0;
+        for (float[] element : data) {
+            f[i] = element[n];
+            i++;
+        }
+
+        return f;
+
+    }
+
+    public float[] dataOfFeaturerByNum(int s) {
+        float[] f = new float[data.size()];
+        int i = 0;
+        for (float[] element : data) {
+            f[i] = element[s];
+            i++;
+        }
+
+        return f;
+
+    }
+
+    public float getValAtSepcifiTime(int time, String request)
+    //we get key and feature name
+    //we return the feature at that time
+    {
+
+        int sPlace = featurePlace(request);
+        if (sPlace == -1) {
+            return -1;
+        } else return data.get(time - 1)[sPlace];
+
+    }
+
+    public float getCoral() {
+        return coral;
+    }
+
+    public void setCoral(float coral) {
+        this.coral = coral;
+    }
+
+
+    public ArrayList<CorrelationType> CreateMaxListOfCoral() {
+
+
+        float maxp, t;
+        float[] arrayX, arrayY;
+        int y, i, j;
+        ArrayList<CorrelationType> dataCoral = new ArrayList<CorrelationType>();
+        int size = this.data.get(0).length;//size of our rows
+
+
+        for (i = 0; i < size; i++) {
+
+            maxp = 0;
+            y = i; //the feature with max pearson to feature i
+            arrayX = this.dataOfFeaturerByNum(i);
+            for (j = i + 1; j < size; j++) {
+                arrayY = this.dataOfFeaturerByNum(j);
+                t = Math.abs(StatLib.pearson(arrayX, arrayY));
+
+                if (t > maxp) {
+                    y = j;
+                    maxp = t;
+                }
+            }
+
+            if (maxp >= 0.95) {
+                dataCoral.add(new CorrelationType(this.namesOfFeatures.get(i), this.namesOfFeatures.get(y)
+                        , typeAlgo.Line, maxp));
+
+            } else if (0.5 <= maxp && maxp < 0.95) {
+                dataCoral.add(new CorrelationType(this.namesOfFeatures.get(i), this.namesOfFeatures.get(y)
+                        , typeAlgo.Circle, maxp));
+
+            } else {
+                dataCoral.add(new CorrelationType(this.namesOfFeatures.get(i), this.namesOfFeatures.get(y)
+                        , typeAlgo.zScore, maxp));
+            }
+
+
+        }
+        return dataCoral;
+    }
+
+    public float[] getCoralFeature(String fea) {
+
+        float[] t = null;
+        if (fea != null) {
+
+            for (CorrelationType temp : this.dataCoral) {
+                if (temp.CoralA.equals(fea))
+                    t = this.dataOfFeaturerByName(temp.CoralB);
+            }
+
+        }
+        return t;
+
+    }
+
+    public ArrayList<CorrelationType> findCoral() {
+
+
+        float t;
+        float[] arrayX, arrayY;
+        int y, i, j;
+        ArrayList<CorrelationType> dataCoral = new ArrayList<CorrelationType>();
+        int size = this.data.get(0).length;//size of our rows
+
+
+        for (i = 0; i < size; i++) {
+            arrayX = this.dataOfFeaturerByNum(i);
+            for (j = i + 1; j < size; j++) {
+                arrayY = this.dataOfFeaturerByNum(j);
+                t = Math.abs(StatLib.pearson(arrayX, arrayY));
+
+                if (t >= 0.95) {
+                    dataCoral.add(new CorrelationType(this.namesOfFeatures.get(i), this.namesOfFeatures.get(j)
+                            , typeAlgo.Line, t));
+
+                } else if (0.5 <= t && t < 0.95) {
+                    dataCoral.add(new CorrelationType(this.namesOfFeatures.get(i), this.namesOfFeatures.get(j)
+                            , typeAlgo.Circle, t));
+
+                } else {
+                    dataCoral.add(new CorrelationType(this.namesOfFeatures.get(i), this.namesOfFeatures.get(j)
+                            , typeAlgo.zScore, t));
+                }
+
+            }
+
+
+        }
+        return dataCoral;
+    }
 
 }

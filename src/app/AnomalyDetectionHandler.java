@@ -1,63 +1,62 @@
 package app;
 
 
-
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.Scanner;
+
 import app.Commands.DefaultIO;
 import app.Server.ClientHandler;
 
-public class AnomalyDetectionHandler implements ClientHandler{
+public class AnomalyDetectionHandler implements ClientHandler {
 
-	public class SocketIO implements DefaultIO
-	{
-		Scanner in;
-		PrintWriter out;
-		
-		
-		public SocketIO(InputStream inputStream, OutputStream outputStream) {
-			in=new Scanner(inputStream);
-			out=new PrintWriter(outputStream);
-		}
+    public class SocketIO implements DefaultIO {
+        Scanner in;
+        PrintWriter out;
 
-		@Override
-		public String readText() {
-			return in.nextLine();
-		}
 
-		@Override
-		public void write(String text) {
-			out.print(text);
-			out.flush();
-		}
+        public SocketIO(InputStream inputStream, OutputStream outputStream) {
+            in = new Scanner(inputStream);
+            out = new PrintWriter(outputStream);
+        }
 
-		@Override
-		public float readVal() {
-			return in.nextFloat();
-		}
+        @Override
+        public String readText() {
+            return in.nextLine();
+        }
 
-		@Override
-		public void write(float val) {
-			out.print(val);
-			out.flush();
-		}
+        @Override
+        public void write(String text) {
+            out.print(text);
+            out.flush();
+        }
 
-		public void close() {
-			in.close();
-			out.close();
-		}
-	}
+        @Override
+        public float readVal() {
+            return in.nextFloat();
+        }
 
-	@Override
-	public void communicate(InputStream inFromClient, OutputStream outFromClient) {
-		// TODO Auto-generated method stub
-		SocketIO socketIO=new SocketIO(inFromClient,outFromClient) ;
-		CLI cli=new CLI(socketIO);
-		cli.start();
-		socketIO.write("bye\n");
-		socketIO.close();
-	}
+        @Override
+        public void write(float val) {
+            out.print(val);
+            out.flush();
+        }
+
+        public void close() {
+            in.close();
+            out.close();
+        }
+    }
+
+    @Override
+    public void communicate(InputStream inFromClient, OutputStream outFromClient) {
+        // TODO Auto-generated method stub
+        SocketIO socketIO = new SocketIO(inFromClient, outFromClient);
+        CLI cli = new CLI(socketIO);
+        cli.start();
+        socketIO.write("bye\n");
+        socketIO.close();
+    }
 
 }
