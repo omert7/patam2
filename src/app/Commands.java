@@ -113,7 +113,7 @@ public class Commands {
                 }
                 fw1.close();
                 dio.write("Upload complete.\n");
-                dio.write("Please upload your local test CSV file.\n");
+                dio.write("Please upload your local Tests CSV file.\n");
                 sharedState.test = new File("./files/anomalyTest.csv");
 
                 FileWriter fw = new FileWriter(sharedState.test.getAbsolutePath(), true);
