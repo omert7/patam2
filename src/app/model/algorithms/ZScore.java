@@ -1,6 +1,7 @@
 package app.model.algorithms;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -12,7 +13,7 @@ import app.AnomalyReport;
 public class ZScore implements TimeSeriesAnomalyDetector {
 
 
-    HashMap<String, Float> hashMap;
+   public HashMap<String, Float> hashMap;
 
     //fix Zscore!
 
@@ -25,12 +26,15 @@ public class ZScore implements TimeSeriesAnomalyDetector {
 
         if (size <= 1)
             return 0;
-        float[] arr = new float[size];
-        for (int j = 0; j < size; j++) {
+        float[] arr =Arrays.copyOfRange(colom, 0, size-1);
+       /* for (int j = 0; j < size-1; j++) {
             arr[j] = colom[j];
-        }
+        }*/
         float temp = StatLib.var(arr);
         float stia = (float) Math.pow(temp, 0.5);
+        if(stia==0) {
+        	return 0;
+        }
         float avg = StatLib.avg(arr);
         return Math.abs((colom[size - 1] - avg) / stia);
     }
