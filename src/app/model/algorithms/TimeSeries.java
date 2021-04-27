@@ -75,7 +75,7 @@ public class TimeSeries {
         return namesOfFeatures.indexOf(s);
     }
 
-    public float[] dataOfFeaturerByName(String s) {
+    public float[] dataOfFeatureByName(String s) {
         int n = featurePlace(s);
         float[] f = new float[data.size()];
         int i = 0;
@@ -171,7 +171,7 @@ public class TimeSeries {
 
             for (CorrelationType temp : this.dataCoral) {
                 if (temp.CoralA.equals(fea))
-                    t = this.dataOfFeaturerByName(temp.CoralB);
+                    t = this.dataOfFeatureByName(temp.CoralB);
             }
 
         }

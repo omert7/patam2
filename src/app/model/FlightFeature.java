@@ -34,4 +34,6 @@ public class FlightFeature {
     public void setMax(double max) {
         this.max = max;
     }
+
+
 }

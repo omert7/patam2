@@ -26,7 +26,7 @@ public class HybridAlgo implements TimeSeriesAnomalyDetector {
 
         for (CorrelationType temp : ts.dataCoral) {
             if (temp.type == typeAlgo.Circle) {
-                Point[] t = StatLib.ArrayOfPoint(ts.dataOfFeaturerByName(temp.CoralA), ts.dataOfFeaturerByName(temp.CoralB));
+                Point[] t = StatLib.ArrayOfPoint(ts.dataOfFeatureByName(temp.CoralA), ts.dataOfFeatureByName(temp.CoralB));
                 Circle c = SmallestEnclosingCircle.makeCircle(new ArrayList<>(Arrays.asList(t)));
                 hashMap.put(temp, c);
             }
@@ -41,7 +41,7 @@ public class HybridAlgo implements TimeSeriesAnomalyDetector {
         List<AnomalyReport> list = new ArrayList<AnomalyReport>();
         for (CorrelationType key : hashMap.keySet()) {
 
-            Point[] t = StatLib.ArrayOfPoint(ts.dataOfFeaturerByName(key.CoralA), ts.dataOfFeaturerByName(key.CoralB));
+            Point[] t = StatLib.ArrayOfPoint(ts.dataOfFeatureByName(key.CoralA), ts.dataOfFeatureByName(key.CoralB));
             for (int i = 0; i < t.length; i++) {
                 if (!hashMap.get(key).contains(t[i])) {
                     //we detect problem!

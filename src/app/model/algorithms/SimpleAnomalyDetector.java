@@ -70,9 +70,9 @@ public class SimpleAnomalyDetector implements TimeSeriesAnomalyDetector {
         for (int i = 0; i < size; i++) {
 
             String correlate1 = new String(dataCoral.get(i).feature1);
-            float[] fcorrelate1 = ts.dataOfFeaturerByName(correlate1);
+            float[] fcorrelate1 = ts.dataOfFeatureByName(correlate1);
             String correlate2 = new String(dataCoral.get(i).feature2);
-            float[] fcorrelate2 = ts.dataOfFeaturerByName(correlate2);
+            float[] fcorrelate2 = ts.dataOfFeatureByName(correlate2);
             for (int z = 0; z < fcorrelate1.length; z++) {
 
                 temp = new Point(fcorrelate1[z], fcorrelate2[z]);

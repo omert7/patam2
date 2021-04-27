@@ -57,8 +57,8 @@ public class ZScore implements TimeSeriesAnomalyDetector {
 
         for (CorrelationType temp : ts.dataCoral) {
             if (temp.type == typeAlgo.zScore) {
-                float[] t1 = ts.dataOfFeaturerByName(temp.CoralA);
-                float[] t2 = ts.dataOfFeaturerByName(temp.CoralB);
+                float[] t1 = ts.dataOfFeatureByName(temp.CoralA);
+                float[] t2 = ts.dataOfFeatureByName(temp.CoralB);
                 float z1 = findZmax(t1);
                 float z2 = findZmax(t2);
                 hashMap.put(temp.CoralA, z1);
@@ -77,7 +77,7 @@ public class ZScore implements TimeSeriesAnomalyDetector {
         for (String key : hashMap.keySet()) {
 
             for (int j = 0; j < totalTime; j++) {
-                tempZScore = findZScore(ts.dataOfFeaturerByName(key), j);
+                tempZScore = findZScore(ts.dataOfFeatureByName(key), j);
                 if (tempZScore > hashMap.get(key))//we detect problem
                 {
                     list.add(new AnomalyReport(key, j + 1));
