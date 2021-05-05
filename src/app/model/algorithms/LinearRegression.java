@@ -1,26 +1,32 @@
 package app.model.algorithms;
 
-import app.CorrelatedFeatures;
+
+import app.CorrelatedFeaturesLine;
 import app.model.statlib.Point;
 import app.model.statlib.Line;
 import app.AnomalyReport;
 import app.model.statlib.StatLib;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 
-public class SimpleAnomalyDetector implements TimeSeriesAnomalyDetector {
+public class LinearRegression implements TimeSeriesAnomalyDetector {
 
-    ArrayList<CorrelatedFeatures> dataCoral;
-
-    // HashMap<CorrelationType,Line> hashMap=new HashMap<CorrelationType,Line>();
-    public SimpleAnomalyDetector() {
-        dataCoral = new ArrayList<CorrelatedFeatures>();
+   // ArrayList<CorrelatedFeaturesLine> dataCoral;
+    public HashMap<String, CorrelatedFeaturesLine> hashMap;
+   
+    public LinearRegression() {
+        //dataCoral = new ArrayList<CorrelatedFeaturesLine>();
+        hashMap=new HashMap<String, CorrelatedFeaturesLine>();
+      
+        
     }
 
     @Override
     public void learnNormal(TimeSeries ts) {
+    	
         //we want to find the best pearson
         //between colom i and colom j
         float maxp, t, maxdev, threshold;
@@ -38,7 +44,7 @@ public class SimpleAnomalyDetector implements TimeSeriesAnomalyDetector {
                 arrayY = ts.dataOfFeaturerByNum(j);
                 t = StatLib.pearson(arrayX, arrayY);
 
-                if (Math.abs(t) > ts.getCoral()) {
+                if (Math.abs(t) > maxp ) {
                     y = j;
                     maxp = t;
                 }
@@ -54,7 +60,8 @@ public class SimpleAnomalyDetector implements TimeSeriesAnomalyDetector {
                         threshold = maxdev;
                 }
                 threshold = Math.abs(threshold);
-                dataCoral.add(new CorrelatedFeatures(ts.namesOfFeatures.get(x), ts.namesOfFeatures.get(y), maxp, lin_reg, threshold));
+                //dataCoral.add(new CorrelatedFeaturesLine(ts.namesOfFeatures.get(x), ts.namesOfFeatures.get(y), maxp, lin_reg, threshold));
+               hashMap.put(ts.namesOfFeatures.get(x),new CorrelatedFeaturesLine(ts.namesOfFeatures.get(x), ts.namesOfFeatures.get(y), maxp, lin_reg, threshold));
             }
 
         }
@@ -64,19 +71,19 @@ public class SimpleAnomalyDetector implements TimeSeriesAnomalyDetector {
     public List<AnomalyReport> detect(TimeSeries ts) {
         //we know that in dataCoral we have connection between dataCoral.get(i)
         Point temp;
-        int size = dataCoral.size();//number of correlation
+        int size = ts.namesOfFeatures.size();//number of correlation
         List<AnomalyReport> list = new ArrayList<AnomalyReport>();
         //first we create the point by what we know that correlated
         for (int i = 0; i < size; i++) {
 
-            String correlate1 = new String(dataCoral.get(i).feature1);
+            String correlate1 = new String( ts.namesOfFeatures.get(i) );
             float[] fcorrelate1 = ts.dataOfFeatureByName(correlate1);
-            String correlate2 = new String(dataCoral.get(i).feature2);
+            String correlate2 = new String(hashMap.get(correlate1).feature2);
             float[] fcorrelate2 = ts.dataOfFeatureByName(correlate2);
             for (int z = 0; z < fcorrelate1.length; z++) {
 
                 temp = new Point(fcorrelate1[z], fcorrelate2[z]);
-                if (StatLib.dev(temp, dataCoral.get(i).lin_reg) > dataCoral.get(i).threshold + 0.015f) {
+                if (StatLib.dev(temp, hashMap.get(correlate1).lin_reg) > hashMap.get(correlate1).threshold + 0.015f) {
                     //we find error
                     list.add(new AnomalyReport(correlate1 + "-" + correlate2, z + 1));
                 }
@@ -85,11 +92,7 @@ public class SimpleAnomalyDetector implements TimeSeriesAnomalyDetector {
         return list;
     }
 
-    public List<CorrelatedFeatures> getNormalModel() {
-        return dataCoral;
-    }
-
-
+    
     static public class time {
         public long startTime;
         public long endTime;

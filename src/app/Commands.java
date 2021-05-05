@@ -15,9 +15,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import app.model.algorithms.SimpleAnomalyDetector;
+import app.model.algorithms.LinearRegression;
 import app.model.algorithms.TimeSeries;
-import app.model.algorithms.SimpleAnomalyDetector.time;
+import app.model.algorithms.LinearRegression.time;
 
 public class Commands {
 
@@ -68,7 +68,7 @@ public class Commands {
         File train;
         File test;
         TimeSeries timeSeries;
-        SimpleAnomalyDetector detect;
+        LinearRegression detect;
         List<AnomalyReport> listReport;
     }
 
@@ -172,7 +172,7 @@ public class Commands {
         public void execute() {
 
 
-            sharedState.detect = new SimpleAnomalyDetector();
+            sharedState.detect = new LinearRegression();
             sharedState.detect.learnNormal(sharedState.timeSeries);
             dio.write("anomaly detection complete.\n");
         }
@@ -208,7 +208,7 @@ public class Commands {
         @Override
         public void execute() {
 
-            ArrayList<time> t = SimpleAnomalyDetector.GroupByTime(sharedState.listReport);
+            ArrayList<time> t = LinearRegression.GroupByTime(sharedState.listReport);
             dio.write("Please upload your local anomalies file.\n");
             String s;
             int FP = t.size();

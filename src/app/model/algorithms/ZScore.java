@@ -4,11 +4,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-
-import app.CorrelationType;
 import app.model.statlib.StatLib;
-import app.CorrelationType.typeAlgo;
 import app.AnomalyReport;
+
 
 public class ZScore implements TimeSeriesAnomalyDetector {
 
@@ -22,7 +20,7 @@ public class ZScore implements TimeSeriesAnomalyDetector {
         hashMap = new HashMap<>();
     }
 
-    public float findZScore(float[] colom, int size) {
+    static public float findZScore(float[] colom, int size) {
 
         if (size <= 1)
             return 0;
@@ -39,7 +37,7 @@ public class ZScore implements TimeSeriesAnomalyDetector {
         return Math.abs((colom[size - 1] - avg) / stia);
     }
 
-    public float findZmax(float[] fs) {
+    static public float findZmax(float[] fs) {
         if (fs.length < 0)
             return -1;
         float max = findZScore(fs, 1);
@@ -55,16 +53,10 @@ public class ZScore implements TimeSeriesAnomalyDetector {
     @Override
     public void learnNormal(TimeSeries ts) {
 
-        for (CorrelationType temp : ts.dataCoral) {
-            if (temp.type == typeAlgo.zScore) {
-                float[] t1 = ts.dataOfFeatureByName(temp.CoralA);
-                float[] t2 = ts.dataOfFeatureByName(temp.CoralB);
-                float z1 = findZmax(t1);
-                float z2 = findZmax(t2);
-                hashMap.put(temp.CoralA, z1);
-                hashMap.put(temp.CoralB, z2);
+        for (String col : ts.namesOfFeatures) {
+        	this.hashMap.put(col, findZmax(ts.dataOfFeatureByName(col)));
             }
-        }
+        
 
     }
 

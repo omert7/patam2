@@ -5,52 +5,129 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+import app.model.statlib.Line;
 import app.model.statlib.Point;
 import app.AnomalyReport;
-import app.CorrelationType;
+import app.CorrelatedFeatureCircle;
+import app.CorrelatedFeaturesLine;
 import app.model.statlib.StatLib;
-import app.CorrelationType.typeAlgo;
+
 
 public class HybridAlgo implements TimeSeriesAnomalyDetector {
 
 
-    HashMap<CorrelationType, Circle> hashMap;
+    public HashMap<String, CorrelatedFeatureCircle> hashMapC;
+    public HashMap<String, CorrelatedFeaturesLine> hashMapL;
+    public HashMap<String, Float> hashMapZ;
 
     public HybridAlgo() {
-        hashMap = new HashMap<CorrelationType, Circle>();
+    	hashMapC = new HashMap<>();
+    	hashMapL = new HashMap<>();
+    	hashMapZ = new HashMap<>();
     }
 
     @Override
     public void learnNormal(TimeSeries ts) {
-        // TODO Auto-generated method stub
+    	
+    	float maxp, t, maxdev, threshold=0;
+    	float[] arrayX, arrayY;
+        int x, y, i, j;
+        int size = ts.data.get(0).length;//size of our rows
+        Point[] temp;
+        Line lin_reg;
+        for (i = 0; i < size; i++) 
+        {
+            maxp = 0;
+            x = i;
+            y = i;
+            arrayX = ts.dataOfFeaturerByNum(i);
+            for (j = i + 1; j < size; j++) 
+            {
+                arrayY = ts.dataOfFeaturerByNum(j);
+                t = StatLib.pearson(arrayX, arrayY);
 
-        for (CorrelationType temp : ts.dataCoral) {
-            if (temp.type == typeAlgo.Circle) {
-                Point[] t = StatLib.ArrayOfPoint(ts.dataOfFeatureByName(temp.CoralA), ts.dataOfFeatureByName(temp.CoralB));
-                Circle c = SmallestEnclosingCircle.makeCircle(new ArrayList<>(Arrays.asList(t)));
-                hashMap.put(temp, c);
+                if (Math.abs(t) > maxp ) {
+                    y = j;
+                    maxp = t;
+                }
+            }
+            
+            temp = StatLib.ArrayOfPoint(ts.dataOfFeaturerByNum(x), ts.dataOfFeaturerByNum(y));
+            if (maxp >= 0.95) {
+                  lin_reg = StatLib.linear_reg(temp);
+                  for (Point point : temp) {
+                      maxdev = StatLib.dev(point, lin_reg);
+                      if (maxdev > threshold)
+                          threshold = maxdev;
+                  }
+                  threshold = Math.abs(threshold);
+                 hashMapL.put(ts.namesOfFeatures.get(x),new CorrelatedFeaturesLine(ts.namesOfFeatures.get(x), ts.namesOfFeatures.get(y), maxp, lin_reg, threshold));
+         
+            } else if (0.5 <= maxp && maxp < 0.95) {
+            		hashMapC.put(ts.namesOfFeatures.get(x), new CorrelatedFeatureCircle(ts.namesOfFeatures.get(x), ts.namesOfFeatures.get(y), maxp, SmallestEnclosingCircle.makeCircle(Arrays.asList(temp)))) ;          	
+
+            } else {
+            	hashMapZ.put(ts.namesOfFeatures.get(x), ZScore.findZmax(ts.dataOfFeaturerByNum(x)) );
+            	hashMapZ.put(ts.namesOfFeatures.get(y), ZScore.findZmax(ts.dataOfFeaturerByNum(y)) );
+                
             }
         }
-
-
     }
 
     @Override
     public List<AnomalyReport> detect(TimeSeries ts) {
 
         List<AnomalyReport> list = new ArrayList<AnomalyReport>();
-        for (CorrelationType key : hashMap.keySet()) {
+        Point temp;
+        for(String f: ts.namesOfFeatures) 
+        {
+        	
+        if(hashMapC.containsKey(f))
+        {
+        	 float[] fcorrelate1 = ts.dataOfFeatureByName(f);
+             String correlate2 = new String(hashMapL.get(f).feature2);
+             float[] fcorrelate2 = ts.dataOfFeatureByName(correlate2);
+             for (int z = 0; z < fcorrelate1.length; z++) {
 
-            Point[] t = StatLib.ArrayOfPoint(ts.dataOfFeatureByName(key.CoralA), ts.dataOfFeatureByName(key.CoralB));
-            for (int i = 0; i < t.length; i++) {
-                if (!hashMap.get(key).contains(t[i])) {
-                    //we detect problem!
-                    list.add(new AnomalyReport(key.CoralA + "-" + key.CoralB, i + 1));
-                }
-            }
+                 temp = new Point(fcorrelate1[z], fcorrelate2[z]);
+                 if(!hashMapC.get(f).c.contains(temp)) 
+                 {
+                     list.add(new AnomalyReport(f + "-" + correlate2, z + 1));        
+                 }
+             }
+           
+        }
+        else if(hashMapL.containsKey(f)){
+              
+               //first we create the point by what we know that correlated
+               
 
+                   float[] fcorrelate1 = ts.dataOfFeatureByName(f);
+                   String correlate2 = new String(hashMapL.get(f).feature2);
+                   float[] fcorrelate2 = ts.dataOfFeatureByName(correlate2);
+                   for (int z = 0; z < fcorrelate1.length; z++) {
+
+                       temp = new Point(fcorrelate1[z], fcorrelate2[z]);
+                       if (StatLib.dev(temp, hashMapL.get(f).lin_reg) > hashMapL.get(f).threshold + 0.015f) {
+                           //we find error
+                           list.add(new AnomalyReport(f + "-" + correlate2, z + 1));
+                       }
+                   }
+               
 
         }
+        else //in Z score algo
+        	{
+        	 float tempZScore;
+        	for (int j = 0; j < ts.totalTime; j++) 
+        	{
+                tempZScore = ZScore.findZScore(ts.dataOfFeatureByName(f), j);
+                if (tempZScore > hashMapZ.get(f))//we detect problem
+                    list.add(new AnomalyReport(f, j + 1));
+            	}
+        	}
+        }
+        
         return list;
     }
 

@@ -8,18 +8,17 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
-import app.CorrelationType;
+import app.CorrelatedFeature;
 import app.model.statlib.StatLib;
-import app.CorrelationType.typeAlgo;
+
 
 public class TimeSeries {
 
     public ArrayList<String> namesOfFeatures = new ArrayList<String>();
     public ArrayList<float[]> data = new ArrayList<float[]>();
-    public float coral;//the threashold we choose
+    public float coral; //the threashold we choose
     public int totalTime;
-    public ArrayList<CorrelationType> dataCoral = new ArrayList<CorrelationType>();
-
+   
 
     public TimeSeries(String Path) {
 
@@ -52,7 +51,7 @@ public class TimeSeries {
                     counter++;
                 }
                 this.totalTime = counter;
-                dataCoral = this.CreateMaxListOfCoral();
+               
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -121,7 +120,7 @@ public class TimeSeries {
     }
 
 
-    public ArrayList<CorrelationType> CreateMaxListOfCoral() {
+  /*public ArrayList<CorrelationType> CreateMaxListOfCoral() {
 
 
         float maxp, t;
@@ -164,7 +163,7 @@ public class TimeSeries {
         return dataCoral;
     }
 
-    public float[] getCoralFeature(String fea) {
+   /* public float[] getCoralFeature(String fea) {
 
         float[] t = null;
         if (fea != null) {
@@ -214,5 +213,5 @@ public class TimeSeries {
         }
         return dataCoral;
     }
-
+   	*/
 }
