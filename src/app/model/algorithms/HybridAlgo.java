@@ -67,10 +67,15 @@ public class HybridAlgo implements TimeSeriesAnomalyDetector {
             		hashMapC.put(ts.namesOfFeatures.get(x), new CorrelatedFeatureCircle(ts.namesOfFeatures.get(x), ts.namesOfFeatures.get(y), maxp, SmallestEnclosingCircle.makeCircle(Arrays.asList(temp)))) ;          	
 
             } else {
-            	hashMapZ.put(ts.namesOfFeatures.get(x), ZScore.findZmax(ts.dataOfFeaturerByNum(x)) );
-            	hashMapZ.put(ts.namesOfFeatures.get(y), ZScore.findZmax(ts.dataOfFeaturerByNum(y)) );
-                
-            }
+            	if(x!=y) {
+            		hashMapZ.put(ts.namesOfFeatures.get(x), ZScore.findZmax(ts.dataOfFeaturerByNum(x)) );
+            		hashMapZ.put(ts.namesOfFeatures.get(y), ZScore.findZmax(ts.dataOfFeaturerByNum(y)) );
+            	}
+            	else {
+            		hashMapZ.put(ts.namesOfFeatures.get(x), ZScore.findZmax(ts.dataOfFeaturerByNum(x)) );
+            	}
+            	}
+           
         }
     }
 
@@ -85,7 +90,7 @@ public class HybridAlgo implements TimeSeriesAnomalyDetector {
         if(hashMapC.containsKey(f))
         {
         	 float[] fcorrelate1 = ts.dataOfFeatureByName(f);
-             String correlate2 = new String(hashMapL.get(f).feature2);
+             String correlate2 = new String(hashMapC.get(f).feature2);
              float[] fcorrelate2 = ts.dataOfFeatureByName(correlate2);
              for (int z = 0; z < fcorrelate1.length; z++) {
 
@@ -97,7 +102,8 @@ public class HybridAlgo implements TimeSeriesAnomalyDetector {
              }
            
         }
-        else if(hashMapL.containsKey(f)){
+        else if(hashMapL.containsKey(f))
+        {
               
                //first we create the point by what we know that correlated
                

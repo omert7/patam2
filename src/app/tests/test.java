@@ -14,23 +14,23 @@ public class test {
 	
 		ZScore z=new ZScore();
 		z.learnNormal(ts1);
-		  List<AnomalyReport> list=	 z.detect(ts2);
-		  for (AnomalyReport anomalyReport : list) 
+		 // List<AnomalyReport> list=	 z.detect(ts2);
+		 /* for (AnomalyReport anomalyReport : list) 
 		  {
 			System.out.println(anomalyReport.timeStep+" "+anomalyReport.description);
-		  }
+		  }*/
 		  LinearRegression l=new LinearRegression();
 			l.learnNormal(ts1);
-			  List<AnomalyReport> list2=l.detect(ts2);
-			  for (AnomalyReport anomalyReport : list2) {
+			//  List<AnomalyReport> list2=l.detect(ts2);
+			/*  for (AnomalyReport anomalyReport : list2) {
 				System.out.println(anomalyReport.timeStep+" "+anomalyReport.description);
-			}
+			}*/
 			  HybridAlgo c=new HybridAlgo();
 				c.learnNormal(ts1);
-				  List<AnomalyReport> list3=	 c.detect(ts2);
-				  for (AnomalyReport anomalyReport : list3) {
+				 // List<AnomalyReport> list3=	 c.detect(ts2);
+				  /*for (AnomalyReport anomalyReport : list3) {
 					System.out.println(anomalyReport.timeStep+" "+anomalyReport.description);
-				}
+				}*/
 		  System.out.println("done");
 		
 	}

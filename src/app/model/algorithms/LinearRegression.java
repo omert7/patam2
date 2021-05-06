@@ -62,6 +62,7 @@ public class LinearRegression implements TimeSeriesAnomalyDetector {
                 threshold = Math.abs(threshold);
                 //dataCoral.add(new CorrelatedFeaturesLine(ts.namesOfFeatures.get(x), ts.namesOfFeatures.get(y), maxp, lin_reg, threshold));
                hashMap.put(ts.namesOfFeatures.get(x),new CorrelatedFeaturesLine(ts.namesOfFeatures.get(x), ts.namesOfFeatures.get(y), maxp, lin_reg, threshold));
+           
             }
 
         }
@@ -71,23 +72,23 @@ public class LinearRegression implements TimeSeriesAnomalyDetector {
     public List<AnomalyReport> detect(TimeSeries ts) {
         //we know that in dataCoral we have connection between dataCoral.get(i)
         Point temp;
-        int size = ts.namesOfFeatures.size();//number of correlation
         List<AnomalyReport> list = new ArrayList<AnomalyReport>();
         //first we create the point by what we know that correlated
-        for (int i = 0; i < size; i++) {
-
-            String correlate1 = new String( ts.namesOfFeatures.get(i) );
-            float[] fcorrelate1 = ts.dataOfFeatureByName(correlate1);
-            String correlate2 = new String(hashMap.get(correlate1).feature2);
+        for(String f: ts.namesOfFeatures) 
+        {
+        	if(hashMap.containsKey(f)) {
+        	float[] fcorrelate1 = ts.dataOfFeatureByName(f);
+            String correlate2 = new String(hashMap.get(f).feature2);
             float[] fcorrelate2 = ts.dataOfFeatureByName(correlate2);
             for (int z = 0; z < fcorrelate1.length; z++) {
 
                 temp = new Point(fcorrelate1[z], fcorrelate2[z]);
-                if (StatLib.dev(temp, hashMap.get(correlate1).lin_reg) > hashMap.get(correlate1).threshold + 0.015f) {
+                if (StatLib.dev(temp, hashMap.get(f).lin_reg) > hashMap.get(f).threshold + 0.015f) {
                     //we find error
-                    list.add(new AnomalyReport(correlate1 + "-" + correlate2, z + 1));
+                    list.add(new AnomalyReport(f + "-" + correlate2, z + 1));
                 }
-            }
+            	}
+        	}
         }
         return list;
     }

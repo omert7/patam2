@@ -52,11 +52,12 @@ public class ZScore implements TimeSeriesAnomalyDetector {
 
     @Override
     public void learnNormal(TimeSeries ts) {
-
+    	
         for (String col : ts.namesOfFeatures) {
         	this.hashMap.put(col, findZmax(ts.dataOfFeatureByName(col)));
-            }
-        
+           
+        }
+       
 
     }
 
