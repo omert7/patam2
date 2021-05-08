@@ -1,4 +1,5 @@
 package app.model;
+
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +11,7 @@ public class FlightSettings {
     private List<FlightFeature> flightFeatureList;
     private String simulatorIp;
     private long simulatorPort;
+    private double simulatorSpeed;
     private String settingsFile;
 
     public FlightSettings(String file) {
@@ -26,6 +28,12 @@ public class FlightSettings {
 
             this.simulatorIp = (String) jo.get("ip");
             this.simulatorPort = (long) jo.get("port");
+            this.simulatorSpeed = ((Long) jo.get("samplingRatePerSec")).doubleValue();
+
+            if(this.simulatorSpeed<0.1){
+                throw new Exception("samplingRatePerSec is below 0.1");
+            }
+
             JSONArray featuresSettings = (JSONArray) jo.get("featuresSettings");
 
             for (Object featuresSetting : featuresSettings) {
@@ -41,7 +49,7 @@ public class FlightSettings {
         }
     }
 
-// getters and setters
+    // getters and setters
     public List<FlightFeature> getFlightFeatureList() {
         return flightFeatureList;
     }
@@ -56,6 +64,14 @@ public class FlightSettings {
 
     public void setSimulatorIp(String simulatorIp) {
         this.simulatorIp = simulatorIp;
+    }
+
+    public double getSimulatorSpeed() {
+        return simulatorSpeed;
+    }
+
+    public void setSimulatorSpeed(double simulatorSpeed) {
+        this.simulatorSpeed = simulatorSpeed;
     }
 
     public long getSimulatorPort() {

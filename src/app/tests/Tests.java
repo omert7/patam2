@@ -1,8 +1,13 @@
 package app.tests;
 
-//import app.model.CsvFlightHandler;
-import app.model.DefaultXmlGen;
+import app.model.AppModel;
 import app.model.FlightSettings;
+import app.viewModel.AppViewModel;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.PrintWriter;
+import java.net.Socket;
 
 public class Tests {
 
@@ -17,10 +22,15 @@ public class Tests {
 //        cfh.CreateListOfFeaturesFromCsvColumns();
 //        cfh.serializeToXML();
 //        System.out.println(cfh.getCsvColumns());
-        String settingsFile = "C:\\Users\\tatio\\patam2\\src\\files\\settings.json";
-        FlightSettings fs = new FlightSettings(settingsFile);
-        fs.loadSettings();
+//        String settingsFile = "C:\\Users\\tatio\\patam2\\src\\files\\settings.json";
+//        FlightSettings fs = new FlightSettings(settingsFile);
+//        fs.loadSettings();
 
+        AppModel am = new AppModel();
+        AppViewModel avm = new AppViewModel(am);
+        avm.loadSettings("C:\\\\Users\\\\tatio\\\\patam2\\\\src\\\\files\\\\settings.json");
+        FlightSettings fs = avm.getAppModel().getFlightSettings();
+        System.out.println(fs.getSimulatorPort());
     }
 
 }
