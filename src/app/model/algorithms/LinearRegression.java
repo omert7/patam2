@@ -36,7 +36,7 @@ public class LinearRegression implements TimeSeriesAnomalyDetector {
         Point[] temp;
         Line lin_reg;
         for (i = 0; i < size; i++) {
-            maxp = 0;
+            maxp = -1;
             x = i;
             y = i;
             arrayX = ts.dataOfFeaturerByNum(i);
@@ -51,7 +51,7 @@ public class LinearRegression implements TimeSeriesAnomalyDetector {
             }
 
             threshold = -1;
-            if (maxp != 0) {
+            if (maxp >= 0) {
                 temp = StatLib.ArrayOfPoint(ts.dataOfFeaturerByNum(x), ts.dataOfFeaturerByNum(y));
                 lin_reg = StatLib.linear_reg(temp);
                 for (Point point : temp) {
@@ -83,7 +83,7 @@ public class LinearRegression implements TimeSeriesAnomalyDetector {
             for (int z = 0; z < fcorrelate1.length; z++) {
 
                 temp = new Point(fcorrelate1[z], fcorrelate2[z]);
-                if (StatLib.dev(temp, hashMap.get(f).lin_reg) > hashMap.get(f).threshold + 0.015f) {
+                if (StatLib.dev(temp, hashMap.get(f).lin_reg) > hashMap.get(f).threshold ) {
                     //we find error
                     list.add(new AnomalyReport(f + "-" + correlate2, z + 1));
                 }

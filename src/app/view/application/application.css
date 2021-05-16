@@ -1,0 +1,16 @@
+.bodybg{
+	-fx-background-image:url("file:///C:/Users/guyle/eclipse-workspace/GUI/src/pictures/dashbord.png");
+	-fx-background-size: 400px 400px;
+	-fx-background-repeat: no-repeat;
+}
+
+.airplanePic{
+		-fx-image:url("file:///C:/Users/guyle/eclipse-workspace/GUI/src/pictures/airplane.png");
+	
+	
+}
+.speebarPic{			
+	-fx-image:url("file:///C:/Users/guyle/eclipse-workspace/GUI/src/pictures/speedRange.png");
+	
+	
+}

@@ -37,7 +37,7 @@ public class HybridAlgo implements TimeSeriesAnomalyDetector {
         Line lin_reg;
         for (i = 0; i < size; i++) 
         {
-            maxp = 0;
+            maxp = -2;
             x = i;
             y = i;
             arrayX = ts.dataOfFeaturerByNum(i);
@@ -46,7 +46,7 @@ public class HybridAlgo implements TimeSeriesAnomalyDetector {
                 arrayY = ts.dataOfFeaturerByNum(j);
                 t = StatLib.pearson(arrayX, arrayY);
 
-                if (Math.abs(t) > maxp ) {
+                if (Math.abs(t) >= maxp ) {
                     y = j;
                     maxp = t;
                 }
