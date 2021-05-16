@@ -4,11 +4,13 @@ public class FlightFeature {
     private String featureName;
     private double min;
     private double max;
+    private int featureIndex;
 
-    public FlightFeature(String featureName, double min, double max) {
+    public FlightFeature(String featureName, double min, double max, int featureIndex) {
         this.featureName = featureName;
         this.min = min;
         this.max = max;
+        this.featureIndex = featureIndex;
     }
 
     public String getFeatureName() {
@@ -35,5 +37,12 @@ public class FlightFeature {
         this.max = max;
     }
 
+    public int getFeatureIndex() {
+        return featureIndex;
+    }
+
+    public void setFeatureIndex(int featureIndex) {
+        this.featureIndex = featureIndex;
+    }
 
 }
