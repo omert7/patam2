@@ -24,24 +24,24 @@
 	<right> 
 	      <FlowPane  prefHeight="506.0" prefWidth="399.0" BorderPane.alignment="CENTER">
 	
-	 		<Joystick  > </Joystick> 
+	 		<Joystick fx:id="joystick"  > </Joystick> 
 				<FlowPane.margin>
                   <Insets   left="120.0" top="20.0" />
                </FlowPane.margin>
-		<Dashboard  > </Dashboard>
+		<Dashboard fx:id="dashbord" > </Dashboard>
 	</FlowPane>
 	</right>
 	<center>
-	<Graph ></Graph>
+	<Graph fx:id="graph" ></Graph>
 	</center>
 	<top>
-	<MenuBarButton   ></MenuBarButton>
+	<MenuBarButton fx:id="menuButton"  ></MenuBarButton>
 	</top>
 	<left>
-	<FeatureList  ></FeatureList>
+	<FeatureList fx:id="list" ></FeatureList>
 	</left>
 	<bottom>
-	<TimeLine  ></TimeLine>
+	<TimeLine fx:id="timeLine" ></TimeLine>
 	</bottom>
 </BorderPane>
 
