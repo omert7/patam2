@@ -14,8 +14,8 @@ public class JoystickController
 	@FXML private Slider rader;//zir x
 	@FXML private Canvas joy;
 	private DoubleProperty DPali,DPele;
-	private double minTrot,maxTrot,minRad,maxRad;
-	private double minele,maxele,minali,maxali;
+	private DoubleProperty minTrot,maxTrot,minRad,maxRad;
+	private DoubleProperty minele,maxele,minali,maxali;
 	 public JoystickController() 
 	    {//do not write here!!!		
 	    }
@@ -24,13 +24,17 @@ public class JoystickController
 	    private void initialize() 
 	    {
 	    	//get the setting value and initialize
-	    	 minTrot=-1;maxTrot=1 ;minRad=-1;maxRad=1;
-			 minele=0;maxele=joy.getHeight();minali=0;maxali=joy.getWidth();
+	    	minTrot=new SimpleDoubleProperty(-1);maxTrot=new SimpleDoubleProperty(1);
+	    	minRad=new SimpleDoubleProperty(-1);maxRad=new SimpleDoubleProperty(1);
+	    	minele=new SimpleDoubleProperty(0);maxele=new SimpleDoubleProperty(joy.getHeight());
+	    	minali=new SimpleDoubleProperty(0);maxali=new SimpleDoubleProperty(joy.getWidth()); 
+			 
+			 
 			 //end
-	    	this.trot.setMin(minTrot);
-	    	this.trot.setMax(maxTrot);
-	    	this.rader.setMin(minRad);
-	    	this.rader.setMax(maxRad);
+	    	this.trot.setMin(minTrot.getValue());
+	    	this.trot.setMax(maxTrot.getValue());
+	    	this.rader.setMin(minRad.getValue());
+	    	this.rader.setMax(maxRad.getValue());
 	    	
 	    	this.trot.setValue(0);
 	    	this.rader.setValue(0);
@@ -50,22 +54,19 @@ public class JoystickController
 	    
 		public double getEle() {
 			//get the value noramllaiz after get the canvas size
-			double len=Math.abs(maxele-minele);
-			double temp=Math.abs(DPele.getValue()-minele);
+			double len=Math.abs(maxele.getValue()-minele.getValue());
+			double temp=Math.abs(DPele.getValue()-minele.getValue());
 			double	result=(temp/( len ))*(joy.getHeight());
 			System.out.println(result);
 			return result;
 		}
 
-		/*public void setEle(String ele) {
-			this.ele.setValue(double); 
-		}*/
-
+		
 		public double getAli() {
 			//get the value noramllaiz after get the canvas size
 		
-			double len=Math.abs(maxali-minali);
-			double temp=Math.abs(DPali.getValue()-minali);
+			double len=Math.abs(maxali.getValue()-minali.getValue());
+			double temp=Math.abs(DPali.getValue()-minali.getValue());
 			double	result=(temp/( len ))*(joy.getHeight());
 			System.out.println(result);
 			return result;
@@ -112,75 +113,70 @@ public class JoystickController
 			DPele = dPele;
 		}
 
-		public double getMinTrot() {
+		public DoubleProperty getMinTrot() {
 			return minTrot;
 		}
 
-		public void setMinTrot(double minTrot) {
+		public void setMinTrot(DoubleProperty minTrot) {
 			this.minTrot = minTrot;
 		}
 
-		public double getMaxTrot() {
+		public DoubleProperty getMaxTrot() {
 			return maxTrot;
 		}
 
-		public void setMaxTrot(double maxTrot) {
+		public void setMaxTrot(DoubleProperty maxTrot) {
 			this.maxTrot = maxTrot;
 		}
 
-		public double getMinRad() {
+		public DoubleProperty getMinRad() {
 			return minRad;
 		}
 
-		public void setMinRad(double minRad) {
+		public void setMinRad(DoubleProperty minRad) {
 			this.minRad = minRad;
 		}
 
-		public double getMaxRad() {
+		public DoubleProperty getMaxRad() {
 			return maxRad;
 		}
 
-		public void setMaxRad(double maxRad) {
+		public void setMaxRad(DoubleProperty maxRad) {
 			this.maxRad = maxRad;
 		}
 
-		public double getMinele() {
+		public DoubleProperty getMinele() {
 			return minele;
 		}
 
-		public void setMinele(double minele) {
+		public void setMinele(DoubleProperty minele) {
 			this.minele = minele;
 		}
 
-		public double getMaxele() {
+		public DoubleProperty getMaxele() {
 			return maxele;
 		}
 
-		public void setMaxele(double maxele) {
+		public void setMaxele(DoubleProperty maxele) {
 			this.maxele = maxele;
 		}
 
-		public double getMinali() {
+		public DoubleProperty getMinali() {
 			return minali;
 		}
 
-		public void setMinali(double minali) {
+		public void setMinali(DoubleProperty minali) {
 			this.minali = minali;
 		}
 
-		public double getMaxali() {
+		public DoubleProperty getMaxali() {
 			return maxali;
 		}
 
-		public void setMaxali(double maxali) {
+		public void setMaxali(DoubleProperty maxali) {
 			this.maxali = maxali;
 		}
 
-		
 
-		
-	/*	public void setAli(String ali) {
-			this.ali = ali;
-		} */
 
 }
