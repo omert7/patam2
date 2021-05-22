@@ -22,12 +22,12 @@
             <Insets left="10.0" />
          </GridPane.margin>
       </Canvas> 
-      <Slider fx:id="ele" blockIncrement="0.1" disable="true" max="1.0" maxHeight="-Infinity" min="-1.0" orientation="VERTICAL" prefHeight="150.0" prefWidth="0.0" rotate="180.0">
+      <Slider fx:id="trot" blockIncrement="0.1" disable="true" max="1.0" maxHeight="-Infinity" min="-1.0" orientation="VERTICAL" prefHeight="150.0" prefWidth="0.0" rotate="180.0">
          <GridPane.margin>
             <Insets left="150.0" />
          </GridPane.margin>
       </Slider>
-      <Slider fx:id="ali" blockIncrement="0.1" disable="true" max="1.0" maxWidth="-Infinity" min="-1.0" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+      <Slider fx:id="rader" blockIncrement="0.1" disable="true" max="1.0" maxWidth="-Infinity" min="-1.0" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
          <GridPane.margin>
             <Insets bottom="20.0" />
          </GridPane.margin>

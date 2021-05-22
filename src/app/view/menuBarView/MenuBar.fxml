@@ -5,23 +5,23 @@
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="10.0" prefWidth="1220.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/16" fx:controller="app.view.menuBarView.MenuBarController">
+<AnchorPane prefHeight="10.0" prefWidth="1220.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.view.menuBarView.MenuBarController">
 
   <MenuBar>
         <menus>
           <Menu mnemonicParsing="false" text="Setting">
             <items>
-              <MenuItem fx:id="setttingXml" mnemonicParsing="false" text="upload xml" />
+              <MenuItem fx:id="setttingXml" mnemonicParsing="false" onAction="#xmlFileChooser" text="upload xml" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="upload csv">
             <items>
-              <MenuItem fx:id="csvFile" mnemonicParsing="false" text="choose file" />
+              <MenuItem fx:id="csvFile" mnemonicParsing="false" onAction="#csvFileChooser" text="choose file" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="choose algorithm">
             <items>
-              <MenuItem fx:id="algoChoose" mnemonicParsing="false" text="choose file" />
+              <MenuItem fx:id="algoChoose" mnemonicParsing="false" onAction="#algoFileChooser" text="choose file" />
             </items>
           </Menu>
         </menus>
