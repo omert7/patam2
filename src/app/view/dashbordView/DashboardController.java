@@ -31,7 +31,7 @@ public class DashboardController {
     	Sppitch=new SimpleStringProperty("0");
     	Sphigh =new SimpleStringProperty("0");   	
     	dir=new SimpleDoubleProperty(0);
-    	speed=new SimpleDoubleProperty(40);
+    	speed=new SimpleDoubleProperty(0);
     	updateText();
     	updateImages();
     }
@@ -44,7 +44,7 @@ public class DashboardController {
 	}
     public void updateImages() {
     	airplane.setRotate(dir.getValue());
-    	speedRange.setRotate(speed.getValue()+25);
+    	speedRange.setRotate(speed.getValue()*1.35);
   	}
 
 	
