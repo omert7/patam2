@@ -2,6 +2,7 @@ package app.viewModel;
 
 import app.model.AppModel;
 import app.model.algorithms.TimeSeries;
+import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import java.util.Observable;
 import java.util.Observer;
@@ -9,18 +10,38 @@ import java.util.Observer;
 public class AppViewModel implements Observer {
     private AppModel appModel;
     private SimpleDoubleProperty aileron, elevator, rudder, throttle, altitude, airspeed, heading, yaw, roll, pitch;
-    private TimeSeries timeSeries;
-    private double timeStamp;
+    private DoubleProperty timeStamp;
 
-    public AppViewModel(TimeSeries ts) {
-        this.timeSeries = ts;
-        appModel = new AppModel();
-        this.appModel.setTimeSeries(ts);
+    public double getTimeStamp() {
+        return timeStamp.get();
+    }
+
+    public DoubleProperty timeStampProperty() {
+        return timeStamp;
+    }
+
+    public void setTimeStamp(double timeStamp) {
+        this.timeStamp.set(timeStamp);
     }
 
     public AppViewModel(AppModel am) {
+        this.aileron = new SimpleDoubleProperty();
+        this.elevator = new SimpleDoubleProperty();
+        this.throttle = new SimpleDoubleProperty();
+        this.rudder = new SimpleDoubleProperty();
+        this.airspeed = new SimpleDoubleProperty();
+        this.heading = new SimpleDoubleProperty();
+        this.yaw = new SimpleDoubleProperty();
+        this.pitch = new SimpleDoubleProperty();
+        this.roll = new SimpleDoubleProperty();
+        this.altitude = new SimpleDoubleProperty();
+        this.timeStamp = new SimpleDoubleProperty();
         this.appModel = am;
         am.addObserver(this);
+    }
+
+    public void setTimeSeries(String timeSeries){
+        this.appModel.setTimeSeries(new TimeSeries(timeSeries));
     }
 
     public void loadSettings(String settingsFile) {
@@ -162,22 +183,6 @@ public class AppViewModel implements Observer {
 
     public void setPitch(double pitch) {
         this.pitch.set(pitch);
-    }
-
-    public TimeSeries getTimeSeries() {
-        return timeSeries;
-    }
-
-    public void setTimeSeries(TimeSeries timeSeries) {
-        this.timeSeries = timeSeries;
-    }
-
-    public double getTimeStamp() {
-        return timeStamp;
-    }
-
-    public void setTimeStamp(double timeStamp) {
-        this.timeStamp = timeStamp;
     }
 
 }

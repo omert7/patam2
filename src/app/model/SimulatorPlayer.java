@@ -23,7 +23,7 @@ public class SimulatorPlayer {
     public void pause(){
     }
 
-    public void play(){
+    public void play(double speed, double time){
         try {
             Socket fg = new Socket("localhost", 5400);
             BufferedReader in = new BufferedReader(new FileReader("C:\\Users\\tatio\\patam2\\src\\files\\reg_flight.csv"));
