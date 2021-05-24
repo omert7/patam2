@@ -21,10 +21,18 @@ public class DashboardController {
 	// Add a public no-args constructor
     public DashboardController() 
     {
+    	SpRoll=new SimpleDoubleProperty(0);
+    	SpYaw=new SimpleDoubleProperty(0);
+    	SpPitch=new SimpleDoubleProperty(0);
+    	SpAlt =new SimpleDoubleProperty(0);
+    	dir=new SimpleDoubleProperty(0);
+    	speed=new SimpleDoubleProperty(0);
+    	updateText();
+    	updateImages();
     }
      
-    @FXML
-    private void initialize() 
+   @FXML
+   private void initialize() 
     {
     	SpRoll=new SimpleDoubleProperty(0);
     	SpYaw=new SimpleDoubleProperty(0);
@@ -69,32 +77,34 @@ public class DashboardController {
 		return SpRoll;
 	}
 
-	public void setSpRoll(DoubleProperty spRoll) {
-		SpRoll = spRoll;
+	public void setSpRoll(double spRoll) {
+		this.SpRoll.set(spRoll);
 	}
 
 	public DoubleProperty getSpYaw() {
 		return SpYaw;
 	}
 
-	public void setSpYaw(DoubleProperty spYaw) {
-		SpYaw = spYaw;
+	public void setSpYaw(double spYaw) {
+		
+		this.SpYaw.set(spYaw);
 	}
 
 	public DoubleProperty getSpPitch() {
 		return SpPitch;
+		
 	}
 
-	public void setSpPitch(DoubleProperty spPitch) {
-		SpPitch = spPitch;
+	public void setSpPitch(double spPitch) {
+		this.SpPitch.set(spPitch);
 	}
 
 	public DoubleProperty getSpAlt() {
 		return SpAlt;
 	}
 
-	public void setSpAlt(DoubleProperty spAlt) {
-		SpAlt = spAlt;
+	public void setSpAlt(double spAlt) {
+		this.SpAlt.set(spAlt);
 	}
 
 	

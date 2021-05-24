@@ -62,5 +62,53 @@ public class GUIController  {
         this.vm.yawProperty().bind(dashbord.getDashboardController().getSpYaw());
     }
 
+	public FeatureList getFeatList() {
+		return featList;
+	}
+
+	public void setFeatList(FeatureList featList) {
+		this.featList = featList;
+	}
+
+	public Joystick getJoystick() {
+		return joystick;
+	}
+
+	public void setJoystick(Joystick joystick) {
+		this.joystick = joystick;
+	}
+
+	public Dashboard getDashbord() {
+		return dashbord;
+	}
+
+	public void setDashbord(Dashboard dashbord) {
+		this.dashbord = dashbord;
+	}
+
+	public Graph getGraph() {
+		return graph;
+	}
+
+	public void setGraph(Graph graph) {
+		this.graph = graph;
+	}
+
+	public MenuBarButton getMenuButton() {
+		return menuButton;
+	}
+
+	public void setMenuButton(MenuBarButton menuButton) {
+		this.menuButton = menuButton;
+	}
+
+	public TimeLine getTimeLine() {
+		return timeLine;
+	}
+
+	public void setTimeLine(TimeLine timeLine) {
+		this.timeLine = timeLine;
+	}
+
    
 }
