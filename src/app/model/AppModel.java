@@ -10,7 +10,7 @@ public class AppModel extends Observable {
     private TimeSeries timeSeries;
     private SimulatorPlayer sm;
 
-    public void loadSettings(String settingsFile){
+    public void loadSettings(String settingsFile) {
         flightSettings = new FlightSettings(settingsFile);
         flightSettings.loadSettings();
     }
@@ -31,7 +31,7 @@ public class AppModel extends Observable {
         this.timeSeries = timeSeries;
     }
 
-    public void setAileron(double  value, int time){
+    public void setAileron(double value, int time) {
 
     }
 }

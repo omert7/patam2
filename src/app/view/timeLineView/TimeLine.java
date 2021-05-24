@@ -13,8 +13,6 @@ public class TimeLine extends AnchorPane {
 			FXMLLoader fxl=new FXMLLoader();
 			AnchorPane timeLine=fxl.load(getClass().getResource("TimeLine.fxml").openStream());
 			TimeLineController timeLineController=fxl.getController();
-			//aileron=joystickController.aileron;
-			//elevators=joystickController.elevators;
 			this.getChildren().add(timeLine);
 		}
 		catch(Exception e){

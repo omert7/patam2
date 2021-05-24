@@ -4,25 +4,16 @@ import app.model.AppModel;
 import app.model.algorithms.TimeSeries;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleStringProperty;
+
 import java.util.Observable;
 import java.util.Observer;
 
 public class AppViewModel implements Observer {
     private AppModel appModel;
-    private SimpleDoubleProperty aileron, elevator, rudder, throttle, altitude, airspeed, heading, yaw, roll, pitch;
+    private SimpleDoubleProperty aileron, elevator, rudder, throttle, airspeed, heading;
+    private SimpleStringProperty altitude, yaw, roll, pitch;
     private DoubleProperty timeStamp;
-
-    public double getTimeStamp() {
-        return timeStamp.get();
-    }
-
-    public DoubleProperty timeStampProperty() {
-        return timeStamp;
-    }
-
-    public void setTimeStamp(double timeStamp) {
-        this.timeStamp.set(timeStamp);
-    }
 
     public AppViewModel(AppModel am) {
         this.aileron = new SimpleDoubleProperty();
@@ -31,16 +22,16 @@ public class AppViewModel implements Observer {
         this.rudder = new SimpleDoubleProperty();
         this.airspeed = new SimpleDoubleProperty();
         this.heading = new SimpleDoubleProperty();
-        this.yaw = new SimpleDoubleProperty();
-        this.pitch = new SimpleDoubleProperty();
-        this.roll = new SimpleDoubleProperty();
-        this.altitude = new SimpleDoubleProperty();
+        this.yaw = new SimpleStringProperty();
+        this.pitch = new SimpleStringProperty();
+        this.roll = new SimpleStringProperty();
+        this.altitude = new SimpleStringProperty();
         this.timeStamp = new SimpleDoubleProperty();
         this.appModel = am;
         am.addObserver(this);
     }
 
-    public void setTimeSeries(String timeSeries){
+    public void setTimeSeries(String timeSeries) {
         this.appModel.setTimeSeries(new TimeSeries(timeSeries));
     }
 
@@ -113,15 +104,15 @@ public class AppViewModel implements Observer {
         this.throttle.set(throttle);
     }
 
-    public double getAltitude() {
+    public String getAltitude() {
         return altitude.get();
     }
 
-    public SimpleDoubleProperty altitudeProperty() {
+    public SimpleStringProperty altitudeProperty() {
         return altitude;
     }
 
-    public void setAltitude(double altitude) {
+    public void setAltitude(String altitude) {
         this.altitude.set(altitude);
     }
 
@@ -137,7 +128,7 @@ public class AppViewModel implements Observer {
         this.airspeed.set(airspeed);
     }
 
-    public double getHeading() {
+    public Double getHeading() {
         return heading.get();
     }
 
@@ -145,44 +136,57 @@ public class AppViewModel implements Observer {
         return heading;
     }
 
-    public void setHeading(double heading) {
+    public void setHeading(Double heading) {
         this.heading.set(heading);
     }
 
-    public double getYaw() {
+    public String getYaw() {
         return yaw.get();
     }
 
-    public SimpleDoubleProperty yawProperty() {
+    public SimpleStringProperty yawProperty() {
         return yaw;
     }
 
-    public void setYaw(double yaw) {
+    public void setYaw(String yaw) {
         this.yaw.set(yaw);
     }
 
-    public double getRoll() {
+    public String getRoll() {
         return roll.get();
     }
 
-    public SimpleDoubleProperty rollProperty() {
+    public SimpleStringProperty rollProperty() {
         return roll;
     }
 
-    public void setRoll(double roll) {
+    public void setRoll(String roll) {
         this.roll.set(roll);
     }
 
-    public double getPitch() {
+    public String getPitch() {
         return pitch.get();
     }
 
-    public SimpleDoubleProperty pitchProperty() {
+    public SimpleStringProperty pitchProperty() {
         return pitch;
     }
 
-    public void setPitch(double pitch) {
+    public void setPitch(String pitch) {
         this.pitch.set(pitch);
     }
+
+    public double getTimeStamp() {
+        return timeStamp.get();
+    }
+
+    public DoubleProperty timeStampProperty() {
+        return timeStamp;
+    }
+
+    public void setTimeStamp(double timeStamp) {
+        this.timeStamp.set(timeStamp);
+    }
+
 
 }
