@@ -47,6 +47,54 @@ public class DashboardController {
     	speedRange.setRotate(speed.getValue()*1.35);
   	}
 
+	public StringProperty getSproll() {
+		return Sproll;
+	}
+
+	public void setSproll(StringProperty sproll) {
+		Sproll = sproll;
+	}
+
+	public StringProperty getSpyaw() {
+		return Spyaw;
+	}
+
+	public void setSpyaw(StringProperty spyaw) {
+		Spyaw = spyaw;
+	}
+
+	public StringProperty getSppitch() {
+		return Sppitch;
+	}
+
+	public void setSppitch(StringProperty sppitch) {
+		Sppitch = sppitch;
+	}
+
+	public StringProperty getSphigh() {
+		return Sphigh;
+	}
+
+	public void setSphigh(StringProperty sphigh) {
+		Sphigh = sphigh;
+	}
+
+	public DoubleProperty getDir() {
+		return dir;
+	}
+
+	public void setDir(DoubleProperty dir) {
+		this.dir = dir;
+	}
+
+	public DoubleProperty getSpeed() {
+		return speed;
+	}
+
+	public void setSpeed(DoubleProperty speed) {
+		this.speed = speed;
+	}
+
 	
     
    
