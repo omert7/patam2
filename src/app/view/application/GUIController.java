@@ -1,14 +1,28 @@
 package app.view.application;
 
+import app.view.dashbordView.Dashboard;
+import app.view.featureListView.FeatureList;
+import app.view.graphView.Graph;
+import app.view.joystickView.Joystick;
+import app.view.menuBarView.MenuBarButton;
+import app.view.timeLineView.TimeLine;
 import app.viewModel.AppViewModel;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.fxml.FXML;
+import javafx.scene.control.ListView;
 
 
 public class GUIController  {
+	
     private SimpleDoubleProperty aileron, elevator, rudder, throttle, altitude, airspeed, heading, yaw, roll, pitch;
     private AppViewModel vm;
-
+    @FXML private FeatureList list;
+    @FXML private Joystick joystick;
+    @FXML private Dashboard dashbord;
+    @FXML private  Graph graph;
+    @FXML private MenuBarButton menuButton;
+    @FXML private TimeLine timeLine;
+    
     public AppViewModel getVm() {
         return vm;
     }
@@ -28,6 +42,7 @@ public class GUIController  {
         this.pitch = new SimpleDoubleProperty();
         this.roll = new SimpleDoubleProperty();
         this.altitude = new SimpleDoubleProperty();
+
     }
 
     public void init(AppViewModel vm){
