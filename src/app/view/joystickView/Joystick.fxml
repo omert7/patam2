@@ -27,7 +27,7 @@
             <Insets left="150.0" />
          </GridPane.margin>
       </Slider>
-      <Slider fx:id="rader" blockIncrement="0.1" disable="true" max="1.0" maxWidth="-Infinity" min="-1.0" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+      <Slider fx:id="rudder" blockIncrement="0.1" disable="true" max="1.0" maxWidth="-Infinity" min="-1.0" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
          <GridPane.margin>
             <Insets bottom="20.0" />
          </GridPane.margin>

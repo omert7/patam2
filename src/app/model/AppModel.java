@@ -8,6 +8,7 @@ import java.util.Observable;
 public class AppModel extends Observable {
     private FlightSettings flightSettings;
     private TimeSeries timeSeries;
+    private SimulatorPlayer sm;
 
     public void loadSettings(String settingsFile){
         flightSettings = new FlightSettings(settingsFile);
@@ -28,5 +29,9 @@ public class AppModel extends Observable {
 
     public void setTimeSeries(TimeSeries timeSeries) {
         this.timeSeries = timeSeries;
+    }
+
+    public void setAileron(double  value, int time){
+
     }
 }

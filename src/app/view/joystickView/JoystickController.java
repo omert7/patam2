@@ -11,7 +11,7 @@ public class JoystickController
 {
 	
 	@FXML private Slider trot;// zir y
-	@FXML private Slider rader;//zir x
+	@FXML private Slider rudder;//zir x
 	@FXML private Canvas joy;
 	private DoubleProperty DPali,DPele;
 	private DoubleProperty minTrot,maxTrot,minRad,maxRad;
@@ -33,11 +33,11 @@ public class JoystickController
 			 //end
 	    	this.trot.setMin(minTrot.getValue());
 	    	this.trot.setMax(maxTrot.getValue());
-	    	this.rader.setMin(minRad.getValue());
-	    	this.rader.setMax(maxRad.getValue());
+	    	this.rudder.setMin(minRad.getValue());
+	    	this.rudder.setMax(maxRad.getValue());
 	    	
 	    	this.trot.setValue(0);
-	    	this.rader.setValue(0);
+	    	this.rudder.setValue(0);
 	    	DPali=new SimpleDoubleProperty(joy.getWidth()/2);
 	    	DPele=new SimpleDoubleProperty(joy.getHeight()/2);
 	    	paint();
@@ -81,12 +81,12 @@ public class JoystickController
 			this.trot = trot;
 		}
 
-		public Slider getRader() {
-			return rader;
+		public Slider getRudder() {
+			return rudder;
 		}
 
-		public void setRader(Slider rader) {
-			this.rader = rader;
+		public void setRudder(Slider rader) {
+			this.rudder = rader;
 		}
 
 		public Canvas getJoy() {

@@ -8,8 +8,7 @@ import javafx.scene.layout.GridPane;
 
 public class Joystick extends GridPane  {
 	 
-public DoubleProperty aileron,elevators;
-
+     JoystickController joystickController;
 	public Joystick() {
 		// TODO Auto-generated constructor stub
 		super();
@@ -17,15 +16,19 @@ public DoubleProperty aileron,elevators;
 			
 			FXMLLoader fxl=new FXMLLoader();
 			GridPane joy=fxl.load(getClass().getResource("Joystick.fxml").openStream());
-			JoystickController joystickController=fxl.getController();
-			//aileron=joystickController.aileron;
-			//elevators=joystickController.elevators;
+			 joystickController=fxl.getController();
 			this.getChildren().add(joy);
 		}
 		catch(Exception e){
 			e.printStackTrace();
 			
 		}
+	}
+	public JoystickController getJoystickController() {
+		return joystickController;
+	}
+	public void setJoystickController(JoystickController joystickController) {
+		this.joystickController = joystickController;
 	}
 	
 }

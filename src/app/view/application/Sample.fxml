@@ -38,7 +38,7 @@
 	<MenuBarButton fx:id="menuButton"  ></MenuBarButton>
 	</top>
 	<left>
-	<FeatureList fx:id="list" ></FeatureList>
+	<FeatureList fx:id="featList" ></FeatureList>
 	</left>
 	<bottom>
 	<TimeLine fx:id="timeLine" ></TimeLine>

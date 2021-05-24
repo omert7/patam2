@@ -7,13 +7,15 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 
 public class Dashboard extends AnchorPane {
+	
+	DashboardController dashboardController;
 	public Dashboard() {
 		super();
 		try {
 			
 			FXMLLoader fxl=new FXMLLoader();
 			AnchorPane dash=fxl.load(getClass().getResource("Dashboard.fxml").openStream());
-			DashboardController dashboardController=fxl.getController();
+			 dashboardController=fxl.getController();
 			//aileron=joystickController.aileron;
 			//elevators=joystickController.elevators;
 			this.getChildren().add(dash);
@@ -22,6 +24,17 @@ public class Dashboard extends AnchorPane {
 			e.printStackTrace();
 			
 		}
+	}
+	
+	public DashboardController getDashboardController() {
+		return dashboardController;
+	}
+	public void setDashboardController(DashboardController dashboardController) {
+		this.dashboardController = dashboardController;
 	}	
+	
+	
+	
+	
 	
 }

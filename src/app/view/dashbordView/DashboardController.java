@@ -16,7 +16,7 @@ public class DashboardController {
 	@FXML private Text high;
 	@FXML private ImageView airplane;
 	@FXML private ImageView speedRange;
-	private StringProperty Sproll, Spyaw , Sppitch ,Sphigh  ;
+	private DoubleProperty SpRoll, SpYaw , SpPitch ,SpAlt ;
 	private DoubleProperty dir,speed;
 	// Add a public no-args constructor
     public DashboardController() 
@@ -26,10 +26,10 @@ public class DashboardController {
     @FXML
     private void initialize() 
     {
-    	Sproll=new SimpleStringProperty("0");
-    	Spyaw=new SimpleStringProperty("0");
-    	Sppitch=new SimpleStringProperty("0");
-    	Sphigh =new SimpleStringProperty("0");   	
+    	SpRoll=new SimpleDoubleProperty(0);
+    	SpYaw=new SimpleDoubleProperty(0);
+    	SpPitch=new SimpleDoubleProperty(0);
+    	SpAlt =new SimpleDoubleProperty(0);
     	dir=new SimpleDoubleProperty(0);
     	speed=new SimpleDoubleProperty(0);
     	updateText();
@@ -37,47 +37,17 @@ public class DashboardController {
     }
     
     public void updateText() {
-    	roll.setText(Sproll.getValue());
-    	yaw.setText(Spyaw.getValue());
-    	pitch.setText(Sppitch.getValue());
-    	high.setText(Sphigh.getValue());
+    	roll.setText(SpRoll.getValue().toString());
+    	yaw.setText(SpYaw.getValue().toString());
+    	pitch.setText(SpPitch.getValue().toString());
+    	high.setText(SpAlt.getValue().toString());
 	}
     public void updateImages() {
     	airplane.setRotate(dir.getValue());
     	speedRange.setRotate(speed.getValue()*1.35);
   	}
 
-	public StringProperty getSproll() {
-		return Sproll;
-	}
-
-	public void setSproll(StringProperty sproll) {
-		Sproll = sproll;
-	}
-
-	public StringProperty getSpyaw() {
-		return Spyaw;
-	}
-
-	public void setSpyaw(StringProperty spyaw) {
-		Spyaw = spyaw;
-	}
-
-	public StringProperty getSppitch() {
-		return Sppitch;
-	}
-
-	public void setSppitch(StringProperty sppitch) {
-		Sppitch = sppitch;
-	}
-
-	public StringProperty getSphigh() {
-		return Sphigh;
-	}
-
-	public void setSphigh(StringProperty sphigh) {
-		Sphigh = sphigh;
-	}
+	
 
 	public DoubleProperty getDir() {
 		return dir;
@@ -93,6 +63,38 @@ public class DashboardController {
 
 	public void setSpeed(DoubleProperty speed) {
 		this.speed = speed;
+	}
+
+	public DoubleProperty getSpRoll() {
+		return SpRoll;
+	}
+
+	public void setSpRoll(DoubleProperty spRoll) {
+		SpRoll = spRoll;
+	}
+
+	public DoubleProperty getSpYaw() {
+		return SpYaw;
+	}
+
+	public void setSpYaw(DoubleProperty spYaw) {
+		SpYaw = spYaw;
+	}
+
+	public DoubleProperty getSpPitch() {
+		return SpPitch;
+	}
+
+	public void setSpPitch(DoubleProperty spPitch) {
+		SpPitch = spPitch;
+	}
+
+	public DoubleProperty getSpAlt() {
+		return SpAlt;
+	}
+
+	public void setSpAlt(DoubleProperty spAlt) {
+		SpAlt = spAlt;
 	}
 
 	
