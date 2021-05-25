@@ -26,7 +26,11 @@ public class JoystickController {
 
     @FXML
     private void initialize() {
-        //get the setting value and initialize
+      init();
+    }
+
+    public void init() {
+    	  //get the setting value and initialize
         minTrot = new SimpleDoubleProperty(-1);
         maxTrot = new SimpleDoubleProperty(1);
         minRad = new SimpleDoubleProperty(-1);
@@ -43,14 +47,13 @@ public class JoystickController {
         this.rudder.setMin(minRad.getValue());
         this.rudder.setMax(maxRad.getValue());
 
-        this.throttle.setValue(0);
-        this.rudder.setValue(0);
-        aileron = new SimpleDoubleProperty(joy.getWidth() / 2);
-        elevator = new SimpleDoubleProperty(joy.getHeight() / 2);
+        this.throttle.setValue((maxTrot.getValue()-minTrot.getValue())/2);
+        this.rudder.setValue( (maxRad.getValue()-minRad.getValue())/2 );
+        this.aileron = new SimpleDoubleProperty(joy.getWidth() / 2);
+        this.elevator = new SimpleDoubleProperty(joy.getHeight() / 2);
         paint();
     }
-
-
+    
     public void paint() {
         GraphicsContext gc = joy.getGraphicsContext2D();
         gc.clearRect(0, 0, joy.getWidth(), joy.getHeight());
@@ -61,7 +64,7 @@ public class JoystickController {
     public double getEle() {
         //get the value noramllaiz after get the canvas size
         double len = Math.abs(maxele.getValue() - minele.getValue());
-        double temp = Math.abs(elevator.getValue() - minele.getValue());
+        double temp = Math.abs(this.elevator.getValue() - minele.getValue());
         double result = (temp / (len)) * (joy.getHeight());
         System.out.println(result);
         return result;
@@ -72,7 +75,7 @@ public class JoystickController {
         //get the value noramllaiz after get the canvas size
 
         double len = Math.abs(maxali.getValue() - minali.getValue());
-        double temp = Math.abs(aileron.getValue() - minali.getValue());
+        double temp = Math.abs(this.aileron.getValue() - minali.getValue());
         double result = (temp / (len)) * (joy.getHeight());
         System.out.println(result);
         return result;
@@ -109,6 +112,8 @@ public class JoystickController {
 
     public void setAileron(DoubleProperty dPali) {
         aileron = dPali;
+        paint();
+        
     }
 
     public DoubleProperty getElevator() {
@@ -117,6 +122,7 @@ public class JoystickController {
 
     public void setElevator(DoubleProperty dPele) {
         elevator = dPele;
+        paint();
     }
 
     public DoubleProperty getMinTrot() {

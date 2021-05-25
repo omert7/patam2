@@ -25,6 +25,7 @@ public class Joystick extends GridPane {
             FXMLLoader fxl = new FXMLLoader();
             GridPane joy = fxl.load(Objects.requireNonNull(getClass().getResource("Joystick.fxml")).openStream());
             joystickController = fxl.getController();
+            
             throttle = new SimpleDoubleProperty();
             rudder = new SimpleDoubleProperty();
             aileron = new SimpleDoubleProperty();

@@ -12,7 +12,7 @@ import java.util.Observer;
 public class AppViewModel implements Observer {
     private AppModel appModel;
     private SimpleDoubleProperty aileron, elevator, rudder, throttle, airspeed, heading;
-    private SimpleStringProperty altitude, yaw, roll, pitch;
+    private SimpleDoubleProperty altitude, yaw, roll, pitch;
     private DoubleProperty timeStamp;
 
     public AppViewModel(AppModel am) {
@@ -22,10 +22,10 @@ public class AppViewModel implements Observer {
         this.rudder = new SimpleDoubleProperty();
         this.airspeed = new SimpleDoubleProperty();
         this.heading = new SimpleDoubleProperty();
-        this.yaw = new SimpleStringProperty();
-        this.pitch = new SimpleStringProperty();
-        this.roll = new SimpleStringProperty();
-        this.altitude = new SimpleStringProperty();
+        this.yaw = new SimpleDoubleProperty();
+        this.pitch = new SimpleDoubleProperty();
+        this.roll = new SimpleDoubleProperty();
+        this.altitude = new SimpleDoubleProperty();
         this.timeStamp = new SimpleDoubleProperty();
         this.appModel = am;
         am.addObserver(this);
@@ -78,6 +78,7 @@ public class AppViewModel implements Observer {
 
     public void setElevator(double elevator) {
         this.elevator.set(elevator);
+     
     }
 
     public double getRudder() {
@@ -104,15 +105,15 @@ public class AppViewModel implements Observer {
         this.throttle.set(throttle);
     }
 
-    public String getAltitude() {
+    public double getAltitude() {
         return altitude.get();
     }
 
-    public SimpleStringProperty altitudeProperty() {
+    public SimpleDoubleProperty altitudeProperty() {
         return altitude;
     }
 
-    public void setAltitude(String altitude) {
+    public void setAltitude(double altitude) {
         this.altitude.set(altitude);
     }
 
@@ -128,7 +129,7 @@ public class AppViewModel implements Observer {
         this.airspeed.set(airspeed);
     }
 
-    public Double getHeading() {
+    public double getHeading() {
         return heading.get();
     }
 
@@ -136,43 +137,43 @@ public class AppViewModel implements Observer {
         return heading;
     }
 
-    public void setHeading(Double heading) {
+    public void setHeading(double heading) {
         this.heading.set(heading);
     }
 
-    public String getYaw() {
+    public double getYaw() {
         return yaw.get();
     }
 
-    public SimpleStringProperty yawProperty() {
+    public SimpleDoubleProperty yawProperty() {
         return yaw;
     }
 
-    public void setYaw(String yaw) {
+    public void setYaw(double yaw) {
         this.yaw.set(yaw);
     }
 
-    public String getRoll() {
+    public double getRoll() {
         return roll.get();
     }
 
-    public SimpleStringProperty rollProperty() {
+    public SimpleDoubleProperty rollProperty() {
         return roll;
     }
 
-    public void setRoll(String roll) {
+    public void setRoll(double roll) {
         this.roll.set(roll);
     }
 
-    public String getPitch() {
+    public double getPitch() {
         return pitch.get();
     }
 
-    public SimpleStringProperty pitchProperty() {
+    public SimpleDoubleProperty pitchProperty() {
         return pitch;
     }
 
-    public void setPitch(String pitch) {
+    public void setPitch(double pitch) {
         this.pitch.set(pitch);
     }
 
