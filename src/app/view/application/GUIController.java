@@ -1,13 +1,10 @@
 package app.view.application;
 
-import java.util.Observable;
-import java.util.Observer;
-
 import app.view.dashboardView.Dashboard;
 import app.view.featureListView.FeatureList;
 import app.view.graphView.Graph;
 import app.view.joystickView.Joystick;
-import app.view.menuBarView.MenuBarButton;
+import app.view.menuBarView.MenuBar;
 import app.view.timeLineView.TimeLine;
 import app.viewModel.AppViewModel;
 import javafx.fxml.FXML;
@@ -25,7 +22,7 @@ public class GUIController {
     @FXML
     private Graph graph;
     @FXML
-    private MenuBarButton menuButton;
+    private MenuBar menuButton;
     @FXML
     private TimeLine timeLine;
 
@@ -52,14 +49,12 @@ public class GUIController {
         vm.elevatorProperty().setValue( joystick.getElevator() );
         joystick.elevatorProperty().bind(vm.elevatorProperty());
 
-       
         dashboard.getAltitude().bind(vm.altitudeProperty());
         dashboard.getYaw().bind(vm.yawProperty());
         dashboard.getPitch().bind(vm.pitchProperty());
         dashboard.getRoll().bind(vm.rollProperty());
         dashboard.getAirspeed().bind(vm.airspeedProperty());
         dashboard.getHeading().bind(vm.headingProperty());
-
     }
 
     public FeatureList getFeatList() {
@@ -94,11 +89,11 @@ public class GUIController {
         this.graph = graph;
     }
 
-    public MenuBarButton getMenuButton() {
+    public MenuBar getMenuButton() {
         return menuButton;
     }
 
-    public void setMenuButton(MenuBarButton menuButton) {
+    public void setMenuButton(MenuBar menuButton) {
         this.menuButton = menuButton;
     }
 

@@ -5,9 +5,11 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.AnchorPane;
 
 
-public class MenuBarButton extends AnchorPane 
+public class MenuBar extends AnchorPane
 {
-	public MenuBarButton() {
+	MenuBarController menuBarButton;
+
+	public MenuBar() {
 		super();
 		try {
 			

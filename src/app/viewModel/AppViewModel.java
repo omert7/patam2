@@ -30,8 +30,9 @@ public class AppViewModel extends Observable implements Observer {
         this.timeStamp = new SimpleDoubleProperty();
         this.appModel = am;
         am.addObserver(this);
-   
+
     }
+
 
     public void setTimeSeries(String timeSeries) {
         this.appModel.setTimeSeries(new TimeSeries(timeSeries));
@@ -43,7 +44,6 @@ public class AppViewModel extends Observable implements Observer {
 
     public void play(int start, int rate) {
     }
-
 
 
     public AppModel getAppModel() {
@@ -76,7 +76,7 @@ public class AppViewModel extends Observable implements Observer {
 
     public void setElevator(double elevator) {
         this.elevator.set(elevator);
-     
+
     }
 
     public double getRudder() {
@@ -187,12 +187,12 @@ public class AppViewModel extends Observable implements Observer {
         this.timeStamp.set(timeStamp);
     }
 
-    
-	@Override
-	public void update(Observable o, Object arg) {
-		// TODO Auto-generated method stub
-		
-	}
+
+    @Override
+    public void update(Observable o, Object arg) {
+        // TODO Auto-generated method stub
+
+    }
 
 
 }

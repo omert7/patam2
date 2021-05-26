@@ -11,6 +11,9 @@ import javafx.scene.layout.FlowPane;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
+
 public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
@@ -21,29 +24,37 @@ public class Main extends Application {
             AppViewModel vm = new AppViewModel(m);
             GUIController view = fxl.getController();
             view.init(vm);
-           
-          //  vm.setAltitude(12.2);
-            
 
-	      
+            //  vm.setAltitude(12.2);
+
+
             Scene scene = new Scene(root, 1400, 680);
             scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
             primaryStage.setScene(scene);
             primaryStage.show();
-            new Thread(()->{
-            	try {
-					Thread.sleep(3000);
-					System.out.println("hi guy");
-					vm.setRoll(10.2);
-					vm.setElevator(65);
-					vm.setAileron(105);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-            	
+            new Thread(() -> {
+                try {
+                    while (true) {
+                        Thread.sleep(1000);
+
+
+                        double ele = ThreadLocalRandom.current().nextDouble(0, 150);
+                        double ail = ThreadLocalRandom.current().nextDouble(0, 150);
+                        System.out.println("hi guy");
+                        vm.setRoll(ThreadLocalRandom.current().nextDouble(0, 150));
+                        vm.setPitch(ThreadLocalRandom.current().nextDouble(0, 150));
+                        vm.setYaw(ThreadLocalRandom.current().nextDouble(0, 150));
+                        vm.setAirspeed(ThreadLocalRandom.current().nextDouble(0, 150));
+                        vm.setElevator(ele);
+                        vm.setAileron(ail);
+                    }
+                } catch (InterruptedException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+
             }).start();
-      
+
         } catch (Exception e) {
             e.printStackTrace();
         }

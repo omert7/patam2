@@ -5,7 +5,7 @@
 <?import app.view.joystickView.Joystick?>
 <?import app.view.dashboardView.Dashboard?>
 <?import app.view.graphView.Graph?>
-<?import app.view.menuBarView.MenuBarButton?>
+<?import app.view.menuBarView.MenuBar?>
 <?import app.view.featureListView.FeatureList?>
 <?import app.view.timeLineView.TimeLine?>
 <?import javafx.geometry.Insets?>
@@ -15,7 +15,7 @@
 <?import featureListView.FeatureList?>
 <?import javafx.geometry.Insets?>
 <?import dashbordView.Dashboard?>
-<?import menuBarView.MenuBarButton?>
+<?import menuBarView.MenuBar?>
 <?import timeLineView.TimeLine?> -->
 
 
@@ -37,7 +37,7 @@
         <Graph fx:id="graph"></Graph>
     </center>
     <top>
-        <MenuBarButton fx:id="menuButton"></MenuBarButton>
+        <MenuBar fx:id="menuButton"></MenuBar>
     </top>
     <left>
         <FeatureList fx:id="featList"></FeatureList>

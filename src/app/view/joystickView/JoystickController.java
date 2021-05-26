@@ -28,13 +28,38 @@ public class JoystickController implements Initializable {
         //do not write here!!!
     }
 
-   /* @FXML
-    private void initialize() {
-      init();
-    }
+    /* @FXML
+     private void initialize() {
+       init();
+     }
 
-    public void init() {
-    	  //get the setting value and initialize
+     public void init() {
+           //get the setting value and initialize
+         minTrot = new SimpleDoubleProperty(-1);
+         maxTrot = new SimpleDoubleProperty(1);
+         minRad = new SimpleDoubleProperty(-1);
+         maxRad = new SimpleDoubleProperty(1);
+         minele = new SimpleDoubleProperty(0);
+         maxele = new SimpleDoubleProperty(joy.getHeight());
+         minali = new SimpleDoubleProperty(0);
+         maxali = new SimpleDoubleProperty(joy.getWidth());
+
+
+         //end
+         this.throttle.setMin(minTrot.getValue());
+         this.throttle.setMax(maxTrot.getValue());
+         this.rudder.setMin(minRad.getValue());
+         this.rudder.setMax(maxRad.getValue());
+
+         this.throttle.setValue((maxTrot.getValue()-minTrot.getValue())/2);
+         this.rudder.setValue( (maxRad.getValue()-minRad.getValue())/2 );
+         this.aileron = new SimpleDoubleProperty(joy.getWidth() / 2);
+         this.elevator = new SimpleDoubleProperty(joy.getHeight() / 2);
+         paint();
+     }*/
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        //get the setting value and initialize
         minTrot = new SimpleDoubleProperty(-1);
         maxTrot = new SimpleDoubleProperty(1);
         minRad = new SimpleDoubleProperty(-1);
@@ -51,45 +76,21 @@ public class JoystickController implements Initializable {
         this.rudder.setMin(minRad.getValue());
         this.rudder.setMax(maxRad.getValue());
 
-        this.throttle.setValue((maxTrot.getValue()-minTrot.getValue())/2);
-        this.rudder.setValue( (maxRad.getValue()-minRad.getValue())/2 );
-        this.aileron = new SimpleDoubleProperty(joy.getWidth() / 2);
-        this.elevator = new SimpleDoubleProperty(joy.getHeight() / 2);
-        paint();
-    }*/
-	@Override
-	public void initialize(URL location, ResourceBundle resources) {
-		  //get the setting value and initialize
-        minTrot = new SimpleDoubleProperty(-1);
-        maxTrot = new SimpleDoubleProperty(1);
-        minRad = new SimpleDoubleProperty(-1);
-        maxRad = new SimpleDoubleProperty(1);
-        minele = new SimpleDoubleProperty(0);
-        maxele = new SimpleDoubleProperty(joy.getHeight());
-        minali = new SimpleDoubleProperty(0);
-        maxali = new SimpleDoubleProperty(joy.getWidth());
-
-
-        //end
-        this.throttle.setMin(minTrot.getValue());
-        this.throttle.setMax(maxTrot.getValue());
-        this.rudder.setMin(minRad.getValue());
-        this.rudder.setMax(maxRad.getValue());
-
-        this.throttle.setValue((maxTrot.getValue()-minTrot.getValue())/2);
-        this.rudder.setValue( (maxRad.getValue()-minRad.getValue())/2 );
+        this.throttle.setValue((maxTrot.getValue() - minTrot.getValue()) / 2);
+        this.rudder.setValue((maxRad.getValue() - minRad.getValue()) / 2);
         this.aileron = new SimpleDoubleProperty();
         this.aileron.set(joy.getWidth() / 2);
         this.elevator = new SimpleDoubleProperty();
         this.elevator.set(joy.getHeight() / 2);
-        
-        this.elevator.addListener(v->paint());
-        this.aileron.addListener(v->paint());
-      
-		
-	}
+
+        this.elevator.addListener(v -> paint());
+        this.aileron.addListener(v -> paint());
+
+
+    }
+
     public void paint() {
-    	System.out.println("paint: "+this.aileron.getValue()+"  "+this.elevator.getValue());
+        System.out.println("paint: " + this.aileron.getValue() + "  " + this.elevator.getValue());
         GraphicsContext gc = joy.getGraphicsContext2D();
         gc.clearRect(0, 0, joy.getWidth(), joy.getHeight());
         gc.strokeRect(0, 0, joy.getWidth(), joy.getHeight());
@@ -144,7 +145,7 @@ public class JoystickController implements Initializable {
 
     public void setAileron(DoubleProperty dPali) {
         aileron = dPali;
-        
+
     }
 
     public DoubleProperty getElevator() {
@@ -219,8 +220,6 @@ public class JoystickController implements Initializable {
     public void setMaxali(DoubleProperty maxali) {
         this.maxali = maxali;
     }
-
-
 
 
 }
