@@ -2,6 +2,7 @@ package app.viewModel;
 
 import app.model.AppModel;
 import app.model.algorithms.TimeSeries;
+import app.view.application.GUIController;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -9,7 +10,7 @@ import javafx.beans.property.SimpleStringProperty;
 import java.util.Observable;
 import java.util.Observer;
 
-public class AppViewModel implements Observer {
+public class AppViewModel extends Observable implements Observer {
     private AppModel appModel;
     private SimpleDoubleProperty aileron, elevator, rudder, throttle, airspeed, heading;
     private SimpleDoubleProperty altitude, yaw, roll, pitch;
@@ -29,6 +30,7 @@ public class AppViewModel implements Observer {
         this.timeStamp = new SimpleDoubleProperty();
         this.appModel = am;
         am.addObserver(this);
+   
     }
 
     public void setTimeSeries(String timeSeries) {
@@ -43,10 +45,6 @@ public class AppViewModel implements Observer {
     }
 
 
-    @Override
-    public void update(Observable o, Object arg) {
-
-    }
 
     public AppModel getAppModel() {
         return appModel;
@@ -188,6 +186,13 @@ public class AppViewModel implements Observer {
     public void setTimeStamp(double timeStamp) {
         this.timeStamp.set(timeStamp);
     }
+
+    
+	@Override
+	public void update(Observable o, Object arg) {
+		// TODO Auto-generated method stub
+		
+	}
 
 
 }

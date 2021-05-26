@@ -5,8 +5,10 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.AnchorPane;
 import java.util.Objects;
+import java.util.Observable;
+import java.util.Observer;
 
-public class Dashboard extends AnchorPane {
+public class Dashboard extends AnchorPane  {
 
 	  private  DashboardController dashboardController;
 	  private  DoubleProperty altitude, yaw  , pitch, roll;
@@ -21,12 +23,12 @@ public class Dashboard extends AnchorPane {
             AnchorPane dash = fxl.load(Objects.requireNonNull(getClass().getResource("Dashboard.fxml")).openStream());
             dashboardController = fxl.getController();
            
-            roll = new SimpleDoubleProperty();
-            pitch = new SimpleDoubleProperty();
-            heading = new SimpleDoubleProperty();
-            yaw = new SimpleDoubleProperty();
-            airspeed = new SimpleDoubleProperty();
-            altitude = new SimpleDoubleProperty();
+            roll = new SimpleDoubleProperty(dashboardController.getDpRoll().getValue());
+            pitch = new SimpleDoubleProperty(dashboardController.getDpPitch().getValue());
+            heading = new SimpleDoubleProperty(dashboardController.getDpHeading().getValue());
+            yaw = new SimpleDoubleProperty(dashboardController.getDpYaw().getValue());
+            airspeed = new SimpleDoubleProperty(dashboardController.getDpAirspeed().getValue());
+            altitude = new SimpleDoubleProperty(dashboardController.getDpAltitude().getValue());
             
             dashboardController.getDpAirspeed().bind(airspeed);
             dashboardController.getDpHeading().bind(heading);
@@ -103,6 +105,7 @@ public class Dashboard extends AnchorPane {
 
 	}
 
+	
 
     
 }

@@ -1,13 +1,17 @@
 package app.view.joystickView;
 
+import java.net.URL;
+import java.util.ResourceBundle;
+
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Slider;
 
-public class JoystickController {
+public class JoystickController implements Initializable {
 
     @FXML
     private Slider throttle;// zir y
@@ -24,7 +28,7 @@ public class JoystickController {
         //do not write here!!!
     }
 
-    @FXML
+   /* @FXML
     private void initialize() {
       init();
     }
@@ -52,32 +56,60 @@ public class JoystickController {
         this.aileron = new SimpleDoubleProperty(joy.getWidth() / 2);
         this.elevator = new SimpleDoubleProperty(joy.getHeight() / 2);
         paint();
-    }
-    
+    }*/
+	@Override
+	public void initialize(URL location, ResourceBundle resources) {
+		  //get the setting value and initialize
+        minTrot = new SimpleDoubleProperty(-1);
+        maxTrot = new SimpleDoubleProperty(1);
+        minRad = new SimpleDoubleProperty(-1);
+        maxRad = new SimpleDoubleProperty(1);
+        minele = new SimpleDoubleProperty(0);
+        maxele = new SimpleDoubleProperty(joy.getHeight());
+        minali = new SimpleDoubleProperty(0);
+        maxali = new SimpleDoubleProperty(joy.getWidth());
+
+
+        //end
+        this.throttle.setMin(minTrot.getValue());
+        this.throttle.setMax(maxTrot.getValue());
+        this.rudder.setMin(minRad.getValue());
+        this.rudder.setMax(maxRad.getValue());
+
+        this.throttle.setValue((maxTrot.getValue()-minTrot.getValue())/2);
+        this.rudder.setValue( (maxRad.getValue()-minRad.getValue())/2 );
+        this.aileron = new SimpleDoubleProperty();
+        this.aileron.set(joy.getWidth() / 2);
+        this.elevator = new SimpleDoubleProperty();
+        this.elevator.set(joy.getHeight() / 2);
+        
+        this.elevator.addListener(v->paint());
+        this.aileron.addListener(v->paint());
+      
+		
+	}
     public void paint() {
+    	System.out.println("paint: "+this.aileron.getValue()+"  "+this.elevator.getValue());
         GraphicsContext gc = joy.getGraphicsContext2D();
         gc.clearRect(0, 0, joy.getWidth(), joy.getHeight());
         gc.strokeRect(0, 0, joy.getWidth(), joy.getHeight());
-        gc.strokeOval(getAli() - 30, getEle() - 30, 60, 60);
+        gc.strokeOval(this.getAli() - 30, this.getEle() - 30, 60, 60);
     }
 
     public double getEle() {
         //get the value noramllaiz after get the canvas size
         double len = Math.abs(maxele.getValue() - minele.getValue());
         double temp = Math.abs(this.elevator.getValue() - minele.getValue());
-        double result = (temp / (len)) * (joy.getHeight());
-        System.out.println(result);
+        double result = (temp / len) * (joy.getHeight());
         return result;
     }
 
 
     public double getAli() {
         //get the value noramllaiz after get the canvas size
-
         double len = Math.abs(maxali.getValue() - minali.getValue());
         double temp = Math.abs(this.aileron.getValue() - minali.getValue());
-        double result = (temp / (len)) * (joy.getHeight());
-        System.out.println(result);
+        double result = (temp / len) * (joy.getHeight());
         return result;
 
     }
@@ -112,7 +144,6 @@ public class JoystickController {
 
     public void setAileron(DoubleProperty dPali) {
         aileron = dPali;
-        paint();
         
     }
 
@@ -122,7 +153,7 @@ public class JoystickController {
 
     public void setElevator(DoubleProperty dPele) {
         elevator = dPele;
-        paint();
+
     }
 
     public DoubleProperty getMinTrot() {
@@ -188,6 +219,8 @@ public class JoystickController {
     public void setMaxali(DoubleProperty maxali) {
         this.maxali = maxali;
     }
+
+
 
 
 }

@@ -1,5 +1,8 @@
 package app.view.application;
 
+import java.util.Observable;
+import java.util.Observer;
+
 import app.view.dashboardView.Dashboard;
 import app.view.featureListView.FeatureList;
 import app.view.graphView.Graph;
@@ -39,11 +42,23 @@ public class GUIController {
 
     public void init(AppViewModel vm) {
         this.vm = vm;
+     
         joystick.throttleProperty().bind(vm.throttleProperty());
         joystick.rudderProperty().bind(vm.rudderProperty());
+        
+        vm.aileronProperty().setValue( joystick.getAileron() );
         joystick.aileronProperty().bind(vm.aileronProperty());
+
+        vm.elevatorProperty().setValue( joystick.getElevator() );
         joystick.elevatorProperty().bind(vm.elevatorProperty());
 
+       
+        dashboard.getAltitude().bind(vm.altitudeProperty());
+        dashboard.getYaw().bind(vm.yawProperty());
+        dashboard.getPitch().bind(vm.pitchProperty());
+        dashboard.getRoll().bind(vm.rollProperty());
+        dashboard.getAirspeed().bind(vm.airspeedProperty());
+        dashboard.getHeading().bind(vm.headingProperty());
 
     }
 
@@ -94,6 +109,8 @@ public class GUIController {
     public void setTimeLine(TimeLine timeLine) {
         this.timeLine = timeLine;
     }
+
+
 
 
 }

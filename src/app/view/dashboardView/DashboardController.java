@@ -1,12 +1,16 @@
 package app.view.dashboardView;
 
+import java.net.URL;
+import java.util.ResourceBundle;
+
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 
-public class DashboardController {
+public class DashboardController implements Initializable {
 
     @FXML
     private Text roll;
@@ -27,14 +31,14 @@ public class DashboardController {
     public DashboardController() {
     }
 
-    @FXML
+    /*@FXML
     private void initialize() {
  
     	init();
 
     }
     
-    public void init() {
+   public void init() {
         //get the setting value and initialize
 
     	dpHeading = new SimpleDoubleProperty(0);
@@ -49,7 +53,29 @@ public class DashboardController {
        updateImages();
        updateText();
     }
-    
+    */
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+    	//get the setting value and initialize
+
+    	dpHeading = new SimpleDoubleProperty(0);
+    	dpAirspeed = new SimpleDoubleProperty(0);
+    	dpRoll = new SimpleDoubleProperty(0);
+    	dpYaw = new SimpleDoubleProperty(0);
+    	dpPitch = new SimpleDoubleProperty(0);
+    	dpAltitude = new SimpleDoubleProperty(0);
+    	
+    	//end
+    	dpRoll.addListener( v->updateText());
+    	dpYaw.addListener( v->updateText());
+    	dpPitch.addListener( v->updateText());
+    	dpAltitude.addListener( v->updateText());
+    	
+    	dpHeading.addListener(v->updateImages());
+    	dpAirspeed.addListener(v->updateImages());
+      
+    	
+    }
     public void updateImages() {
     	 heading.setRotate(dpHeading.getValue());
          airspeed.setRotate(dpAirspeed.getValue());
@@ -157,6 +183,7 @@ public class DashboardController {
 	public void setDpAltitude(DoubleProperty dpAltitude) {
 		this.dpAltitude = dpAltitude;
 	}
+
 
 
 
