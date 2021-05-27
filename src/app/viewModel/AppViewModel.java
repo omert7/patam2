@@ -4,22 +4,31 @@ import app.model.AppModel;
 import app.model.algorithms.TimeSeries;
 import app.view.application.GUIController;
 import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.collections.ObservableList;
 
 import java.util.Observable;
 import java.util.Observer;
 
 public class AppViewModel extends Observable implements Observer {
     private AppModel appModel;
+    private TimeSeries ts;
     private SimpleDoubleProperty aileron, elevator, rudder, throttle, airspeed, heading;
     private SimpleDoubleProperty altitude, yaw, roll, pitch;
     private DoubleProperty timeStamp;
-
+    private StringProperty algoFile,csvFile ,settingFile ;
+    private ListProperty<String> listView;
     public AppViewModel(AppModel am) {
+    	//joystick
         this.aileron = new SimpleDoubleProperty();
         this.elevator = new SimpleDoubleProperty();
         this.throttle = new SimpleDoubleProperty();
+        //dashbord
         this.rudder = new SimpleDoubleProperty();
         this.airspeed = new SimpleDoubleProperty();
         this.heading = new SimpleDoubleProperty();
@@ -27,12 +36,39 @@ public class AppViewModel extends Observable implements Observer {
         this.pitch = new SimpleDoubleProperty();
         this.roll = new SimpleDoubleProperty();
         this.altitude = new SimpleDoubleProperty();
+        //list
+        this.listView=new SimpleListProperty<>();
+        //time
         this.timeStamp = new SimpleDoubleProperty();
-        this.appModel = am;
+        //menu button
+        algoFile=new SimpleStringProperty();
+        csvFile=new SimpleStringProperty();
+        settingFile=new SimpleStringProperty();
+        csvFile.addListener(v->createTimeSeries());
+        //listView.addListener((ListChangeListener)v->creatList());
         am.addObserver(this);
+        this.appModel = am;
 
     }
 
+  
+
+	private void createTimeSeries()
+    {	
+		String s="C:\\Users\\guyle\\Desktop\\gitProjects\\patam2\\src\\files\\anomaly_flight.csv";
+    	System.out.println(csvFile.getValue());
+    	ts=new TimeSeries(s);
+    	
+    	this.appModel.setTimeSeries(ts);  
+    	listView.addAll(appModel.getTimeSeries().namesOfFeatures);
+    	System.out.println("hi im here");
+    	
+    }
+    
+    
+    
+    
+    
 
     public void setTimeSeries(String timeSeries) {
         this.appModel.setTimeSeries(new TimeSeries(timeSeries));
@@ -187,8 +223,45 @@ public class AppViewModel extends Observable implements Observer {
         this.timeStamp.set(timeStamp);
     }
 
+	public StringProperty getAlgoFile() {
+		return algoFile;
+	}
 
-    @Override
+
+	public void setAlgoFile(StringProperty algoFile) {
+		this.algoFile = algoFile;
+	}
+
+
+	public StringProperty getCsvFile() {
+		return csvFile;
+	}
+
+
+	public void setCsvFile(StringProperty csvFile) {
+		this.csvFile = csvFile;
+	}
+
+
+	public StringProperty getSettingFile() {
+		return settingFile;
+	}
+
+
+	public void setSettingFile(StringProperty settingFile) {
+		this.settingFile = settingFile;
+	}
+
+
+	public ListProperty<String> getListView() {
+		return listView;
+	}
+
+	public void setListView(ListProperty<String> listView) {
+		this.listView = listView;
+	}
+
+	@Override
     public void update(Observable o, Object arg) {
         // TODO Auto-generated method stub
 

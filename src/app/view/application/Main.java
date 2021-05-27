@@ -32,28 +32,29 @@ public class Main extends Application {
             scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
             primaryStage.setScene(scene);
             primaryStage.show();
-            new Thread(() -> {
+            /*new Thread(() -> {
                 try {
-                    while (true) {
-                        Thread.sleep(1000);
+                	int i=0;
+                    while (i<10) {
+                        Thread.sleep(3000);
 
 
                         double ele = ThreadLocalRandom.current().nextDouble(0, 150);
                         double ail = ThreadLocalRandom.current().nextDouble(0, 150);
-                        System.out.println("hi guy");
                         vm.setRoll(ThreadLocalRandom.current().nextDouble(0, 150));
                         vm.setPitch(ThreadLocalRandom.current().nextDouble(0, 150));
                         vm.setYaw(ThreadLocalRandom.current().nextDouble(0, 150));
                         vm.setAirspeed(ThreadLocalRandom.current().nextDouble(0, 150));
                         vm.setElevator(ele);
                         vm.setAileron(ail);
+                        i++;
                     }
                 } catch (InterruptedException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
 
-            }).start();
+            }).start();*/
 
         } catch (Exception e) {
             e.printStackTrace();

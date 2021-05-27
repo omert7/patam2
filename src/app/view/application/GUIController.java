@@ -42,10 +42,8 @@ public class GUIController {
      
         joystick.throttleProperty().bind(vm.throttleProperty());
         joystick.rudderProperty().bind(vm.rudderProperty());
-        
         vm.aileronProperty().setValue( joystick.getAileron() );
         joystick.aileronProperty().bind(vm.aileronProperty());
-
         vm.elevatorProperty().setValue( joystick.getElevator() );
         joystick.elevatorProperty().bind(vm.elevatorProperty());
 
@@ -55,6 +53,14 @@ public class GUIController {
         dashboard.getRoll().bind(vm.rollProperty());
         dashboard.getAirspeed().bind(vm.airspeedProperty());
         dashboard.getHeading().bind(vm.headingProperty());
+        
+        menuButton.getsAlgoFile().bindBidirectional(vm.getAlgoFile());
+        menuButton.getsCsvFile().bindBidirectional(vm.getCsvFile());
+        menuButton.getsSettingFile().bindBidirectional(vm.getSettingFile());
+        
+        featList.getListViewP().bind(vm.getListView());
+        
+        
     }
 
     public FeatureList getFeatList() {

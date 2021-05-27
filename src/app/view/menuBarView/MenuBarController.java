@@ -28,9 +28,10 @@ public class MenuBarController {
     @FXML
     private void initialize() {
         //
-        sSettingFile = new SimpleStringProperty();
-        sCsvFile = new SimpleStringProperty();
-        sAlgoFile = new SimpleStringProperty();
+        sSettingFile = new SimpleStringProperty("");
+        sCsvFile = new SimpleStringProperty("");
+        sAlgoFile = new SimpleStringProperty("");
+  
     }
 
     @FXML
@@ -49,7 +50,7 @@ public class MenuBarController {
         fc.getExtensionFilters().add(new ExtensionFilter(" csv files", "*.csv"));
         File f = fc.showOpenDialog(null);
         if (f != null) {
-            sCsvFile.setValue(f.getName());
+            sCsvFile.setValue(f.getPath());
         }
     }
 

@@ -4,6 +4,7 @@ package app.model;
 import app.model.algorithms.TimeSeries;
 
 import java.util.Observable;
+import java.util.Observer;
 
 public class AppModel extends Observable {
     private FlightSettings flightSettings;
@@ -14,6 +15,7 @@ public class AppModel extends Observable {
         flightSettings = new FlightSettings(settingsFile);
         flightSettings.loadSettings();
     }
+    
 
     public FlightSettings getFlightSettings() {
         return flightSettings;
@@ -34,4 +36,6 @@ public class AppModel extends Observable {
     public void setAileron(double value, int time) {
 
     }
+
+	
 }
