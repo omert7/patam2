@@ -14,7 +14,7 @@ public class GUIController {
 
     private AppViewModel vm;
     @FXML
-    private FeatureList featList;
+    private FeatureList featureList;
     @FXML
     private Joystick joystick;
     @FXML
@@ -22,7 +22,7 @@ public class GUIController {
     @FXML
     private Graph graph;
     @FXML
-    private MenuBar menuButton;
+    private MenuBar menuBar;
     @FXML
     private TimeLine timeLine;
 
@@ -39,12 +39,12 @@ public class GUIController {
 
     public void init(AppViewModel vm) {
         this.vm = vm;
-     
+
         joystick.throttleProperty().bind(vm.throttleProperty());
         joystick.rudderProperty().bind(vm.rudderProperty());
-        vm.aileronProperty().setValue( joystick.getAileron() );
+        vm.aileronProperty().setValue(joystick.getAileron());
         joystick.aileronProperty().bind(vm.aileronProperty());
-        vm.elevatorProperty().setValue( joystick.getElevator() );
+        vm.elevatorProperty().setValue(joystick.getElevator());
         joystick.elevatorProperty().bind(vm.elevatorProperty());
 
         dashboard.getAltitude().bind(vm.altitudeProperty());
@@ -53,22 +53,20 @@ public class GUIController {
         dashboard.getRoll().bind(vm.rollProperty());
         dashboard.getAirspeed().bind(vm.airspeedProperty());
         dashboard.getHeading().bind(vm.headingProperty());
-        
-        menuButton.getsAlgoFile().bindBidirectional(vm.getAlgoFile());
-        menuButton.getsCsvFile().bindBidirectional(vm.getCsvFile());
-        menuButton.getsSettingFile().bindBidirectional(vm.getSettingFile());
-        
-        featList.getListViewP().bind(vm.getListView());
-        
-        
+
+        menuBar.getsAlgoFile().bindBidirectional(vm.getAlgoFile());
+        menuBar.getsCsvFile().bindBidirectional(vm.getCsvFile());
+        menuBar.getsSettingFile().bindBidirectional(vm.getSettingFile());
+//        featureList.getListViewP().bind((vm.getListView());
+
     }
 
-    public FeatureList getFeatList() {
-        return featList;
+    public FeatureList getFeatureList() {
+        return featureList;
     }
 
-    public void setFeatList(FeatureList featList) {
-        this.featList = featList;
+    public void setFeatureList(FeatureList featureList) {
+        this.featureList = featureList;
     }
 
     public Joystick getJoystick() {
@@ -95,12 +93,12 @@ public class GUIController {
         this.graph = graph;
     }
 
-    public MenuBar getMenuButton() {
-        return menuButton;
+    public MenuBar getMenuBar() {
+        return menuBar;
     }
 
-    public void setMenuButton(MenuBar menuButton) {
-        this.menuButton = menuButton;
+    public void setMenuBar(MenuBar menuBar) {
+        this.menuBar = menuBar;
     }
 
     public TimeLine getTimeLine() {
@@ -110,8 +108,6 @@ public class GUIController {
     public void setTimeLine(TimeLine timeLine) {
         this.timeLine = timeLine;
     }
-
-
 
 
 }

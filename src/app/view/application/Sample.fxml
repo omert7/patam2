@@ -37,10 +37,10 @@
         <Graph fx:id="graph"></Graph>
     </center>
     <top>
-        <MenuBar fx:id="menuButton"></MenuBar>
+        <MenuBar fx:id="menuBar"></MenuBar>
     </top>
     <left>
-        <FeatureList fx:id="featList"></FeatureList>
+        <FeatureList fx:id="featureList"></FeatureList>
     </left>
     <bottom>
         <TimeLine fx:id="timeLine"></TimeLine>

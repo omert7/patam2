@@ -18,7 +18,7 @@ public class TimeSeries {
     public ArrayList<float[]> data = new ArrayList<float[]>();
     public float coral; //the threashold we choose
     public int totalTime;
-   
+
 
     public TimeSeries(String Path) {
 
@@ -51,7 +51,7 @@ public class TimeSeries {
                     counter++;
                 }
                 this.totalTime = counter;
-               
+
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -110,17 +110,19 @@ public class TimeSeries {
         } else return data.get(time - 1)[sPlace];
 
     }
+
     public float getValAtSepcifiTime(int time, int request)
     //we get key and feature name
     //we return the feature at that time
     {
 
-      
+
         if (request == -1) {
             return -1;
         } else return data.get(time - 1)[request];
 
     }
+
     public float getCoral() {
         return coral;
     }
