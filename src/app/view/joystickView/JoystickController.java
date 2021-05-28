@@ -69,6 +69,9 @@ public class JoystickController implements Initializable {
         minali = new SimpleDoubleProperty(0);
         maxali = new SimpleDoubleProperty(joy.getWidth());
 
+        minRad.addListener(v -> {
+            this.rudder.setMin(this.minRad.getValue());
+        }); //TODO omer add for all properties
 
         //end
         this.throttle.setMin(minTrot.getValue());

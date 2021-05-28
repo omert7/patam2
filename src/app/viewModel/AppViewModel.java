@@ -5,6 +5,7 @@ import app.model.algorithms.TimeSeries;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+
 import java.util.Observable;
 import java.util.Observer;
 
@@ -15,7 +16,7 @@ public class AppViewModel extends Observable implements Observer {
     private SimpleDoubleProperty altitude, yaw, roll, pitch;
     private DoubleProperty timeStamp;
     private StringProperty algoFile, csvFile, settingFile;
-    private ObservableList<String> listView;
+    private ListProperty<String> listView;
 
     public AppViewModel(AppModel am) {
         //joystick
@@ -30,28 +31,52 @@ public class AppViewModel extends Observable implements Observer {
         this.pitch = new SimpleDoubleProperty();
         this.roll = new SimpleDoubleProperty();
         this.altitude = new SimpleDoubleProperty();
-        //list
-        this.listView = FXCollections.observableArrayList();
-        //time
+        ObservableList<String> observableList = FXCollections.observableArrayList();
+        this.listView = new SimpleListProperty<>(observableList);
         this.timeStamp = new SimpleDoubleProperty();
+
         //menu button
         algoFile = new SimpleStringProperty();
         csvFile = new SimpleStringProperty();
-        settingFile = new SimpleStringProperty();
+        settingFile = new SimpleStringProperty(); //TODO add listener and function for settingsFile
         csvFile.addListener(v -> createTimeSeries());
         //listView.addListener((ListChangeListener)v->creatList());
         am.addObserver(this);
         this.appModel = am;
-
     }
 
 
     private void createTimeSeries() {
         listView.clear();
-        ts = new TimeSeries(csvFile.getValue());
-        this.appModel.setTimeSeries(ts);
-        listView.addAll(appModel.getTimeSeries().namesOfFeatures);
-        System.out.println("hi im here");
+        String s = this.csvFile.getValue();
+        //	if(checkCsvFile())
+        if (true) {
+            this.appModel.setTimeSeries(new TimeSeries(s));
+            this.listView.clear();
+            this.listView.addAll(appModel.getTimeSeries().namesOfFeatures);
+            resetFilghtProp();
+        } else {
+            //handel with wrong file!!
+        }
+    }
+
+
+    private void resetFilghtProp() {
+        //joystick
+        this.aileron.set(75); ///TODO fix
+        this.elevator.set(75);
+        this.throttle.set(0);
+        //dashbord
+
+        this.rudder.set(0);
+        this.airspeed.set(0);
+        this.heading.set(0);
+        this.yaw.set(0);
+        this.pitch.set(0);
+        this.roll.set(0);
+        this.altitude.set(0);
+
+        this.timeStamp.set(0);
     }
 
 
@@ -238,11 +263,11 @@ public class AppViewModel extends Observable implements Observer {
     }
 
 
-    public ObservableList<String> getListView() {
+    public ListProperty<String> getListView() {
         return listView;
     }
 
-    public void setListView(ObservableList<String> listView) {
+    public void setListView(SimpleListProperty<String> listView) {
         this.listView = listView;
     }
 

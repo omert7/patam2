@@ -1,7 +1,8 @@
 {
   "ip": "127.0.0.1",
   "port": 5400,
-  "samplingRatePerSec": 1.5,
+  "samplingRatePerSec": 1,
+  ## algorithtm path & valid flight
   "featuresSettings": [
     {
       "FeatureName": "aileron",

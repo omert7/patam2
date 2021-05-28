@@ -57,8 +57,7 @@ public class GUIController {
         menuBar.getsAlgoFile().bindBidirectional(vm.getAlgoFile());
         menuBar.getsCsvFile().bindBidirectional(vm.getCsvFile());
         menuBar.getsSettingFile().bindBidirectional(vm.getSettingFile());
-//        featureList.getListViewP().bind((vm.getListView());
-
+        featureList.getListViewP().bind(vm.getListView());
     }
 
     public FeatureList getFeatureList() {

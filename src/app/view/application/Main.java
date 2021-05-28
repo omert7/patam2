@@ -9,6 +9,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 
 import java.util.ArrayList;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class Main extends Application {
     @Override
@@ -28,19 +29,17 @@ public class Main extends Application {
             new Thread(() -> {
                 try {
                     Thread.sleep(2000);
-                    while (true) {
-                        Thread.sleep(1000);
-//                        double ele = ThreadLocalRandom.current().nextDouble(0, 150);
-//                        double ail = ThreadLocalRandom.current().nextDouble(0, 150);
-//                        vm.setRoll(ThreadLocalRandom.current().nextDouble(0, 150));
-//                        vm.setPitch(ThreadLocalRandom.current().nextDouble(0, 150));
-//                        vm.setYaw(ThreadLocalRandom.current().nextDouble(0, 150));
-//                        vm.setAirspeed(ThreadLocalRandom.current().nextDouble(0, 150));
+//                    double ele = ThreadLocalRandom.current().nextDouble(0, 150);
+//                    double ail = ThreadLocalRandom.current().nextDouble(0, 150);
+//                    vm.setRoll(ThreadLocalRandom.current().nextDouble(0, 150));
+//                    vm.setPitch(ThreadLocalRandom.current().nextDouble(0, 150));
+//                    vm.setYaw(ThreadLocalRandom.current().nextDouble(0, 150));
+//                    vm.setAirspeed(ThreadLocalRandom.current().nextDouble(0, 150));
 //                        vm.setElevator(ele);
 //                        vm.setAileron(ail);
-                        System.out.println(vm.getListView());
-                        System.out.println(view.getFeatureList().getListViewP());
-                    }
+//                        System.out.println(vm.getListView());
+//                        System.out.println(view.getFeatureList().getListViewP());
+
                 } catch (InterruptedException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();

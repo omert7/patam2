@@ -19,7 +19,7 @@ public class FeatureListController {
     @FXML
     private void initialize() {
 
-        listView.getItems().clear();
+//        listView.getItems().clear();
         listViewP = new SimpleListProperty<>();
         listView.itemsProperty().bind(listViewP);
     }
