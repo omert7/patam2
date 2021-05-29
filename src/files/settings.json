@@ -1,8 +1,10 @@
 {
   "ip": "127.0.0.1",
   "port": 5400,
-  "samplingRatePerSec": 1,
-  ## algorithtm path & valid flight
+  "samplingRatePerSec": 10,
+  "chosenAlgorithmPath": "/home/omert/algo",
+  "validFlightPath": "/home/omert/reg_flight.csv",
+
   "featuresSettings": [
     {
       "FeatureName": "aileron",

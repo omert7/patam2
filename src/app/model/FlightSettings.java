@@ -3,12 +3,15 @@ package app.model;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.*;
 
 public class FlightSettings {
     private List<FlightFeature> flightFeatureList;
+    private String validFlightPath;
+    private String chosenAlgorithmPath;
     private String simulatorIp;
     private long simulatorPort;
     private double simulatorSpeed;
@@ -27,10 +30,12 @@ public class FlightSettings {
             JSONObject jo = (JSONObject) obj;
 
             this.simulatorIp = (String) jo.get("ip");
+            this.chosenAlgorithmPath = (String) jo.get("chosenAlgorithmPath");
+            this.validFlightPath = (String) jo.get("validFlightPath");
             this.simulatorPort = (long) jo.get("port");
-            this.simulatorSpeed = ((Long) jo.get("samplingRatePerSec")).doubleValue();
+            this.simulatorSpeed = ((Long) jo.get("samplingRatePerSec")).doubleValue() / 10; // divide by 10 for x per sec
 
-            if(this.simulatorSpeed<0.1){
+            if (this.simulatorSpeed < 0.1) {
                 throw new Exception("samplingRatePerSec is below 0.1");
             }
 
@@ -89,4 +94,22 @@ public class FlightSettings {
     public void setSettingsFile(String settingsFile) {
         this.settingsFile = settingsFile;
     }
+
+
+    public String getValidFlightPath() {
+        return validFlightPath;
+    }
+
+    public void setValidFlightPath(String validFlightPath) {
+        this.validFlightPath = validFlightPath;
+    }
+
+    public String getChosenAlgorithmPath() {
+        return chosenAlgorithmPath;
+    }
+
+    public void setChosenAlgorithmPath(String chosenAlgorithmPath) {
+        this.chosenAlgorithmPath = chosenAlgorithmPath;
+    }
+
 }

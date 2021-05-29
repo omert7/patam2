@@ -21,70 +21,56 @@ public class JoystickController implements Initializable {
     private Canvas joy;
 
     private DoubleProperty aileron, elevator;
-    private DoubleProperty minTrot, maxTrot, minRad, maxRad;
-    private DoubleProperty minele, maxele, minali, maxali;
+    private DoubleProperty minThrottle, maxThrottle, minRudder, maxRudder;
+    private DoubleProperty minElevator, maxElevator, minAileron, maxAileron;
+    private DoubleProperty centerCircle;
 
     public JoystickController() {
         //do not write here!!!
     }
 
-    /* @FXML
-     private void initialize() {
-       init();
-     }
-
-     public void init() {
-           //get the setting value and initialize
-         minTrot = new SimpleDoubleProperty(-1);
-         maxTrot = new SimpleDoubleProperty(1);
-         minRad = new SimpleDoubleProperty(-1);
-         maxRad = new SimpleDoubleProperty(1);
-         minele = new SimpleDoubleProperty(0);
-         maxele = new SimpleDoubleProperty(joy.getHeight());
-         minali = new SimpleDoubleProperty(0);
-         maxali = new SimpleDoubleProperty(joy.getWidth());
-
-
-         //end
-         this.throttle.setMin(minTrot.getValue());
-         this.throttle.setMax(maxTrot.getValue());
-         this.rudder.setMin(minRad.getValue());
-         this.rudder.setMax(maxRad.getValue());
-
-         this.throttle.setValue((maxTrot.getValue()-minTrot.getValue())/2);
-         this.rudder.setValue( (maxRad.getValue()-minRad.getValue())/2 );
-         this.aileron = new SimpleDoubleProperty(joy.getWidth() / 2);
-         this.elevator = new SimpleDoubleProperty(joy.getHeight() / 2);
-         paint();
-     }*/
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         //get the setting value and initialize
-        minTrot = new SimpleDoubleProperty(-1);
-        maxTrot = new SimpleDoubleProperty(1);
-        minRad = new SimpleDoubleProperty(-1);
-        maxRad = new SimpleDoubleProperty(1);
-        minele = new SimpleDoubleProperty(0);
-        maxele = new SimpleDoubleProperty(joy.getHeight());
-        minali = new SimpleDoubleProperty(0);
-        maxali = new SimpleDoubleProperty(joy.getWidth());
+        minThrottle = new SimpleDoubleProperty(-1);
+        maxThrottle = new SimpleDoubleProperty(1);
+        minRudder = new SimpleDoubleProperty(-1);
+        maxRudder = new SimpleDoubleProperty(1);
+        centerCircle = new SimpleDoubleProperty(joy.getHeight() / 2);
+        minElevator = new SimpleDoubleProperty(0);
+        maxElevator = new SimpleDoubleProperty(joy.getHeight());
+        minAileron = new SimpleDoubleProperty(0);
+        maxAileron = new SimpleDoubleProperty(joy.getWidth());
 
-        minRad.addListener(v -> {
-            this.rudder.setMin(this.minRad.getValue());
-        }); //TODO omer add for all properties
+        this.throttle.setMajorTickUnit(1000);
+        this.rudder.setMajorTickUnit(1000);
+
+        minRudder.addListener(v -> {
+            this.rudder.setMin(this.minRudder.getValue());
+        });
+
+        maxThrottle.addListener(v -> {
+            this.throttle.setMax(this.maxThrottle.getValue());
+        });
+        maxRudder.addListener(v -> {
+            this.rudder.setMax(this.maxRudder.getValue());
+        });
+        minRudder.addListener(v -> {
+            this.rudder.setMin(this.minRudder.getValue());
+        });
 
         //end
-        this.throttle.setMin(minTrot.getValue());
-        this.throttle.setMax(maxTrot.getValue());
-        this.rudder.setMin(minRad.getValue());
-        this.rudder.setMax(maxRad.getValue());
+        this.throttle.setMin(minThrottle.getValue());
+        this.throttle.setMax(maxThrottle.getValue());
+        this.rudder.setMin(minRudder.getValue());
+        this.rudder.setMax(maxRudder.getValue());
 
-        this.throttle.setValue((maxTrot.getValue() - minTrot.getValue()) / 2);
-        this.rudder.setValue((maxRad.getValue() - minRad.getValue()) / 2);
+        this.throttle.setValue((maxThrottle.getValue() - minThrottle.getValue()) / 2);
+        this.rudder.setValue((maxRudder.getValue() - minRudder.getValue()) / 2);
         this.aileron = new SimpleDoubleProperty();
-        this.aileron.set(joy.getWidth() / 2);
+        this.aileron.set(centerCircle.getValue());
         this.elevator = new SimpleDoubleProperty();
-        this.elevator.set(joy.getHeight() / 2);
+        this.elevator.set(centerCircle.getValue());
 
         this.elevator.addListener(v -> paint());
         this.aileron.addListener(v -> paint());
@@ -102,19 +88,17 @@ public class JoystickController implements Initializable {
 
     public double getEle() {
         //get the value noramllaiz after get the canvas size
-        double len = Math.abs(maxele.getValue() - minele.getValue());
-        double temp = Math.abs(this.elevator.getValue() - minele.getValue());
-        double result = (temp / len) * (joy.getHeight());
-        return result;
+        double len = Math.abs(maxElevator.getValue() - minElevator.getValue());
+        double temp = Math.abs(this.elevator.getValue() - minElevator.getValue());
+        return (temp / len) * (joy.getHeight());
     }
 
 
     public double getAli() {
         //get the value noramllaiz after get the canvas size
-        double len = Math.abs(maxali.getValue() - minali.getValue());
-        double temp = Math.abs(this.aileron.getValue() - minali.getValue());
-        double result = (temp / len) * (joy.getHeight());
-        return result;
+        double len = Math.abs(maxAileron.getValue() - minAileron.getValue());
+        double temp = Math.abs(this.aileron.getValue() - minAileron.getValue());
+        return (temp / len) * (joy.getHeight());
 
     }
 
@@ -160,69 +144,144 @@ public class JoystickController implements Initializable {
 
     }
 
-    public DoubleProperty getMinTrot() {
-        return minTrot;
+    public DoubleProperty getMinThrottle() {
+        return minThrottle;
     }
 
-    public void setMinTrot(DoubleProperty minTrot) {
-        this.minTrot = minTrot;
+    public void setMinThrottle(DoubleProperty minThrottle) {
+        this.minThrottle = minThrottle;
     }
 
-    public DoubleProperty getMaxTrot() {
-        return maxTrot;
+    public DoubleProperty getMaxThrottle() {
+        return maxThrottle;
     }
 
-    public void setMaxTrot(DoubleProperty maxTrot) {
-        this.maxTrot = maxTrot;
+    public void setMaxThrottle(DoubleProperty maxThrottle) {
+        this.maxThrottle = maxThrottle;
     }
 
-    public DoubleProperty getMinRad() {
-        return minRad;
+    public DoubleProperty getMinRudder() {
+        return minRudder;
     }
 
-    public void setMinRad(DoubleProperty minRad) {
-        this.minRad = minRad;
+    public void setMinRudder(DoubleProperty minRudder) {
+        this.minRudder = minRudder;
     }
 
-    public DoubleProperty getMaxRad() {
-        return maxRad;
+    public DoubleProperty getMaxRudder() {
+        return maxRudder;
     }
 
-    public void setMaxRad(DoubleProperty maxRad) {
-        this.maxRad = maxRad;
+    public void setMaxRudder(DoubleProperty maxRudder) {
+        this.maxRudder = maxRudder;
     }
 
-    public DoubleProperty getMinele() {
-        return minele;
+    public DoubleProperty getMinElevator() {
+        return minElevator;
     }
 
-    public void setMinele(DoubleProperty minele) {
-        this.minele = minele;
+    public void setMinElevator(DoubleProperty minElevator) {
+        this.minElevator = minElevator;
     }
 
-    public DoubleProperty getMaxele() {
-        return maxele;
+    public DoubleProperty getMaxElevator() {
+        return maxElevator;
     }
 
-    public void setMaxele(DoubleProperty maxele) {
-        this.maxele = maxele;
+    public void setMaxElevator(DoubleProperty maxElevator) {
+        this.maxElevator = maxElevator;
     }
 
-    public DoubleProperty getMinali() {
-        return minali;
+    public DoubleProperty getMinAileron() {
+        return minAileron;
     }
 
-    public void setMinali(DoubleProperty minali) {
-        this.minali = minali;
+    public void setMinAileron(DoubleProperty minAileron) {
+        this.minAileron = minAileron;
     }
 
-    public DoubleProperty getMaxali() {
-        return maxali;
+    public DoubleProperty getMaxAileron() {
+        return maxAileron;
     }
 
-    public void setMaxali(DoubleProperty maxali) {
-        this.maxali = maxali;
+    public void setMaxAileron(DoubleProperty maxAileron) {
+        this.maxAileron = maxAileron;
     }
 
 
+    public DoubleProperty minThrottleProperty() {
+        return minThrottle;
+    }
+
+    public void setMinTrot(double minTrot) {
+        this.minThrottle.set(minTrot);
+    }
+
+    public DoubleProperty maxThrottleProperty() {
+        return maxThrottle;
+    }
+
+    public void setMaxTrot(double maxTrot) {
+        this.maxThrottle.set(maxTrot);
+    }
+
+    public DoubleProperty minRudderProperty() {
+        return minRudder;
+    }
+
+    public void setMinRad(double minRad) {
+        this.minRudder.set(minRad);
+    }
+
+    public DoubleProperty maxRudderProperty() {
+        return maxRudder;
+    }
+
+    public void setMaxRad(double maxRad) {
+        this.maxRudder.set(maxRad);
+    }
+
+    public DoubleProperty minElevatorProperty() {
+        return minElevator;
+    }
+
+    public void setMinele(double minele) {
+        this.minElevator.set(minele);
+    }
+
+    public DoubleProperty maxElevatorProperty() {
+        return maxElevator;
+    }
+
+    public void setMaxele(double maxele) {
+        this.maxElevator.set(maxele);
+    }
+
+    public DoubleProperty minAileronProperty() {
+        return minAileron;
+    }
+
+    public void setMinali(double minali) {
+        this.minAileron.set(minali);
+    }
+
+    public DoubleProperty maxAileronProperty() {
+        return maxAileron;
+    }
+
+    public void setMaxali(double maxali) {
+        this.maxAileron.set(maxali);
+    }
+
+    public double getCenterCircle() {
+        return centerCircle.get();
+    }
+
+    public DoubleProperty centerCircleProperty() {
+        return centerCircle;
+    }
+
+    public void setCenterCircle(double centerCircle) {
+        this.centerCircle.set(centerCircle);
+    }
 }

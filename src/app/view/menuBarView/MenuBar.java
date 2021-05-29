@@ -2,7 +2,6 @@ package app.view.menuBarView;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.AnchorPane;
 
@@ -20,8 +19,7 @@ public class MenuBar extends AnchorPane {
             FXMLLoader fxl = new FXMLLoader();
             AnchorPane menuBar = fxl.load(getClass().getResource("MenuBar.fxml").openStream());
             MenuBarController menuBarController = fxl.getController();
-            //aileron=joystickController.aileron;
-            //elevators=joystickController.elevators;
+
             this.getChildren().add(menuBar);
             sSettingFile = new SimpleStringProperty(menuBarController.getsSettingFile().getValue());
             sCsvFile = new SimpleStringProperty(menuBarController.getsCsvFile().getValue());
@@ -30,7 +28,6 @@ public class MenuBar extends AnchorPane {
             menuBarController.getsAlgoFile().bindBidirectional(sAlgoFile);
             menuBarController.getsCsvFile().bindBidirectional(sCsvFile);
             menuBarController.getsSettingFile().bindBidirectional(sSettingFile);
-
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -69,6 +66,5 @@ public class MenuBar extends AnchorPane {
     public void setsAlgoFile(StringProperty sAlgoFile) {
         this.sAlgoFile = sAlgoFile;
     }
-
 
 }

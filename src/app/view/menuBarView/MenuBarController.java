@@ -40,7 +40,7 @@ public class MenuBarController {
         fc.getExtensionFilters().add(new ExtensionFilter("json files", "*.json"));
         File f = fc.showOpenDialog(null);
         if (f != null) {
-            sSettingFile.setValue(f.getName());
+            sSettingFile.setValue(f.getPath());
         }
     }
 
@@ -60,7 +60,7 @@ public class MenuBarController {
         fc.getExtensionFilters().add(new ExtensionFilter("Anomaly detector files", "*.java"));
         File f = fc.showOpenDialog(null);
         if (f != null) {
-            sAlgoFile.setValue(f.getName());
+            sAlgoFile.setValue(f.getPath());
         }
     }
 

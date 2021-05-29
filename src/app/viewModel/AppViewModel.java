@@ -1,10 +1,13 @@
 package app.viewModel;
 
 import app.model.AppModel;
+import app.model.FlightSettings;
 import app.model.algorithms.TimeSeries;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -12,17 +15,30 @@ import java.util.Observer;
 public class AppViewModel extends Observable implements Observer {
     private AppModel appModel;
     private TimeSeries ts;
-    private SimpleDoubleProperty aileron, elevator, rudder, throttle, airspeed, heading;
-    private SimpleDoubleProperty altitude, yaw, roll, pitch;
+    private DoubleProperty aileron, elevator, rudder, throttle, centerCircle;
+    private SimpleDoubleProperty altitude, yaw, roll, pitch, airspeed, heading;
     private DoubleProperty timeStamp;
     private StringProperty algoFile, csvFile, settingFile;
     private ListProperty<String> listView;
+    private DoubleProperty minThrottle, maxThrottle, minRudder, maxRudder;
+    private DoubleProperty minElevator, maxElevator, minAileron, maxAileron;
+
 
     public AppViewModel(AppModel am) {
         //joystick
         this.aileron = new SimpleDoubleProperty();
         this.elevator = new SimpleDoubleProperty();
         this.throttle = new SimpleDoubleProperty();
+        this.centerCircle = new SimpleDoubleProperty();
+        this.minThrottle = new SimpleDoubleProperty();
+        this.maxThrottle = new SimpleDoubleProperty();
+        this.minRudder = new SimpleDoubleProperty();
+        this.maxRudder = new SimpleDoubleProperty();
+        this.minElevator = new SimpleDoubleProperty();
+        this.maxElevator = new SimpleDoubleProperty();
+        this.minAileron = new SimpleDoubleProperty();
+        this.maxAileron = new SimpleDoubleProperty();
+
         //dashboard
         this.rudder = new SimpleDoubleProperty();
         this.airspeed = new SimpleDoubleProperty();
@@ -38,37 +54,53 @@ public class AppViewModel extends Observable implements Observer {
         //menu button
         algoFile = new SimpleStringProperty();
         csvFile = new SimpleStringProperty();
-        settingFile = new SimpleStringProperty(); //TODO add listener and function for settingsFile
+        settingFile = new SimpleStringProperty();
         csvFile.addListener(v -> createTimeSeries());
-        //listView.addListener((ListChangeListener)v->creatList());
+        settingFile.addListener(v -> createSettings());
+
         am.addObserver(this);
         this.appModel = am;
+    }
+
+    private void createSettings() {
+        // TODO check for wrong json format
+        resetFlightProp();
+        FlightSettings fs = new FlightSettings(settingFile.getValue());
+        appModel.setFlightSettings(fs);
     }
 
 
     private void createTimeSeries() {
         listView.clear();
         String s = this.csvFile.getValue();
-        //	if(checkCsvFile())
-        if (true) {
+        if (checkCsvFile()) {
             this.appModel.setTimeSeries(new TimeSeries(s));
             this.listView.clear();
             this.listView.addAll(appModel.getTimeSeries().namesOfFeatures);
-            resetFilghtProp();
+
         } else {
-            //handel with wrong file!!
+
+            Alert a1 = new Alert(Alert.AlertType.ERROR,
+                    "NOT A VALID CSV", ButtonType.CLOSE);
+            // show the dialog
+            a1.show();
         }
+        resetFlightProp();
     }
 
+    private boolean checkCsvFile() {
+        return false;
+        ///TODO omer please write this function
+    }
 
-    private void resetFilghtProp() {
+    private void resetFlightProp() {
         //joystick
-        this.aileron.set(75); ///TODO fix
-        this.elevator.set(75);
-        this.throttle.set(0);
-        //dashbord
+        this.aileron.set(centerCircle.getValue()); ///TODO fix
+        this.elevator.set(centerCircle.getValue());
+        this.throttle.set((minThrottle.getValue() + maxThrottle.getValue()) / 2);
+        this.rudder.set((minRudder.getValue() + maxRudder.getValue()) / 2);
 
-        this.rudder.set(0);
+        //dashboard
         this.airspeed.set(0);
         this.heading.set(0);
         this.yaw.set(0);
@@ -88,7 +120,9 @@ public class AppViewModel extends Observable implements Observer {
         appModel.loadSettings(settingsFile);
     }
 
-    public void play(int start, int rate) {
+    public void play() {
+        this.appModel.play();
+
     }
 
 
@@ -104,7 +138,7 @@ public class AppViewModel extends Observable implements Observer {
         return aileron.get();
     }
 
-    public SimpleDoubleProperty aileronProperty() {
+    public DoubleProperty aileronProperty() {
         return aileron;
     }
 
@@ -116,7 +150,7 @@ public class AppViewModel extends Observable implements Observer {
         return elevator.get();
     }
 
-    public SimpleDoubleProperty elevatorProperty() {
+    public DoubleProperty elevatorProperty() {
         return elevator;
     }
 
@@ -129,7 +163,7 @@ public class AppViewModel extends Observable implements Observer {
         return rudder.get();
     }
 
-    public SimpleDoubleProperty rudderProperty() {
+    public DoubleProperty rudderProperty() {
         return rudder;
     }
 
@@ -141,7 +175,7 @@ public class AppViewModel extends Observable implements Observer {
         return throttle.get();
     }
 
-    public SimpleDoubleProperty throttleProperty() {
+    public DoubleProperty throttleProperty() {
         return throttle;
     }
 
@@ -165,7 +199,7 @@ public class AppViewModel extends Observable implements Observer {
         return airspeed.get();
     }
 
-    public SimpleDoubleProperty airspeedProperty() {
+    public DoubleProperty airspeedProperty() {
         return airspeed;
     }
 
@@ -278,4 +312,111 @@ public class AppViewModel extends Observable implements Observer {
     }
 
 
+    public double getMinThrottle() {
+        return minThrottle.get();
+    }
+
+    public DoubleProperty minThrottleProperty() {
+        return minThrottle;
+    }
+
+    public void setMinThrottle(double minThrottle) {
+        this.minThrottle.set(minThrottle);
+    }
+
+    public double getMaxThrottle() {
+        return maxThrottle.get();
+    }
+
+    public DoubleProperty maxThrottleProperty() {
+        return maxThrottle;
+    }
+
+    public void setMaxThrottle(double maxThrottle) {
+        this.maxThrottle.set(maxThrottle);
+    }
+
+    public double getMinRudder() {
+        return minRudder.get();
+    }
+
+    public DoubleProperty minRudderProperty() {
+        return minRudder;
+    }
+
+    public void setMinRudder(double minRudder) {
+        this.minRudder.set(minRudder);
+    }
+
+    public double getMaxRudder() {
+        return maxRudder.get();
+    }
+
+    public DoubleProperty maxRudderProperty() {
+        return maxRudder;
+    }
+
+    public void setMaxRudder(double maxRudder) {
+        this.maxRudder.set(maxRudder);
+    }
+
+    public double getMinElevator() {
+        return minElevator.get();
+    }
+
+    public DoubleProperty minElevatorProperty() {
+        return minElevator;
+    }
+
+    public void setMinElevator(double minElevator) {
+        this.minElevator.set(minElevator);
+    }
+
+    public double getMaxElevator() {
+        return maxElevator.get();
+    }
+
+    public DoubleProperty maxElevatorProperty() {
+        return maxElevator;
+    }
+
+    public void setMaxElevator(double maxElevator) {
+        this.maxElevator.set(maxElevator);
+    }
+
+    public double getMinAileron() {
+        return minAileron.get();
+    }
+
+    public DoubleProperty minAileronProperty() {
+        return minAileron;
+    }
+
+    public void setMinAileron(double minAileron) {
+        this.minAileron.set(minAileron);
+    }
+
+    public double getMaxAileron() {
+        return maxAileron.get();
+    }
+
+    public DoubleProperty maxAileronProperty() {
+        return maxAileron;
+    }
+
+    public void setMaxAileron(double maxAileron) {
+        this.maxAileron.set(maxAileron);
+    }
+
+    public double getCenterCircle() {
+        return centerCircle.get();
+    }
+
+    public DoubleProperty centerCircleProperty() {
+        return centerCircle;
+    }
+
+    public void setCenterCircle(double centerCircle) {
+        this.centerCircle.set(centerCircle);
+    }
 }
