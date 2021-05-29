@@ -1,15 +1,10 @@
 package app.view.dashboardView;
 
-import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.FloatProperty;
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.AnchorPane;
-
 import java.util.Objects;
-import java.util.Observable;
-import java.util.Observer;
 
 public class Dashboard extends AnchorPane {
 

@@ -6,6 +6,7 @@ import javafx.scene.layout.AnchorPane;
 
 public class TimeLine extends AnchorPane {
     TimeLineController timeLineController;
+
     public TimeLine() {
         super();
         try {
@@ -19,7 +20,8 @@ public class TimeLine extends AnchorPane {
 
         }
     }
-    public TimeLineController getTimeLineController(){
+
+    public TimeLineController getTimeLineController() {
         return this.timeLineController;
     }
 

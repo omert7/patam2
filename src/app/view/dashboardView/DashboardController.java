@@ -2,10 +2,7 @@ package app.view.dashboardView;
 
 import java.net.URL;
 import java.util.ResourceBundle;
-
-import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.FloatProperty;
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;

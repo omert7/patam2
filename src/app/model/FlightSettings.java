@@ -2,6 +2,7 @@ package app.model;
 
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.json.simple.JSONArray;
@@ -16,42 +17,41 @@ public class FlightSettings {
     private long simulatorPort;
     private double simulatorSpeed;
     private String settingsFile;
+    private List<String> settingsKeys = Arrays.asList("port", "ip", "featuresSettings",
+            "chosenAlgorithmPath", "samplingRatePerSec", "validFlightPath");
 
     public FlightSettings(String file) {
         this.settingsFile = file;
     }
 
-    public void loadSettings() {
+    public void loadSettings() throws Exception {
         this.flightFeatureList = new ArrayList<>();
 
-        try {
-            Object obj = new JSONParser().parse(new FileReader(this.settingsFile));
-
-            JSONObject jo = (JSONObject) obj;
-
-            this.simulatorIp = (String) jo.get("ip");
-            this.chosenAlgorithmPath = (String) jo.get("chosenAlgorithmPath");
-            this.validFlightPath = (String) jo.get("validFlightPath");
-            this.simulatorPort = (long) jo.get("port");
-            this.simulatorSpeed = ((Long) jo.get("samplingRatePerSec")).doubleValue() / 10; // divide by 10 for x per sec
-
-            if (this.simulatorSpeed < 0.1) {
-                throw new Exception("samplingRatePerSec is below 0.1");
-            }
-
-            JSONArray featuresSettings = (JSONArray) jo.get("featuresSettings");
-
-            for (Object featuresSetting : featuresSettings) {
-                JSONObject feature = (JSONObject) featuresSetting;
-                FlightFeature ff = new FlightFeature((String) feature.get("FeatureName"), ((Long) feature.get("min")).doubleValue(),
-                        ((Long) feature.get("max")).doubleValue(), ((Long) feature.get("ColumnIndex")).intValue());
-                flightFeatureList.add(ff);
-            }
-
-        } catch (Exception e) {
-            // THROW ERROR TO VIEW
-            System.out.println(e.toString());
+        Object obj = new JSONParser().parse(new FileReader(this.settingsFile));
+        JSONObject jo = (JSONObject) obj;
+        if (!jo.keySet().containsAll(this.settingsKeys)) {
+            throw new Exception("Settings json File doesn't contain all keys");
         }
+
+        this.simulatorIp = (String) jo.get("ip");
+        this.chosenAlgorithmPath = (String) jo.get("chosenAlgorithmPath");
+        this.validFlightPath = (String) jo.get("validFlightPath");
+        this.simulatorPort = (long) jo.get("port");
+        this.simulatorSpeed = ((Long) jo.get("samplingRatePerSec")).doubleValue() / 10; // divide by 10 for x per sec
+
+        if (this.simulatorSpeed < 0.1) {
+            throw new Exception("samplingRatePerSec is below 0.1");
+        }
+
+        JSONArray featuresSettings = (JSONArray) jo.get("featuresSettings");
+
+        for (Object featuresSetting : featuresSettings) {
+            JSONObject feature = (JSONObject) featuresSetting;
+            FlightFeature ff = new FlightFeature((String) feature.get("FeatureName"), ((Long) feature.get("min")).doubleValue(),
+                    ((Long) feature.get("max")).doubleValue(), ((Long) feature.get("ColumnIndex")).intValue());
+            flightFeatureList.add(ff);
+        }
+
     }
 
     // getters and setters

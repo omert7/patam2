@@ -2,24 +2,25 @@ package app.model;
 
 
 import app.model.algorithms.TimeSeries;
+import javafx.beans.property.FloatProperty;
+import javafx.beans.property.SimpleFloatProperty;
 
 import java.util.Observable;
 
 public class AppModel extends Observable {
     private FlightSettings flightSettings;
     private TimeSeries timeSeries;
-    private SimulatorPlayer sm;
+    private SimulatorPlayer sp;
 
-    public boolean isReady(){
-        return (timeSeries != null && flightSettings!=null);
+    private FloatProperty timestamp;
+
+    public AppModel() {
+        this.timestamp = new SimpleFloatProperty();
     }
 
-    public void loadSettings(String settingsFile) {
-        flightSettings = new FlightSettings(settingsFile);
-        flightSettings.loadSettings();
-        sm = new SimulatorPlayer(flightSettings);
+    public boolean isReady() {
+        return (timeSeries != null && flightSettings != null);
     }
-
 
     public FlightSettings getFlightSettings() {
         return flightSettings;
@@ -27,8 +28,8 @@ public class AppModel extends Observable {
 
     public void setFlightSettings(FlightSettings flightSettings) {
         this.flightSettings = flightSettings;
-        this.flightSettings.loadSettings();
-        sm = new SimulatorPlayer(flightSettings);
+        sp = new SimulatorPlayer(flightSettings);
+        this.timestamp.bindBidirectional(sp.timeStampProperty());
     }
 
     public TimeSeries getTimeSeries() {
@@ -39,17 +40,28 @@ public class AppModel extends Observable {
         this.timeSeries = timeSeries;
     }
 
-    public void setAileron(double value, int time) {
-
+    public void play() {
+        sp.play(1, 1);
     }
 
-    public void play(){
-        if (isReady()){
-            sm.play(1,1);
-            System.out.println("READY");
-        }else{
-            System.out.println("NOT READY");
-        }
+    public float getTimestamp() {
+        return timestamp.get();
     }
 
+    public FloatProperty timestampProperty() {
+        return timestamp;
+    }
+
+    public void setTimestamp(float timestamp) {
+        this.timestamp.set(timestamp);
+    }
+
+
+    public SimulatorPlayer getSp() {
+        return sp;
+    }
+
+    public void setSp(SimulatorPlayer sp) {
+        this.sp = sp;
+    }
 }

@@ -13,6 +13,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 public class AppViewModel extends Observable implements Observer {
+
     private AppModel appModel;
     private TimeSeries ts;
     private DoubleProperty timeStamp;
@@ -23,6 +24,7 @@ public class AppViewModel extends Observable implements Observer {
     private FloatProperty minThrottle, maxThrottle, minRudder, maxRudder;
     private FloatProperty minElevator, maxElevator, minAileron, maxAileron;
 
+    Thread startThread;
 
     public AppViewModel(AppModel am) {
         //joystick
@@ -44,6 +46,8 @@ public class AppViewModel extends Observable implements Observer {
 
         am.addObserver(this);
         this.appModel = am;
+        this.timeStamp.bindBidirectional(am.timestampProperty());
+
     }
 
     private void initJoyStickProperties() {
@@ -76,35 +80,47 @@ public class AppViewModel extends Observable implements Observer {
 
     }
 
-
     private void createSettings() {
-        // TODO check for wrong json format
+        // call pause
         resetFlightProp();
         FlightSettings fs = new FlightSettings(settingFile.getValue());
-        appModel.setFlightSettings(fs);
+
+        try {
+            fs.loadSettings();
+            appModel.setFlightSettings(fs);
+        } catch (Exception exception) {
+            myErrorAlert("Choose Flight Settings.json file ERROR", exception.toString());
+        }
+
     }
 
 
     private void createTimeSeries() {
-        listView.clear();
+        // call pause
         String s = this.csvFile.getValue();
-        if (checkCsvFile()) {
+        String check = checkCsvFile();
+        if (check.equals("OK")) {
             this.appModel.setTimeSeries(new TimeSeries(s));
             this.listView.clear();
             this.listView.addAll(appModel.getTimeSeries().namesOfFeatures);
-
         } else {
-
-            Alert a1 = new Alert(Alert.AlertType.ERROR,
-                    "NOT A VALID CSV", ButtonType.CLOSE);
-            // show the dialog
-            a1.show();
+            myErrorAlert("Choose Flight Csv file ERROR", check);
         }
+
         resetFlightProp();
     }
 
-    private boolean checkCsvFile() {
-        return false;
+    private void myErrorAlert(String title, String text) {
+        Alert a1 = new Alert(Alert.AlertType.ERROR, text, ButtonType.CLOSE);
+        a1.setTitle(title);
+        a1.show();
+    }
+
+    private String checkCsvFile() {
+        if (false) {
+            return "ERROR";
+        }
+        return "OK";
         ///TODO omer please write this function
     }
 
@@ -124,6 +140,7 @@ public class AppViewModel extends Observable implements Observer {
         this.altitude.set(0);
 
         this.timeStamp.set(0);
+
     }
 
 
@@ -131,15 +148,23 @@ public class AppViewModel extends Observable implements Observer {
         this.appModel.setTimeSeries(new TimeSeries(timeSeries));
     }
 
-    public void loadSettings(String settingsFile) {
-        appModel.loadSettings(settingsFile);
-    }
 
     public void play() {
-        this.appModel.play();
+        if (!appModel.isReady()) {
+            myErrorAlert("Start ERROR", "FLIGHT NOT READY\nMISSING SETTINGS OR FLIGHT CSV");
+        } else {
+            this.startThread = new Thread(() -> {
+                this.appModel.play();
+            });
+            this.startThread.start();
 
+        }
     }
 
+    public void pause() {
+        if (this.startThread != null)
+            this.startThread.interrupt();
+    }
 
     public AppModel getAppModel() {
         return appModel;

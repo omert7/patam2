@@ -26,41 +26,34 @@ public class GUIController {
     @FXML
     private TimeLine timeLine;
 
-    public AppViewModel getVm() {
-        return vm;
-    }
-
-    public void setVm(AppViewModel vm) {
-        this.vm = vm;
-    }
-
     public GUIController() {
     }
 
     public void init(AppViewModel vm) {
         this.vm = vm;
-        BindJoyStickProperties();;
+        BindJoyStickProperties();
         bindDashboardProperties();
         bindMenuBarProperties();
         bindFeatureListProperties();
         bindTimeLineProperties();
     }
 
-    private void bindMenuBarProperties(){
+    private void bindMenuBarProperties() {
         menuBar.getsAlgoFile().bindBidirectional(vm.getAlgoFile());
         menuBar.getsCsvFile().bindBidirectional(vm.getCsvFile());
         menuBar.getsSettingFile().bindBidirectional(vm.getSettingFile());
     }
-    private void bindFeatureListProperties(){
+
+    private void bindFeatureListProperties() {
         featureList.getListViewP().bind(vm.getListView());
-
     }
-    private void bindTimeLineProperties(){
+
+    private void bindTimeLineProperties() {
         timeLine.getTimeLineController().getPlay().setOnMouseClicked(v -> vm.play());
-
+        timeLine.getTimeLineController().getPause().setOnMouseClicked(v -> vm.pause());
     }
 
-    private void bindDashboardProperties(){
+    private void bindDashboardProperties() {
         dashboard.altitudeProperty().bind(vm.altitudeProperty());
         dashboard.yawProperty().bind(vm.yawProperty());
         dashboard.pitchProperty().bind(vm.pitchProperty());
@@ -69,7 +62,7 @@ public class GUIController {
         dashboard.headingProperty().bind(vm.headingProperty());
     }
 
-    private void BindJoyStickProperties(){
+    private void BindJoyStickProperties() {
         vm.minThrottleProperty().setValue(joystick.minThrottleProperty().getValue());
         vm.maxThrottleProperty().setValue(joystick.maxThrottleProperty().getValue());
         vm.minRudderProperty().setValue(joystick.minRudderProperty().getValue());
@@ -97,6 +90,14 @@ public class GUIController {
         vm.centerCircleProperty().setValue(joystick.centerCircleProperty().getValue());
         joystick.centerCircleProperty().bind(vm.centerCircleProperty());
 
+    }
+
+    public AppViewModel getVm() {
+        return vm;
+    }
+
+    public void setVm(AppViewModel vm) {
+        this.vm = vm;
     }
 
     public FeatureList getFeatureList() {
