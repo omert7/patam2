@@ -28,7 +28,8 @@ public class Main extends Application {
             primaryStage.show();
             new Thread(() -> {
                 try {
-                    Thread.sleep(2000);
+                    while(true){
+                    Thread.sleep(100);
 //                    double ele = ThreadLocalRandom.current().nextDouble(0, 150);
 //                    double ail = ThreadLocalRandom.current().nextDouble(0, 150);
 //                    vm.setRoll(ThreadLocalRandom.current().nextDouble(0, 150));
@@ -39,7 +40,8 @@ public class Main extends Application {
 //                        vm.setAileron(ail);
 //                        System.out.println(vm.getListView());
 //                        System.out.println(view.getFeatureList().getListViewP());
-
+                    vm.setRudder(ThreadLocalRandom.current().nextDouble(-1, 1));
+                    }
                 } catch (InterruptedException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();

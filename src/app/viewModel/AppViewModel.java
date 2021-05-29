@@ -26,10 +26,34 @@ public class AppViewModel extends Observable implements Observer {
 
     public AppViewModel(AppModel am) {
         //joystick
+        initJoyStickProperties();
+        initDashBoardProperties();
+
+        //menu button
+        algoFile = new SimpleStringProperty();
+        csvFile = new SimpleStringProperty();
+        settingFile = new SimpleStringProperty();
+
+        csvFile.addListener(v -> createTimeSeries());
+        settingFile.addListener(v -> createSettings());
+
+        ObservableList<String> observableList = FXCollections.observableArrayList();
+        this.listView = new SimpleListProperty<>(observableList);
+
+        this.timeStamp = new SimpleDoubleProperty();
+
+        am.addObserver(this);
+        this.appModel = am;
+    }
+
+    private void initJoyStickProperties(){
         this.aileron = new SimpleDoubleProperty();
         this.elevator = new SimpleDoubleProperty();
         this.throttle = new SimpleDoubleProperty();
+        this.rudder = new SimpleDoubleProperty();
+
         this.centerCircle = new SimpleDoubleProperty();
+
         this.minThrottle = new SimpleDoubleProperty();
         this.maxThrottle = new SimpleDoubleProperty();
         this.minRudder = new SimpleDoubleProperty();
@@ -39,28 +63,18 @@ public class AppViewModel extends Observable implements Observer {
         this.minAileron = new SimpleDoubleProperty();
         this.maxAileron = new SimpleDoubleProperty();
 
+    }
+    private void initDashBoardProperties(){
         //dashboard
-        this.rudder = new SimpleDoubleProperty();
         this.airspeed = new SimpleDoubleProperty();
         this.heading = new SimpleDoubleProperty();
         this.yaw = new SimpleDoubleProperty();
         this.pitch = new SimpleDoubleProperty();
         this.roll = new SimpleDoubleProperty();
         this.altitude = new SimpleDoubleProperty();
-        ObservableList<String> observableList = FXCollections.observableArrayList();
-        this.listView = new SimpleListProperty<>(observableList);
-        this.timeStamp = new SimpleDoubleProperty();
 
-        //menu button
-        algoFile = new SimpleStringProperty();
-        csvFile = new SimpleStringProperty();
-        settingFile = new SimpleStringProperty();
-        csvFile.addListener(v -> createTimeSeries());
-        settingFile.addListener(v -> createSettings());
-
-        am.addObserver(this);
-        this.appModel = am;
     }
+
 
     private void createSettings() {
         // TODO check for wrong json format

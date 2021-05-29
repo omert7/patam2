@@ -12,11 +12,11 @@ import java.util.Objects;
 public class Joystick extends GridPane {
 
     JoystickController joystickController;
-    DoubleProperty throttle;
-    DoubleProperty rudder;
-    DoubleProperty aileron;
-    DoubleProperty elevator;
-    DoubleProperty centerCircle;
+    private DoubleProperty throttle;
+    private DoubleProperty rudder;
+    private DoubleProperty aileron;
+    private DoubleProperty elevator;
+    private DoubleProperty centerCircle;
     private DoubleProperty minThrottle, maxThrottle, minRudder, maxRudder;
     private DoubleProperty minElevator, maxElevator, minAileron, maxAileron;
 
@@ -28,36 +28,8 @@ public class Joystick extends GridPane {
             FXMLLoader fxl = new FXMLLoader();
             GridPane joy = fxl.load(Objects.requireNonNull(getClass().getResource("Joystick.fxml")).openStream());
             joystickController = fxl.getController();
-
-
-            throttle = new SimpleDoubleProperty(joystickController.getThrottle().getValue());
-            rudder = new SimpleDoubleProperty(joystickController.getRudder().getValue());
-            aileron = new SimpleDoubleProperty(joystickController.getAileron().getValue());
-            elevator = new SimpleDoubleProperty(joystickController.getElevator().getValue());
-            centerCircle = new SimpleDoubleProperty(joystickController.centerCircleProperty().getValue());
-            minThrottle = new SimpleDoubleProperty(joystickController.getMinThrottle().getValue());
-            maxThrottle = new SimpleDoubleProperty(joystickController.getMaxThrottle().getValue());
-            minRudder = new SimpleDoubleProperty(joystickController.getMinRudder().getValue());
-            maxRudder = new SimpleDoubleProperty(joystickController.getMaxRudder().getValue());
-            minElevator = new SimpleDoubleProperty(joystickController.getMinElevator().getValue());
-            maxElevator = new SimpleDoubleProperty(joystickController.getMaxElevator().getValue());
-            minAileron = new SimpleDoubleProperty(joystickController.getMinAileron().getValue());
-            maxAileron = new SimpleDoubleProperty(joystickController.getMaxAileron().getValue());
-
-
-            joystickController.getThrottle().valueProperty().bind(throttle);
-            joystickController.getRudder().valueProperty().bind(rudder);
-            joystickController.getAileron().bind(aileron);
-            joystickController.getElevator().bind(elevator);
-            joystickController.centerCircleProperty().bind(centerCircle);
-            joystickController.getMinThrottle().bind(minThrottle);
-            joystickController.getMaxThrottle().bind(maxThrottle);
-            joystickController.getMinRudder().bind(minRudder);
-            joystickController.getMaxRudder().bind(maxRudder);
-            joystickController.getMinElevator().bind(minElevator);
-            joystickController.getMaxElevator().bind(maxElevator);
-            joystickController.getMinAileron().bind(minAileron);
-            joystickController.getMaxAileron().bind(maxAileron);
+            initProperties();
+            bindProperties();
 
             this.getChildren().add(joy);
 
@@ -66,6 +38,43 @@ public class Joystick extends GridPane {
 
         }
     }
+    public void bindProperties(){
+        joystickController.getThrottle().valueProperty().bind(throttle);
+        joystickController.getRudder().valueProperty().bind(rudder);
+        joystickController.aileronProperty().bind(aileron);
+        joystickController.elevatorProperty().bind(elevator);
+
+        joystickController.centerCircleProperty().bind(centerCircle);
+
+        //min max values
+        joystickController.minThrottleProperty().bind(minThrottle);
+        joystickController.maxThrottleProperty().bind(maxThrottle);
+        joystickController.minRudderProperty().bind(minRudder);
+        joystickController.maxRudderProperty().bind(maxRudder);
+        joystickController.minElevatorProperty().bind(minElevator);
+        joystickController.maxElevatorProperty().bind(maxElevator);
+        joystickController.minAileronProperty().bind(minAileron);
+        joystickController.maxAileronProperty().bind(maxAileron);
+    }
+
+    public void initProperties(){
+        throttle = new SimpleDoubleProperty(joystickController.getThrottle().getValue());
+        rudder = new SimpleDoubleProperty(joystickController.getRudder().getValue());
+        aileron = new SimpleDoubleProperty(joystickController.aileronProperty().getValue());
+        elevator = new SimpleDoubleProperty(joystickController.elevatorProperty().getValue());
+
+        centerCircle = new SimpleDoubleProperty(joystickController.centerCircleProperty().getValue());
+
+        minThrottle = new SimpleDoubleProperty(joystickController.minThrottleProperty().getValue());
+        maxThrottle = new SimpleDoubleProperty(joystickController.maxThrottleProperty().getValue());
+        minRudder = new SimpleDoubleProperty(joystickController.minRudderProperty().getValue());
+        maxRudder = new SimpleDoubleProperty(joystickController.maxRudderProperty().getValue());
+        minElevator = new SimpleDoubleProperty(joystickController.minElevatorProperty().getValue());
+        maxElevator = new SimpleDoubleProperty(joystickController.maxElevatorProperty().getValue());
+        minAileron = new SimpleDoubleProperty(joystickController.minAileronProperty().getValue());
+        maxAileron = new SimpleDoubleProperty(joystickController.maxAileronProperty().getValue());
+    }
+
 
     public JoystickController getJoystickController() {
         return joystickController;

@@ -39,15 +39,45 @@ public class GUIController {
 
     public void init(AppViewModel vm) {
         this.vm = vm;
+        BindJoyStickProperties();;
+        bindDashboardProperties();
+        bindMenuBarProperties();
+        bindFeatureListProperties();
+        bindTimeLineProperties();
+    }
 
-        vm.minThrottleProperty().setValue( joystick.minThrottleProperty().getValue());
-        vm.maxThrottleProperty().setValue( joystick.maxThrottleProperty().getValue());
-        vm.minRudderProperty().setValue( joystick.minRudderProperty().getValue());
-        vm.maxRudderProperty().setValue( joystick.maxRudderProperty().getValue());
-        vm.minElevatorProperty().setValue( joystick.minElevatorProperty().getValue());
-        vm.maxElevatorProperty().setValue( joystick.maxElevatorProperty().getValue());
-        vm.minAileronProperty().setValue( joystick.minAileronProperty().getValue());
-        vm.maxAileronProperty().setValue( joystick.maxAileronProperty().getValue());
+    private void bindMenuBarProperties(){
+        menuBar.getsAlgoFile().bindBidirectional(vm.getAlgoFile());
+        menuBar.getsCsvFile().bindBidirectional(vm.getCsvFile());
+        menuBar.getsSettingFile().bindBidirectional(vm.getSettingFile());
+    }
+    private void bindFeatureListProperties(){
+        featureList.getListViewP().bind(vm.getListView());
+
+    }
+    private void bindTimeLineProperties(){
+        timeLine.getTimeLineController().getPlay().setOnMouseClicked(v -> vm.play());
+
+    }
+
+    private void bindDashboardProperties(){
+        dashboard.getAltitude().bind(vm.altitudeProperty());
+        dashboard.getYaw().bind(vm.yawProperty());
+        dashboard.getPitch().bind(vm.pitchProperty());
+        dashboard.getRoll().bind(vm.rollProperty());
+        dashboard.getAirspeed().bind(vm.airspeedProperty());
+        dashboard.getHeading().bind(vm.headingProperty());
+    }
+
+    private void BindJoyStickProperties(){
+        vm.minThrottleProperty().setValue(joystick.minThrottleProperty().getValue());
+        vm.maxThrottleProperty().setValue(joystick.maxThrottleProperty().getValue());
+        vm.minRudderProperty().setValue(joystick.minRudderProperty().getValue());
+        vm.maxRudderProperty().setValue(joystick.maxRudderProperty().getValue());
+        vm.minElevatorProperty().setValue(joystick.minElevatorProperty().getValue());
+        vm.maxElevatorProperty().setValue(joystick.maxElevatorProperty().getValue());
+        vm.minAileronProperty().setValue(joystick.minAileronProperty().getValue());
+        vm.maxAileronProperty().setValue(joystick.maxAileronProperty().getValue());
 
         joystick.minThrottleProperty().bind(vm.minThrottleProperty());
         joystick.maxThrottleProperty().bind(vm.maxThrottleProperty());
@@ -57,31 +87,16 @@ public class GUIController {
         joystick.maxElevatorProperty().bind(vm.maxElevatorProperty());
         joystick.minAileronProperty().bind(vm.minAileronProperty());
         joystick.maxAileronProperty().bind(vm.maxAileronProperty());
-
         joystick.throttleProperty().bind(vm.throttleProperty());
         joystick.rudderProperty().bind(vm.rudderProperty());
+
         vm.aileronProperty().setValue(joystick.getAileron());
         joystick.aileronProperty().bind(vm.aileronProperty());
         vm.elevatorProperty().setValue(joystick.getElevator());
         joystick.elevatorProperty().bind(vm.elevatorProperty());
-        System.out.println("#@!#@!#@!");
         vm.centerCircleProperty().setValue(joystick.centerCircleProperty().getValue());
         joystick.centerCircleProperty().bind(vm.centerCircleProperty());
 
-        dashboard.getAltitude().bind(vm.altitudeProperty());
-        dashboard.getYaw().bind(vm.yawProperty());
-        dashboard.getPitch().bind(vm.pitchProperty());
-        dashboard.getRoll().bind(vm.rollProperty());
-        dashboard.getAirspeed().bind(vm.airspeedProperty());
-        dashboard.getHeading().bind(vm.headingProperty());
-
-        menuBar.getsAlgoFile().bindBidirectional(vm.getAlgoFile());
-        menuBar.getsCsvFile().bindBidirectional(vm.getCsvFile());
-        menuBar.getsSettingFile().bindBidirectional(vm.getSettingFile());
-
-        featureList.getListViewP().bind(vm.getListView());
-
-        timeLine.getTimeLineController().getPlay().setOnMouseClicked(v -> vm.play());
     }
 
     public FeatureList getFeatureList() {
