@@ -40,7 +40,7 @@ public class Main extends Application {
 //                        vm.setAileron(ail);
 //                        System.out.println(vm.getListView());
 //                        System.out.println(view.getFeatureList().getListViewP());
-                    vm.setRudder(ThreadLocalRandom.current().nextDouble(-1, 1));
+                    vm.setRudder((float) ThreadLocalRandom.current().nextDouble(-1, 1));
                     }
                 } catch (InterruptedException e) {
                     // TODO Auto-generated catch block

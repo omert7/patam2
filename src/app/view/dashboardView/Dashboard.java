@@ -1,7 +1,9 @@
 package app.view.dashboardView;
 
 import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleFloatProperty;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.AnchorPane;
 
@@ -12,8 +14,8 @@ import java.util.Observer;
 public class Dashboard extends AnchorPane {
 
     private DashboardController dashboardController;
-    private DoubleProperty altitude, yaw, pitch, roll;
-    private DoubleProperty airspeed, heading;
+    private FloatProperty altitude, yaw, pitch, roll;
+    private FloatProperty airspeed, heading;
 
 
     public Dashboard() {
@@ -23,26 +25,35 @@ public class Dashboard extends AnchorPane {
             FXMLLoader fxl = new FXMLLoader();
             AnchorPane dash = fxl.load(Objects.requireNonNull(getClass().getResource("Dashboard.fxml")).openStream());
             dashboardController = fxl.getController();
-
-            roll = new SimpleDoubleProperty(dashboardController.getDpRoll().getValue());
-            pitch = new SimpleDoubleProperty(dashboardController.getDpPitch().getValue());
-            heading = new SimpleDoubleProperty(dashboardController.getDpHeading().getValue());
-            yaw = new SimpleDoubleProperty(dashboardController.getDpYaw().getValue());
-            airspeed = new SimpleDoubleProperty(dashboardController.getDpAirspeed().getValue());
-            altitude = new SimpleDoubleProperty(dashboardController.getDpAltitude().getValue());
-
-            dashboardController.getDpAirspeed().bind(airspeed);
-            dashboardController.getDpHeading().bind(heading);
-            dashboardController.getDpYaw().bind(yaw);
-            dashboardController.getDpRoll().bind(roll);
-            dashboardController.getDpPitch().bind(pitch);
-            dashboardController.getDpAltitude().bind(altitude);
+            initProperties();
+            bindProperties();
 
             this.getChildren().add(dash);
         } catch (Exception e) {
             e.printStackTrace();
 
         }
+    }
+    private void initProperties(){
+        roll = new SimpleFloatProperty(dashboardController.dpRollProperty().getValue());
+        pitch = new SimpleFloatProperty(dashboardController.dpPitchProperty().getValue());
+        heading = new SimpleFloatProperty(dashboardController.dpHeadingProperty().getValue());
+        yaw = new SimpleFloatProperty(dashboardController.dpYawProperty().getValue());
+        airspeed = new SimpleFloatProperty(dashboardController.dpAirspeedProperty().getValue());
+        altitude = new SimpleFloatProperty(dashboardController.dpAltitudeProperty().getValue());
+
+
+    }
+
+    private void bindProperties(){
+        dashboardController.dpAirspeedProperty().bind(airspeed);
+        dashboardController.dpHeadingProperty().bind(heading);
+        dashboardController.dpYawProperty().bind(yaw);
+        dashboardController.dpRollProperty().bind(roll);
+        dashboardController.dpPitchProperty().bind(pitch);
+        dashboardController.dpAltitudeProperty().bind(altitude);
+
+
     }
 
     public DashboardController getDashboardController() {
@@ -53,58 +64,76 @@ public class Dashboard extends AnchorPane {
         this.dashboardController = dashboardController;
     }
 
-    public DoubleProperty getAltitude() {
+
+    public float getAltitude() {
+        return altitude.get();
+    }
+
+    public FloatProperty altitudeProperty() {
         return altitude;
     }
 
-    public void setAltitude(double altitude) {
+    public void setAltitude(float altitude) {
         this.altitude.set(altitude);
     }
 
-    public DoubleProperty getYaw() {
+    public float getYaw() {
+        return yaw.get();
+    }
+
+    public FloatProperty yawProperty() {
         return yaw;
     }
 
-    public void setYaw(double yaw) {
+    public void setYaw(float yaw) {
         this.yaw.set(yaw);
-
     }
 
-    public DoubleProperty getPitch() {
+    public float getPitch() {
+        return pitch.get();
+    }
+
+    public FloatProperty pitchProperty() {
         return pitch;
     }
 
-    public void setPitch(double pitch) {
+    public void setPitch(float pitch) {
         this.pitch.set(pitch);
-
     }
 
-    public DoubleProperty getRoll() {
+    public float getRoll() {
+        return roll.get();
+    }
+
+    public FloatProperty rollProperty() {
         return roll;
     }
 
-    public void setRoll(double roll) {
+    public void setRoll(float roll) {
         this.roll.set(roll);
-
     }
 
-    public DoubleProperty getAirspeed() {
+    public float getAirspeed() {
+        return airspeed.get();
+    }
+
+    public FloatProperty airspeedProperty() {
         return airspeed;
     }
 
-    public void setAirspeed(double airspeed) {
+    public void setAirspeed(float airspeed) {
         this.airspeed.set(airspeed);
-
     }
 
-    public DoubleProperty getHeading() {
+    public float getHeading() {
+        return heading.get();
+    }
+
+    public FloatProperty headingProperty() {
         return heading;
     }
 
-    public void setHeading(double heading) {
+    public void setHeading(float heading) {
         this.heading.set(heading);
-
     }
-
-
 }

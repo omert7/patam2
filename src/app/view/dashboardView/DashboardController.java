@@ -4,7 +4,9 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleFloatProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.image.ImageView;
@@ -25,45 +27,22 @@ public class DashboardController implements Initializable {
     @FXML
     private ImageView airspeed;
     
-    private DoubleProperty dpHeading,dpAirspeed , dpRoll, dpYaw,dpPitch,dpAltitude;
+    private FloatProperty dpHeading,dpAirspeed , dpRoll, dpYaw,dpPitch,dpAltitude;
 
     // Add a public no-args constructor
     public DashboardController() {
     }
 
-    /*@FXML
-    private void initialize() {
- 
-    	init();
-
-    }
-    
-   public void init() {
-        //get the setting value and initialize
-
-    	dpHeading = new SimpleDoubleProperty(0);
-    	dpAirspeed = new SimpleDoubleProperty(0);
-    	dpRoll = new SimpleDoubleProperty(0);
-    	dpYaw = new SimpleDoubleProperty(0);
-    	dpPitch = new SimpleDoubleProperty(0);
-    	dpAltitude = new SimpleDoubleProperty(0);
-    	
-    	//end
-    	
-       updateImages();
-       updateText();
-    }
-    */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
     	//get the setting value and initialize
 
-    	dpHeading = new SimpleDoubleProperty(0);
-    	dpAirspeed = new SimpleDoubleProperty(0);
-    	dpRoll = new SimpleDoubleProperty(0);
-    	dpYaw = new SimpleDoubleProperty(0);
-    	dpPitch = new SimpleDoubleProperty(0);
-    	dpAltitude = new SimpleDoubleProperty(0);
+    	dpHeading = new SimpleFloatProperty(0);
+    	dpAirspeed = new SimpleFloatProperty(0);
+    	dpRoll = new SimpleFloatProperty(0);
+    	dpYaw = new SimpleFloatProperty(0);
+    	dpPitch = new SimpleFloatProperty(0);
+    	dpAltitude = new SimpleFloatProperty(0);
     	
     	//end
     	dpRoll.addListener( v->updateText());
@@ -136,57 +115,76 @@ public class DashboardController implements Initializable {
         this.airspeed = airspeed;
     }
 
-	public DoubleProperty getDpHeading() {
-		return dpHeading;
-	}
 
-	public void setDpHeading(DoubleProperty dpHeading) {
-		this.dpHeading = dpHeading;
-	}
+    public float getDpHeading() {
+        return dpHeading.get();
+    }
 
-	public DoubleProperty getDpAirspeed() {
-		return dpAirspeed;
-	}
+    public FloatProperty dpHeadingProperty() {
+        return dpHeading;
+    }
 
-	public void setDpAirspeed(DoubleProperty dpAirspeed) {
-		this.dpAirspeed = dpAirspeed;
-	}
+    public void setDpHeading(float dpHeading) {
+        this.dpHeading.set(dpHeading);
+    }
 
-	public DoubleProperty getDpRoll() {
-		return dpRoll;
-	}
+    public float getDpAirspeed() {
+        return dpAirspeed.get();
+    }
 
-	public void setDpRoll(DoubleProperty dpRoll) {
-		this.dpRoll = dpRoll;
-	}
+    public FloatProperty dpAirspeedProperty() {
+        return dpAirspeed;
+    }
 
-	public DoubleProperty getDpYaw() {
-		return dpYaw;
-	}
+    public void setDpAirspeed(float dpAirspeed) {
+        this.dpAirspeed.set(dpAirspeed);
+    }
 
-	public void setDpYaw(DoubleProperty dpYaw) {
-		this.dpYaw = dpYaw;
-	}
+    public float getDpRoll() {
+        return dpRoll.get();
+    }
 
-	public DoubleProperty getDpPitch() {
-		return dpPitch;
-	}
+    public FloatProperty dpRollProperty() {
+        return dpRoll;
+    }
 
-	public void setDpPitch(DoubleProperty dpPitch) {
-		this.dpPitch = dpPitch;
-	}
+    public void setDpRoll(float dpRoll) {
+        this.dpRoll.set(dpRoll);
+    }
 
-	public DoubleProperty getDpAltitude() {
-		return dpAltitude;
-	}
+    public float getDpYaw() {
+        return dpYaw.get();
+    }
 
-	public void setDpAltitude(DoubleProperty dpAltitude) {
-		this.dpAltitude = dpAltitude;
-	}
+    public FloatProperty dpYawProperty() {
+        return dpYaw;
+    }
 
+    public void setDpYaw(float dpYaw) {
+        this.dpYaw.set(dpYaw);
+    }
 
+    public float getDpPitch() {
+        return dpPitch.get();
+    }
 
+    public FloatProperty dpPitchProperty() {
+        return dpPitch;
+    }
 
-    
-    
+    public void setDpPitch(float dpPitch) {
+        this.dpPitch.set(dpPitch);
+    }
+
+    public float getDpAltitude() {
+        return dpAltitude.get();
+    }
+
+    public FloatProperty dpAltitudeProperty() {
+        return dpAltitude;
+    }
+
+    public void setDpAltitude(float dpAltitude) {
+        this.dpAltitude.set(dpAltitude);
+    }
 }

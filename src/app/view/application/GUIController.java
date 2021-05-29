@@ -61,12 +61,12 @@ public class GUIController {
     }
 
     private void bindDashboardProperties(){
-        dashboard.getAltitude().bind(vm.altitudeProperty());
-        dashboard.getYaw().bind(vm.yawProperty());
-        dashboard.getPitch().bind(vm.pitchProperty());
-        dashboard.getRoll().bind(vm.rollProperty());
-        dashboard.getAirspeed().bind(vm.airspeedProperty());
-        dashboard.getHeading().bind(vm.headingProperty());
+        dashboard.altitudeProperty().bind(vm.altitudeProperty());
+        dashboard.yawProperty().bind(vm.yawProperty());
+        dashboard.pitchProperty().bind(vm.pitchProperty());
+        dashboard.rollProperty().bind(vm.rollProperty());
+        dashboard.airspeedProperty().bind(vm.airspeedProperty());
+        dashboard.headingProperty().bind(vm.headingProperty());
     }
 
     private void BindJoyStickProperties(){

@@ -2,7 +2,9 @@ package app.view.joystickView;
 
 
 import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleFloatProperty;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.GridPane;
 
@@ -12,13 +14,13 @@ import java.util.Objects;
 public class Joystick extends GridPane {
 
     JoystickController joystickController;
-    private DoubleProperty throttle;
-    private DoubleProperty rudder;
-    private DoubleProperty aileron;
-    private DoubleProperty elevator;
-    private DoubleProperty centerCircle;
-    private DoubleProperty minThrottle, maxThrottle, minRudder, maxRudder;
-    private DoubleProperty minElevator, maxElevator, minAileron, maxAileron;
+    private FloatProperty throttle;
+    private FloatProperty rudder;
+    private FloatProperty aileron;
+    private FloatProperty elevator;
+    private FloatProperty centerCircle;
+    private FloatProperty minThrottle, maxThrottle, minRudder, maxRudder;
+    private FloatProperty minElevator, maxElevator, minAileron, maxAileron;
 
     public Joystick() {
         // TODO Auto-generated constructor stub
@@ -58,21 +60,21 @@ public class Joystick extends GridPane {
     }
 
     public void initProperties(){
-        throttle = new SimpleDoubleProperty(joystickController.getThrottle().getValue());
-        rudder = new SimpleDoubleProperty(joystickController.getRudder().getValue());
-        aileron = new SimpleDoubleProperty(joystickController.aileronProperty().getValue());
-        elevator = new SimpleDoubleProperty(joystickController.elevatorProperty().getValue());
+        throttle = new SimpleFloatProperty((float) joystickController.getThrottle().getValue());
+        rudder = new SimpleFloatProperty((float) joystickController.getRudder().getValue());
+        aileron = new SimpleFloatProperty(joystickController.aileronProperty().getValue());
+        elevator = new SimpleFloatProperty(joystickController.elevatorProperty().getValue());
 
-        centerCircle = new SimpleDoubleProperty(joystickController.centerCircleProperty().getValue());
+        centerCircle = new SimpleFloatProperty(joystickController.centerCircleProperty().getValue());
 
-        minThrottle = new SimpleDoubleProperty(joystickController.minThrottleProperty().getValue());
-        maxThrottle = new SimpleDoubleProperty(joystickController.maxThrottleProperty().getValue());
-        minRudder = new SimpleDoubleProperty(joystickController.minRudderProperty().getValue());
-        maxRudder = new SimpleDoubleProperty(joystickController.maxRudderProperty().getValue());
-        minElevator = new SimpleDoubleProperty(joystickController.minElevatorProperty().getValue());
-        maxElevator = new SimpleDoubleProperty(joystickController.maxElevatorProperty().getValue());
-        minAileron = new SimpleDoubleProperty(joystickController.minAileronProperty().getValue());
-        maxAileron = new SimpleDoubleProperty(joystickController.maxAileronProperty().getValue());
+        minThrottle = new SimpleFloatProperty(joystickController.minThrottleProperty().getValue());
+        maxThrottle = new SimpleFloatProperty(joystickController.maxThrottleProperty().getValue());
+        minRudder = new SimpleFloatProperty(joystickController.minRudderProperty().getValue());
+        maxRudder = new SimpleFloatProperty(joystickController.maxRudderProperty().getValue());
+        minElevator = new SimpleFloatProperty(joystickController.minElevatorProperty().getValue());
+        maxElevator = new SimpleFloatProperty(joystickController.maxElevatorProperty().getValue());
+        minAileron = new SimpleFloatProperty(joystickController.minAileronProperty().getValue());
+        maxAileron = new SimpleFloatProperty(joystickController.maxAileronProperty().getValue());
     }
 
 
@@ -84,159 +86,160 @@ public class Joystick extends GridPane {
         this.joystickController = joystickController;
     }
 
-    public double getThrottle() {
+
+    public float getThrottle() {
         return throttle.get();
     }
 
-    public DoubleProperty throttleProperty() {
+    public FloatProperty throttleProperty() {
         return throttle;
     }
 
-    public void setThrottle(double throttle) {
+    public void setThrottle(float throttle) {
         this.throttle.set(throttle);
     }
 
-    public double getRudder() {
+    public float getRudder() {
         return rudder.get();
     }
 
-    public DoubleProperty rudderProperty() {
+    public FloatProperty rudderProperty() {
         return rudder;
     }
 
-    public void setRudder(double rudder) {
+    public void setRudder(float rudder) {
         this.rudder.set(rudder);
     }
 
-    public double getAileron() {
+    public float getAileron() {
         return aileron.get();
     }
 
-    public DoubleProperty aileronProperty() {
+    public FloatProperty aileronProperty() {
         return aileron;
     }
 
-    public void setAileron(double aileron) {
+    public void setAileron(float aileron) {
         this.aileron.set(aileron);
     }
 
-    public double getElevator() {
+    public float getElevator() {
         return elevator.get();
     }
 
-    public DoubleProperty elevatorProperty() {
+    public FloatProperty elevatorProperty() {
         return elevator;
     }
 
-    public void setElevator(double elevator) {
+    public void setElevator(float elevator) {
         this.elevator.set(elevator);
     }
 
-    public double getCenterCircle() {
+    public float getCenterCircle() {
         return centerCircle.get();
     }
 
-    public DoubleProperty centerCircleProperty() {
+    public FloatProperty centerCircleProperty() {
         return centerCircle;
     }
 
-    public void setCenterCircle(double centerCircle) {
+    public void setCenterCircle(float centerCircle) {
         this.centerCircle.set(centerCircle);
     }
 
-    public double getMinThrottle() {
+    public float getMinThrottle() {
         return minThrottle.get();
     }
 
-    public DoubleProperty minThrottleProperty() {
+    public FloatProperty minThrottleProperty() {
         return minThrottle;
     }
 
-    public void setMinThrottle(double minThrottle) {
+    public void setMinThrottle(float minThrottle) {
         this.minThrottle.set(minThrottle);
     }
 
-    public double getMaxThrottle() {
+    public float getMaxThrottle() {
         return maxThrottle.get();
     }
 
-    public DoubleProperty maxThrottleProperty() {
+    public FloatProperty maxThrottleProperty() {
         return maxThrottle;
     }
 
-    public void setMaxThrottle(double maxThrottle) {
+    public void setMaxThrottle(float maxThrottle) {
         this.maxThrottle.set(maxThrottle);
     }
 
-    public double getMinRudder() {
+    public float getMinRudder() {
         return minRudder.get();
     }
 
-    public DoubleProperty minRudderProperty() {
+    public FloatProperty minRudderProperty() {
         return minRudder;
     }
 
-    public void setMinRudder(double minRudder) {
+    public void setMinRudder(float minRudder) {
         this.minRudder.set(minRudder);
     }
 
-    public double getMaxRudder() {
+    public float getMaxRudder() {
         return maxRudder.get();
     }
 
-    public DoubleProperty maxRudderProperty() {
+    public FloatProperty maxRudderProperty() {
         return maxRudder;
     }
 
-    public void setMaxRudder(double maxRudder) {
+    public void setMaxRudder(float maxRudder) {
         this.maxRudder.set(maxRudder);
     }
 
-    public double getMinElevator() {
+    public float getMinElevator() {
         return minElevator.get();
     }
 
-    public DoubleProperty minElevatorProperty() {
+    public FloatProperty minElevatorProperty() {
         return minElevator;
     }
 
-    public void setMinElevator(double minElevator) {
+    public void setMinElevator(float minElevator) {
         this.minElevator.set(minElevator);
     }
 
-    public double getMaxElevator() {
+    public float getMaxElevator() {
         return maxElevator.get();
     }
 
-    public DoubleProperty maxElevatorProperty() {
+    public FloatProperty maxElevatorProperty() {
         return maxElevator;
     }
 
-    public void setMaxElevator(double maxElevator) {
+    public void setMaxElevator(float maxElevator) {
         this.maxElevator.set(maxElevator);
     }
 
-    public double getMinAileron() {
+    public float getMinAileron() {
         return minAileron.get();
     }
 
-    public DoubleProperty minAileronProperty() {
+    public FloatProperty minAileronProperty() {
         return minAileron;
     }
 
-    public void setMinAileron(double minAileron) {
+    public void setMinAileron(float minAileron) {
         this.minAileron.set(minAileron);
     }
 
-    public double getMaxAileron() {
+    public float getMaxAileron() {
         return maxAileron.get();
     }
 
-    public DoubleProperty maxAileronProperty() {
+    public FloatProperty maxAileronProperty() {
         return maxAileron;
     }
 
-    public void setMaxAileron(double maxAileron) {
+    public void setMaxAileron(float maxAileron) {
         this.maxAileron.set(maxAileron);
     }
 }
