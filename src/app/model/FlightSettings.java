@@ -1,31 +1,30 @@
 package app.model;
 
 import java.io.FileReader;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.*;
 
 public class FlightSettings {
-    private List<FlightFeature> flightFeatureList;
+    private HashMap<String,FlightFeature> flightFeatureHashMap;
     private String validFlightPath;
     private String chosenAlgorithmPath;
     private String simulatorIp;
     private long simulatorPort;
     private double simulatorSpeed;
     private String settingsFile;
-    private List<String> settingsKeys = Arrays.asList("port", "ip", "featuresSettings",
-            "chosenAlgorithmPath", "samplingRatePerSec", "validFlightPath");
 
+    private final List<String> settingsKeys = Arrays.asList("port", "ip", "featuresSettings",
+            "chosenAlgorithmPath", "samplingRatePerSec", "validFlightPath");
+    private final List<String> featureNames = Arrays.asList("aileron","throttle","elevator","rudder","heading","yaw","roll","pitch","airspeed","altitude");
     public FlightSettings(String file) {
         this.settingsFile = file;
     }
 
     public void loadSettings() throws Exception {
-        this.flightFeatureList = new ArrayList<>();
+        this.flightFeatureHashMap = new HashMap<>();
 
         Object obj = new JSONParser().parse(new FileReader(this.settingsFile));
         JSONObject jo = (JSONObject) obj;
@@ -47,20 +46,19 @@ public class FlightSettings {
 
         for (Object featuresSetting : featuresSettings) {
             JSONObject feature = (JSONObject) featuresSetting;
+            String featureName = (String) feature.get("FeatureName");
+            if (!featureNames.contains(featureName)){
+                throw new Exception("Feature Name " + featureName + " not found in settings.json file");
+            }
             FlightFeature ff = new FlightFeature((String) feature.get("FeatureName"), ((Long) feature.get("min")).doubleValue(),
                     ((Long) feature.get("max")).doubleValue(), ((Long) feature.get("ColumnIndex")).intValue());
-            flightFeatureList.add(ff);
+            flightFeatureHashMap.put(ff.getFeatureName(),ff);
         }
 
     }
 
-    // getters and setters
-    public List<FlightFeature> getFlightFeatureList() {
-        return flightFeatureList;
-    }
-
-    public void setFlightFeatureList(List<FlightFeature> flightFeatureList) {
-        this.flightFeatureList = flightFeatureList;
+    public HashMap<String, FlightFeature> getFlightFeatureHashMap() {
+        return flightFeatureHashMap;
     }
 
     public String getSimulatorIp() {
@@ -94,7 +92,6 @@ public class FlightSettings {
     public void setSettingsFile(String settingsFile) {
         this.settingsFile = settingsFile;
     }
-
 
     public String getValidFlightPath() {
         return validFlightPath;

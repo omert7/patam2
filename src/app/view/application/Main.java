@@ -29,7 +29,7 @@ public class Main extends Application {
             new Thread(() -> {
                 try {
                     while (true) {
-                        Thread.sleep(2000);
+                        Thread.sleep(100);
 //                    double ele = ThreadLocalRandom.current().nextDouble(0, 150);
 //                    double ail = ThreadLocalRandom.current().nextDouble(0, 150);
 //                    vm.setRoll(ThreadLocalRandom.current().nextDouble(0, 150));
@@ -43,9 +43,8 @@ public class Main extends Application {
 //                    vm.setRudder((float) ThreadLocalRandom.current().nextDouble(-1, 1));
 //                        System.out.println(vm.getTimeStamp());
 //                        vm.setTimeStamp(14);
-//                        System.out.println(vm.getAppModel().getTimestamp());
-//                        System.out.println(vm.getAppModel().getSp().getTimeStamp());
-
+                        System.out.println(vm.getAppModel().getTimestamp());
+                        System.out.println(vm.getThrottle());
                     }
                 } catch (InterruptedException e) {
                     // TODO Auto-generated catch block

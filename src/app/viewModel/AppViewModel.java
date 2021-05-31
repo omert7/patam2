@@ -47,7 +47,25 @@ public class AppViewModel extends Observable implements Observer {
         am.addObserver(this);
         this.appModel = am;
         this.timeStamp.bindBidirectional(am.timestampProperty());
+        this.timeStamp.addListener(v -> updateParams());
+    }
 
+    private void updateParams() {
+        if (this.timeStamp.getValue() == 0) {
+            resetFlightProp();
+        } else {
+            int time = (int) (this.timeStamp.getValue() * 10);
+            this.yaw.setValue(this.appModel.getTimeSeries().getValAtSpecificTime(time, this.appModel.getYawIndex()));
+            this.pitch.setValue(this.appModel.getTimeSeries().getValAtSpecificTime(time, this.appModel.getPitchIndex()));
+            this.roll.setValue(this.appModel.getTimeSeries().getValAtSpecificTime(time, this.appModel.getRollIndex()));
+            this.heading.setValue(this.appModel.getTimeSeries().getValAtSpecificTime(time, this.appModel.getHeadingIndex()));
+            this.altitude.setValue(this.appModel.getTimeSeries().getValAtSpecificTime(time, this.appModel.getAltitudeIndex()));
+            this.airspeed.setValue(this.appModel.getTimeSeries().getValAtSpecificTime(time, this.appModel.getAirspeedIndex()));
+            this.throttle.setValue(this.appModel.getTimeSeries().getValAtSpecificTime(time, this.appModel.getThrottleIndex()));
+            this.rudder.setValue(this.appModel.getTimeSeries().getValAtSpecificTime(time, this.appModel.getRudderIndex()));
+            this.aileron.setValue(this.appModel.getTimeSeries().getValAtSpecificTime(time, this.appModel.getAileronIndex()));
+            this.elevator.setValue(this.appModel.getTimeSeries().getValAtSpecificTime(time, this.appModel.getElevatorIndex()));
+        }
     }
 
     private void initJoyStickProperties() {
@@ -55,9 +73,7 @@ public class AppViewModel extends Observable implements Observer {
         this.elevator = new SimpleFloatProperty();
         this.throttle = new SimpleFloatProperty();
         this.rudder = new SimpleFloatProperty();
-
         this.centerCircle = new SimpleFloatProperty();
-
         this.minThrottle = new SimpleFloatProperty();
         this.maxThrottle = new SimpleFloatProperty();
         this.minRudder = new SimpleFloatProperty();
@@ -106,7 +122,6 @@ public class AppViewModel extends Observable implements Observer {
         } else {
             myErrorAlert("Choose Flight Csv file ERROR", check);
         }
-
         resetFlightProp();
     }
 
@@ -151,14 +166,14 @@ public class AppViewModel extends Observable implements Observer {
 
     public void play() {
         if (!appModel.isReady()) {
-            myErrorAlert("Start ERROR", "FLIGHT NOT READY\nMISSING SETTINGS OR FLIGHT CSV");
+            myErrorAlert("Start ERROR", "Flight is missing 1 of the followings:\n1) Settings.json file\n2) flight.csv file");
         } else {
             this.startThread = new Thread(() -> {
                 this.appModel.play();
             });
             this.startThread.start();
-
         }
+
     }
 
     public void pause() {

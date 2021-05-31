@@ -1,27 +1,45 @@
 package app.model;
 
+import app.model.algorithms.TimeSeries;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.FloatProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleFloatProperty;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.ConnectException;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class SimulatorPlayer {
     private String ip;
     private long port;
     private double speed;
-    private FloatProperty timeStamp;
+    private TimeSeries timeSeries;
+    private DoubleProperty timeStamp;
+    private FlightSettings flightSettings;
+    private int maxlines;
 
-    public SimulatorPlayer(FlightSettings fs) {
+    public SimulatorPlayer() {
+    }
+
+    public void setFlightSettings(FlightSettings fs) {
+        this.flightSettings = fs;
         this.ip = fs.getSimulatorIp();
         this.port = fs.getSimulatorPort();
         this.speed = fs.getSimulatorSpeed();
-        this.timeStamp = new SimpleFloatProperty();
+        this.timeStamp = new SimpleDoubleProperty();
+
     }
 
+    public void setTimeSeries(TimeSeries ts) {
+        this.timeSeries = ts;
+        this.maxlines = this.timeSeries.data.size();
+    }
 
     public void stop() {
     }
@@ -29,25 +47,38 @@ public class SimulatorPlayer {
     public void pause() {
     }
 
+    private ArrayList<String> castFloatArrayToString(float[] floats){
+        ArrayList<String> sVals = new ArrayList<>();
+        for (int i = 0; i < floats.length; i++) {
+            sVals.add("" + floats[i]);
+        }
+        return sVals;
+    }
+
     public void play(double speed, double time) {
+
+
         try {
-            Socket fg = new Socket("localhost", 5400);
-            BufferedReader in = new BufferedReader(new FileReader("C:\\Users\\tatio\\patam2\\src\\files\\reg_flight.csv"));
+            Socket fg = new Socket(this.ip, (int) this.port);
             PrintWriter out = new PrintWriter(fg.getOutputStream());
-            String line;
-            while ((line = in.readLine()) != null) {
-                System.out.println(line);
+
+            double floatedMaxTime = (this.maxlines / 10 + ((double) this.maxlines % 10 / 10) + 0.1);
+
+            while (this.timeStamp.getValue() < floatedMaxTime - 0.1) {
+                int linuNum = (int) (this.timeStamp.getValue() * 10);
+                float[] data = this.timeSeries.data.get(linuNum);
+                String line = String.join(",",castFloatArrayToString(data));
                 out.println(line);
                 out.flush();
                 Thread.sleep((long) (100 / this.speed));
+                this.timeStamp.setValue(this.timeStamp.getValue() + 0.1);
             }
             out.close();
-            in.close();
             fg.close();
-        } catch (Exception e) {
 
+        } catch (Exception connectException) {
+            System.out.println(connectException.getMessage());
         }
-
     }
 
     public String getIp() {
@@ -74,15 +105,15 @@ public class SimulatorPlayer {
         this.speed = speed;
     }
 
-    public float getTimeStamp() {
+    public Double getTimeStamp() {
         return timeStamp.get();
     }
 
-    public FloatProperty timeStampProperty() {
+    public DoubleProperty timeStampProperty() {
         return timeStamp;
     }
 
-    public void setTimeStamp(float timeStamp) {
+    public void setTimeStamp(Double timeStamp) {
         this.timeStamp.set(timeStamp);
     }
 }

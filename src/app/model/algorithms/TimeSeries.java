@@ -99,7 +99,7 @@ public class TimeSeries {
 
     }
 
-    public float getValAtSepcifiTime(int time, String request)
+    public float getValAtSpecificTime(int time, String request)
     //we get key and feature name
     //we return the feature at that time
     {
@@ -111,7 +111,7 @@ public class TimeSeries {
 
     }
 
-    public float getValAtSepcifiTime(int time, int request)
+    public float getValAtSpecificTime(int time, int request)
     //we get key and feature name
     //we return the feature at that time
     {
@@ -119,7 +119,7 @@ public class TimeSeries {
 
         if (request == -1) {
             return -1;
-        } else return data.get(time - 1)[request];
+        } else return data.get(time - 1)[request-1];
 
     }
 
