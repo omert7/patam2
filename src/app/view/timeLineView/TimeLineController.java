@@ -26,6 +26,9 @@ public class TimeLineController {
     @FXML
     private ComboBox<String> speed;
 
+    private final double nextValue = 15;
+    private final double backValue = 15;
+
     // Add a public no-args constructor
     public TimeLineController() {
     }
@@ -51,6 +54,14 @@ public class TimeLineController {
 
     public void setTime(Slider time) {
         this.time = time;
+    }
+
+    public double getNextValue(){
+        return this.nextValue;
+    }
+
+    public double getBackValue(){
+        return this.nextValue;
     }
 
     public Text getTimeStamp() {

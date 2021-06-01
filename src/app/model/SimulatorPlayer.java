@@ -23,8 +23,10 @@ public class SimulatorPlayer {
     private DoubleProperty timeStamp;
     private FlightSettings flightSettings;
     private int maxlines;
+    private Socket socket;
 
     public SimulatorPlayer() {
+
     }
 
     public void setFlightSettings(FlightSettings fs) {
@@ -47,7 +49,7 @@ public class SimulatorPlayer {
     public void pause() {
     }
 
-    private ArrayList<String> castFloatArrayToString(float[] floats){
+    private ArrayList<String> castFloatArrayToString(float[] floats) {
         ArrayList<String> sVals = new ArrayList<>();
         for (int i = 0; i < floats.length; i++) {
             sVals.add("" + floats[i]);
@@ -55,65 +57,65 @@ public class SimulatorPlayer {
         return sVals;
     }
 
-    public void play(double speed, double time) {
-
-
+    public void play() {
         try {
-            Socket fg = new Socket(this.ip, (int) this.port);
-            PrintWriter out = new PrintWriter(fg.getOutputStream());
+            PrintWriter out = new PrintWriter(socket.getOutputStream());
 
             double floatedMaxTime = (this.maxlines / 10 + ((double) this.maxlines % 10 / 10) + 0.1);
 
             while (this.timeStamp.getValue() < floatedMaxTime - 0.1) {
                 int linuNum = (int) (this.timeStamp.getValue() * 10);
                 float[] data = this.timeSeries.data.get(linuNum);
-                String line = String.join(",",castFloatArrayToString(data));
+                String line = String.join(",", castFloatArrayToString(data));
                 out.println(line);
                 out.flush();
                 Thread.sleep((long) (100 / this.speed));
                 this.timeStamp.setValue(this.timeStamp.getValue() + 0.1);
             }
             out.close();
-            fg.close();
-
-        } catch (Exception connectException) {
-            System.out.println(connectException.getMessage());
+        } catch (Exception exception) {
+            System.out.println(exception.getMessage());
         }
     }
 
-    public String getIp() {
-        return ip;
+
+    public void createSocket() throws IOException {
+        socket = new Socket(this.ip, (int) this.port);
     }
 
-    public void setIp(String ip) {
-        this.ip = ip;
-    }
+        public String getIp () {
+            return ip;
+        }
 
-    public long getPort() {
-        return port;
-    }
+        public void setIp (String ip){
+            this.ip = ip;
+        }
 
-    public void setPort(long port) {
-        this.port = port;
-    }
+        public long getPort () {
+            return port;
+        }
 
-    public double getSpeed() {
-        return speed;
-    }
+        public void setPort ( long port){
+            this.port = port;
+        }
 
-    public void setSpeed(double speed) {
-        this.speed = speed;
-    }
+        public double getSpeed () {
+            return speed;
+        }
 
-    public Double getTimeStamp() {
-        return timeStamp.get();
-    }
+        public void setSpeed ( double speed){
+            this.speed = speed;
+        }
 
-    public DoubleProperty timeStampProperty() {
-        return timeStamp;
-    }
+        public Double getTimeStamp () {
+            return timeStamp.get();
+        }
 
-    public void setTimeStamp(Double timeStamp) {
-        this.timeStamp.set(timeStamp);
+        public DoubleProperty timeStampProperty () {
+            return timeStamp;
+        }
+
+        public void setTimeStamp (Double timeStamp){
+            this.timeStamp.set(timeStamp);
+        }
     }
-}

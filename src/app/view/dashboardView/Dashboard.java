@@ -4,6 +4,7 @@ import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.AnchorPane;
+
 import java.util.Objects;
 
 public class Dashboard extends AnchorPane {
@@ -29,7 +30,8 @@ public class Dashboard extends AnchorPane {
 
         }
     }
-    private void initProperties(){
+
+    private void initProperties() {
         roll = new SimpleFloatProperty(dashboardController.dpRollProperty().getValue());
         pitch = new SimpleFloatProperty(dashboardController.dpPitchProperty().getValue());
         heading = new SimpleFloatProperty(dashboardController.dpHeadingProperty().getValue());
@@ -40,7 +42,7 @@ public class Dashboard extends AnchorPane {
 
     }
 
-    private void bindProperties(){
+    private void bindProperties() {
         dashboardController.dpAirspeedProperty().bind(airspeed);
         dashboardController.dpHeadingProperty().bind(heading);
         dashboardController.dpYawProperty().bind(yaw);

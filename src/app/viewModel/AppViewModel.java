@@ -9,6 +9,10 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.sql.Time;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -82,7 +86,6 @@ public class AppViewModel extends Observable implements Observer {
         this.maxElevator = new SimpleFloatProperty();
         this.minAileron = new SimpleFloatProperty();
         this.maxAileron = new SimpleFloatProperty();
-
     }
 
     private void initDashBoardProperties() {
@@ -93,7 +96,6 @@ public class AppViewModel extends Observable implements Observer {
         this.pitch = new SimpleFloatProperty();
         this.roll = new SimpleFloatProperty();
         this.altitude = new SimpleFloatProperty();
-
     }
 
     private void createSettings() {
@@ -104,10 +106,18 @@ public class AppViewModel extends Observable implements Observer {
         try {
             fs.loadSettings();
             appModel.setFlightSettings(fs);
+            this.maxAileron.setValue(fs.getFlightFeatureHashMap().get("aileron").getMax());
+            this.minAileron.setValue(fs.getFlightFeatureHashMap().get("aileron").getMin());
+            this.maxElevator.setValue(fs.getFlightFeatureHashMap().get("elevator").getMax());
+            this.minElevator.setValue(fs.getFlightFeatureHashMap().get("elevator").getMin());
+            this.maxThrottle.setValue(fs.getFlightFeatureHashMap().get("throttle").getMax());
+            this.minThrottle.setValue(fs.getFlightFeatureHashMap().get("throttle").getMin());
+            this.maxRudder.setValue(fs.getFlightFeatureHashMap().get("rudder").getMax());
+            this.minRudder.setValue(fs.getFlightFeatureHashMap().get("rudder").getMin());
+            myGoodAlert("Settings.json");
         } catch (Exception exception) {
             myErrorAlert("Choose Flight Settings.json file ERROR", exception.toString());
         }
-
     }
 
 
@@ -119,10 +129,12 @@ public class AppViewModel extends Observable implements Observer {
             this.appModel.setTimeSeries(new TimeSeries(s));
             this.listView.clear();
             this.listView.addAll(appModel.getTimeSeries().namesOfFeatures);
+            resetFlightProp();
+            myGoodAlert("csv flight");
         } else {
             myErrorAlert("Choose Flight Csv file ERROR", check);
         }
-        resetFlightProp();
+
     }
 
     private void myErrorAlert(String title, String text) {
@@ -131,12 +143,35 @@ public class AppViewModel extends Observable implements Observer {
         a1.show();
     }
 
+    private void myGoodAlert(String fileName) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Managed To Load " + fileName + " File", ButtonType.OK);
+        alert.show();
+    }
+
+
     private String checkCsvFile() {
-        if (false) {
-            return "ERROR";
+        BufferedReader reader;
+        try {
+            reader = new BufferedReader(new FileReader(this.csvFile.getValue()));
+            String line = reader.readLine();
+            int counter=1;
+            while (line != null) {
+                String[] s;
+                s = line.split(",");
+
+                if (s.length!=42){
+                    return "flight csv row: " + counter +" expected to have 42 column";
+                }
+                // read next line
+                counter++;
+                line = reader.readLine();
+            }
+            reader.close();
+        } catch (IOException e) {
+            return e.getMessage();
         }
-        return "OK";
-        ///TODO omer please write this function
+
+        return "OK"; // if all is good return OK
     }
 
     private void resetFlightProp() {
@@ -166,19 +201,45 @@ public class AppViewModel extends Observable implements Observer {
 
     public void play() {
         if (!appModel.isReady()) {
-            myErrorAlert("Start ERROR", "Flight is missing 1 of the followings:\n1) Settings.json file\n2) flight.csv file");
-        } else {
-            this.startThread = new Thread(() -> {
-                this.appModel.play();
-            });
-            this.startThread.start();
+            myErrorAlert("Start ERROR", "Flight is missing at least 1 of the followings:\n1) Settings.json file\n2) flight.csv file");
         }
-
+        else if (this.startThread!=null && this.startThread.isAlive()){
+            myErrorAlert("Start Error", "Flight is Running\n" +
+                    "please press 'Pause' Or 'Stop' flight and run again");
+        } else {
+            try {
+                this.appModel.getSp().createSocket();
+                this.startThread = new Thread(() -> {
+                    this.appModel.play();
+                });
+                this.startThread.start();
+            }catch (Exception e){
+                myErrorAlert("Start ERROR", e.getMessage() + "\nPlease make sure simulator is set\n" +
+                        "IP: " + this.appModel.getSp().getIp() + "\nPORT: " +this.appModel.getSp().getPort() + "\n*" +
+                        "Parameters are taken from the settings file given by you");
+            }
+        }
     }
+
 
     public void pause() {
         if (this.startThread != null)
             this.startThread.interrupt();
+    }
+
+    public void runNext(double value){
+        setTimeStamp(this.timeStamp.getValue() + value);
+
+    }
+
+    public void runBack(double value){
+        double val = this.timeStamp.getValue() - value;
+        if (val<=0){
+            this.timeStamp.setValue(0);
+        }else{
+            this.timeStamp.setValue(val);
+        }
+
     }
 
     public AppModel getAppModel() {

@@ -59,7 +59,7 @@ public class AppModel extends Observable {
     }
 
     public void play() {
-        sp.play(1, 1);
+        sp.play();
     }
 
     public float getTimestamp() {

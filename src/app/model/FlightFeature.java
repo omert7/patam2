@@ -1,12 +1,12 @@
 package app.model;
 
-public class FlightFeature {
+public class FlightFeature { //TODO change to float
     private String featureName;
-    private double min;
-    private double max;
+    private float min;
+    private float max;
     private int featureIndex;
 
-    public FlightFeature(String featureName, double min, double max, int featureIndex) {
+    public FlightFeature(String featureName, float min, float max, int featureIndex) {
         this.featureName = featureName;
         this.min = min;
         this.max = max;
@@ -21,19 +21,19 @@ public class FlightFeature {
         this.featureName = featureName;
     }
 
-    public double getMin() {
+    public float getMin() {
         return min;
     }
 
-    public void setMin(double min) {
+    public void setMin(float min) {
         this.min = min;
     }
 
-    public double getMax() {
+    public float getMax() {
         return max;
     }
 
-    public void setMax(double max) {
+    public void setMax(float max) {
         this.max = max;
     }
 

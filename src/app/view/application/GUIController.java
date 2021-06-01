@@ -51,6 +51,8 @@ public class GUIController {
     private void bindTimeLineProperties() {
         timeLine.getTimeLineController().getPlay().setOnMouseClicked(v -> vm.play());
         timeLine.getTimeLineController().getPause().setOnMouseClicked(v -> vm.pause());
+        timeLine.getTimeLineController().getNext().setOnMouseClicked(v->vm.runNext(timeLine.getTimeLineController().getNextValue()));
+        timeLine.getTimeLineController().getBack().setOnMouseClicked(v->vm.runBack(timeLine.getTimeLineController().getBackValue()));
     }
 
     private void bindDashboardProperties() {

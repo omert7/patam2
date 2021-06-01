@@ -3,7 +3,7 @@
   "port": 5400,
   "samplingRatePerSec": 10,
   "chosenAlgorithmPath": "/home/omert/algo",
-  "validFlightPath": "/home/omert/reg_flight.csv",
+  "trainFlightCsvPath": "/home/omert/reg_flight.csv",
 
   "featuresSettings": [
     {
