@@ -39,10 +39,10 @@ public class JoystickController implements Initializable {
         minRudder = new SimpleFloatProperty(-1);
         maxRudder = new SimpleFloatProperty(1);
         centerCircle = new SimpleFloatProperty((float) (joy.getHeight() / 2));
-        minElevator = new SimpleFloatProperty(0);
-        maxElevator = new SimpleFloatProperty((float) joy.getHeight());
-        minAileron = new SimpleFloatProperty(0);
-        maxAileron = new SimpleFloatProperty((float) joy.getWidth());
+        minElevator = new SimpleFloatProperty(-1);
+        maxElevator = new SimpleFloatProperty(1);
+        minAileron = new SimpleFloatProperty(-1);
+        maxAileron = new SimpleFloatProperty(1);
 
         this.throttle.setMajorTickUnit(1000);
         this.rudder.setMajorTickUnit(1000);
@@ -56,9 +56,9 @@ public class JoystickController implements Initializable {
         this.throttle.setValue((maxThrottle.getValue() - minThrottle.getValue()) / 2);
         this.rudder.setValue((maxRudder.getValue() - minRudder.getValue()) / 2);
         this.aileron = new SimpleFloatProperty();
-        this.aileron.set(centerCircle.getValue());
+        this.aileron.set(0);
         this.elevator = new SimpleFloatProperty();
-        this.elevator.set(centerCircle.getValue());
+        this.elevator.set(0);
 
         addListeners();
 
@@ -80,21 +80,25 @@ public class JoystickController implements Initializable {
         gc.clearRect(0, 0, joy.getWidth(), joy.getHeight());
         gc.strokeRect(0, 0, joy.getWidth(), joy.getHeight());
         gc.strokeOval(this.getAli() - 30, this.getEle() - 30, 60, 60);
+        System.out.println("test: " + this.getAli()  + "  " + this.getEle() );
+
     }
 
-    public double getEle() {
+    public float getEle() {
         //get the value noramllaiz after get the canvas size
-        double len = Math.abs(maxElevator.getValue() - minElevator.getValue());
-        double temp = Math.abs(this.elevator.getValue() - minElevator.getValue());
-        return (temp / len) * (joy.getHeight());
+    	float len = Math.abs(maxElevator.getValue() - minElevator.getValue());
+    	float temp = Math.abs(this.elevator.getValue() - minElevator.getValue());
+    	float ans=(float) ((temp / len) * joy.getHeight());
+        return ans;
     }
 
 
-    public double getAli() {
-        //get the value noramllaiz after get the canvas size
-        double len = Math.abs(maxAileron.getValue() - minAileron.getValue());
-        double temp = Math.abs(this.aileron.getValue() - minAileron.getValue());
-        return (temp / len) * (joy.getHeight());
+    public float getAli() {
+        
+        float len = Math.abs(maxAileron.getValue() - minAileron.getValue());///TODO****
+    	float temp = Math.abs(this.aileron.getValue() - minAileron.getValue());
+    	float ans=(float) ((temp / len) * joy.getWidth());
+        return ans;
 
     }
 
