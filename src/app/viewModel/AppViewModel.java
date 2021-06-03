@@ -227,16 +227,18 @@ public class AppViewModel {
     }
 
     public void runNext(double value){
-        setTimeStamp(this.timeStamp.getValue() + value);
+        double newTimeStamp = (this.timeStamp.getValue() + value) >= this.maxTimeLine.getValue() ?
+                this.maxTimeLine.getValue(): this.timeStamp.getValue() + value;
+        setTimeStamp(newTimeStamp);
 
     }
 
     public void runBack(double value){
         double val = this.timeStamp.getValue() - value;
         if (val<=0){
-            this.timeStamp.setValue(0);
+            setTimeStamp(0);
         }else{
-            this.timeStamp.setValue(val);
+            setTimeStamp(val);
         }
 
     }

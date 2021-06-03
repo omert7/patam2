@@ -21,13 +21,18 @@ public class TimeLine extends AnchorPane {
             timeLineController = fxl.getController();
             timeStamp = new SimpleDoubleProperty();
             maxTimeLine = new SimpleDoubleProperty(timeLineController.getMaxTimeLine());
-            timeLineController.maxTimeLineProperty().bind(maxTimeLine);
+            timeLineController.getTime().maxProperty().bind(maxTimeLine);
+
             maxTimeLine.addListener(v -> {
                 timeLineController.getTextTimeStamp().setText(this.createTextTime());
             });
             timeStamp.addListener(v -> {
                 timeLineController.getTime().setValue(timeStamp.getValue());
                 timeLineController.getTextTimeStamp().setText(this.createTextTime());
+            });
+
+            timeLineController.getTime().setOnMouseReleased(event -> {
+                System.out.println(timeLineController.getTime().getValue());
             });
 
             this.getChildren().add(timeLine);
