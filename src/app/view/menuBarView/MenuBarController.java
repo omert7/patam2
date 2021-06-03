@@ -64,9 +64,9 @@ public class MenuBarController {
     @FXML
     void algoFileChooser(ActionEvent event) {
         FileChooser fc = new FileChooser();
-        fc.getExtensionFilters().add(new ExtensionFilter("Anomaly detector files", "*.java"));
+        fc.getExtensionFilters().add(new ExtensionFilter("Anomaly detector files", "*.class"));
         String currentPath = Paths.get(".").toAbsolutePath().normalize().toString();
-        currentPath= currentPath+"/src/files";
+        currentPath= currentPath+"/bin/app/model/algorithms";
         fc.setInitialDirectory(new File(currentPath));
         File f = fc.showOpenDialog(null);
         if (f != null) {
