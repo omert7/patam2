@@ -1,6 +1,7 @@
 package app.view.menuBarView;
 
 import java.io.File;
+import java.nio.file.Paths;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -38,6 +39,9 @@ public class MenuBarController {
     void xmlFileChooser(ActionEvent event) {
         FileChooser fc = new FileChooser();
         fc.getExtensionFilters().add(new ExtensionFilter("json files", "*.json"));
+        String currentPath = Paths.get(".").toAbsolutePath().normalize().toString();
+        currentPath= currentPath+"/src/files";
+        fc.setInitialDirectory(new File(currentPath));
         File f = fc.showOpenDialog(null);
         if (f != null) {
             sSettingFile.setValue(f.getPath());
@@ -48,6 +52,9 @@ public class MenuBarController {
     void csvFileChooser(ActionEvent event) {
         FileChooser fc = new FileChooser();
         fc.getExtensionFilters().add(new ExtensionFilter(" csv files", "*.csv"));
+        String currentPath = Paths.get(".").toAbsolutePath().normalize().toString();
+        currentPath= currentPath+"/src/files";
+        fc.setInitialDirectory(new File(currentPath));
         File f = fc.showOpenDialog(null);
         if (f != null) {
             sCsvFile.setValue(f.getPath());
@@ -58,6 +65,9 @@ public class MenuBarController {
     void algoFileChooser(ActionEvent event) {
         FileChooser fc = new FileChooser();
         fc.getExtensionFilters().add(new ExtensionFilter("Anomaly detector files", "*.java"));
+        String currentPath = Paths.get(".").toAbsolutePath().normalize().toString();
+        currentPath= currentPath+"/src/files";
+        fc.setInitialDirectory(new File(currentPath));
         File f = fc.showOpenDialog(null);
         if (f != null) {
             sAlgoFile.setValue(f.getPath());
