@@ -40,6 +40,7 @@ public class Joystick extends GridPane {
 
         }
     }
+
     public void bindProperties(){
         joystickController.getThrottle().valueProperty().bind(throttle);
         joystickController.getRudder().valueProperty().bind(rudder);

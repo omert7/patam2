@@ -30,6 +30,7 @@ public class Main extends Application {
                 try {
                     while (true) {
                         Thread.sleep(3000);
+                        System.out.println(vm.getMaxTimeLine());
 //                    double ele = ThreadLocalRandom.current().nextDouble(0, 150);
 //                    double ail = ThreadLocalRandom.current().nextDouble(0, 150);
 //                    vm.setRoll(ThreadLocalRandom.current().nextDouble(0, 150));

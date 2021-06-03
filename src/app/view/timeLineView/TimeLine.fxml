@@ -39,6 +39,6 @@
                   </HBox>
                </children>
             </HBox>
-            <Text fx:id="timeStamp" layoutX="402.0" layoutY="18.0" strokeType="OUTSIDE" strokeWidth="0.0" text="time" />
+            <Text fx:id="textTimeStamp" layoutX="402.0" layoutY="18.0" strokeType="OUTSIDE" strokeWidth="0.0" text="time" />
       </AnchorPane>
 

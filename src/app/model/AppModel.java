@@ -7,7 +7,7 @@ import javafx.beans.property.SimpleFloatProperty;
 
 import java.util.Observable;
 
-public class AppModel extends Observable {
+public class AppModel{
     private FlightSettings flightSettings;
     private TimeSeries timeSeries;
     private SimulatorPlayer sp;

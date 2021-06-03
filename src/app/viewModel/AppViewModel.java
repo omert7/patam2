@@ -8,18 +8,13 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
-
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.sql.Time;
-import java.util.Observable;
-import java.util.Observer;
 
-public class AppViewModel extends Observable implements Observer {
+public class AppViewModel {
 
     private AppModel appModel;
-    private TimeSeries ts;
     private DoubleProperty timeStamp;
     private StringProperty algoFile, csvFile, settingFile;
     private ListProperty<String> listView;
@@ -27,6 +22,7 @@ public class AppViewModel extends Observable implements Observer {
     private FloatProperty aileron, elevator, rudder, throttle, centerCircle;
     private FloatProperty minThrottle, maxThrottle, minRudder, maxRudder;
     private FloatProperty minElevator, maxElevator, minAileron, maxAileron;
+    private DoubleProperty maxTimeLine;
 
     Thread startThread;
 
@@ -46,9 +42,8 @@ public class AppViewModel extends Observable implements Observer {
         ObservableList<String> observableList = FXCollections.observableArrayList();
         this.listView = new SimpleListProperty<>(observableList);
 
+        this.maxTimeLine = new SimpleDoubleProperty();
         this.timeStamp = new SimpleDoubleProperty();
-
-        am.addObserver(this);
         this.appModel = am;
         this.timeStamp.bindBidirectional(am.timestampProperty());
         this.timeStamp.addListener(v -> updateParams());
@@ -57,6 +52,7 @@ public class AppViewModel extends Observable implements Observer {
     private void updateParams() {
         if (this.timeStamp.getValue() == 0) {
             resetFlightProp();
+
         } else {
             int time = (int) (this.timeStamp.getValue() * 10);
             this.yaw.setValue(this.appModel.getTimeSeries().getValAtSpecificTime(time, this.appModel.getYawIndex()));
@@ -126,9 +122,12 @@ public class AppViewModel extends Observable implements Observer {
         String s = this.csvFile.getValue();
         String check = checkCsvFile();
         if (check.equals("OK")) {
-            this.appModel.setTimeSeries(new TimeSeries(s));
+            TimeSeries ts = new TimeSeries(s);
+            int dataSize = ts.data.size();
+            this.appModel.setTimeSeries(ts);
             this.listView.clear();
             this.listView.addAll(appModel.getTimeSeries().namesOfFeatures);
+            this.maxTimeLine.setValue((dataSize / 10 + ((double) dataSize % 10 / 10) + 0.1));
             resetFlightProp();
             myGoodAlert("csv flight");
         } else {
@@ -241,6 +240,12 @@ public class AppViewModel extends Observable implements Observer {
         }
 
     }
+    public void stop(){
+        if (this.startThread != null)
+            this.startThread.interrupt();
+        resetFlightProp();
+    }
+
 
     public AppModel getAppModel() {
         return appModel;
@@ -421,12 +426,6 @@ public class AppViewModel extends Observable implements Observer {
         this.listView = listView;
     }
 
-    @Override
-    public void update(Observable o, Object arg) {
-        // TODO Auto-generated method stub
-
-    }
-
 
     public float getMinThrottle() {
         return minThrottle.get();
@@ -534,5 +533,17 @@ public class AppViewModel extends Observable implements Observer {
 
     public void setCenterCircle(float centerCircle) {
         this.centerCircle.set(centerCircle);
+    }
+
+    public double getMaxTimeLine() {
+        return maxTimeLine.get();
+    }
+
+    public DoubleProperty maxTimeLineProperty() {
+        return maxTimeLine;
+    }
+
+    public void setMaxTimeLine(double maxTimeLine) {
+        this.maxTimeLine.set(maxTimeLine);
     }
 }

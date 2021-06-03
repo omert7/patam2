@@ -1,5 +1,7 @@
 package app.view.timeLineView;
 
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -12,7 +14,7 @@ public class TimeLineController {
     @FXML
     private Slider time;
     @FXML
-    private Text timeStamp;
+    private Text textTimeStamp;
     @FXML
     private Button back;
     @FXML
@@ -28,14 +30,14 @@ public class TimeLineController {
 
     private final double nextValue = 15;
     private final double backValue = 15;
-
+    private DoubleProperty maxTimeLine;
     // Add a public no-args constructor
     public TimeLineController() {
     }
 
     @FXML
     private void initialize() {
-        timeStamp.setText("00:00:00");
+//        textTimeStamp.setText("00:00:00 / 00:00:00");
         ObservableList<String> options =
                 FXCollections.observableArrayList(
                         "x0.5",
@@ -43,6 +45,8 @@ public class TimeLineController {
                         "x1.5",
                         "x2"
                 );
+        this.maxTimeLine = new SimpleDoubleProperty(0);
+
         speed.getItems().addAll(options);
         speed.getSelectionModel().select(1);
 
@@ -61,15 +65,15 @@ public class TimeLineController {
     }
 
     public double getBackValue(){
-        return this.nextValue;
+        return this.backValue;
     }
 
-    public Text getTimeStamp() {
-        return timeStamp;
+    public Text getTextTimeStamp() {
+        return textTimeStamp;
     }
 
-    public void setTimeStamp(Text timeStamp) {
-        this.timeStamp = timeStamp;
+    public void setTextTimeStamp(Text textTimeStamp) {
+        this.textTimeStamp = textTimeStamp;
     }
 
     public Button getBack() {
@@ -118,5 +122,17 @@ public class TimeLineController {
 
     public void setSpeed(ComboBox<String> speed) {
         this.speed = speed;
+    }
+
+    public double getMaxTimeLine() {
+        return maxTimeLine.get();
+    }
+
+    public DoubleProperty maxTimeLineProperty() {
+        return maxTimeLine;
+    }
+
+    public void setMaxTimeLine(double maxTimeLine) {
+        this.maxTimeLine.set(maxTimeLine);
     }
 }

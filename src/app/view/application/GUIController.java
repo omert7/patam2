@@ -53,6 +53,10 @@ public class GUIController {
         timeLine.getTimeLineController().getPause().setOnMouseClicked(v -> vm.pause());
         timeLine.getTimeLineController().getNext().setOnMouseClicked(v->vm.runNext(timeLine.getTimeLineController().getNextValue()));
         timeLine.getTimeLineController().getBack().setOnMouseClicked(v->vm.runBack(timeLine.getTimeLineController().getBackValue()));
+        timeLine.getTimeLineController().getStop().setOnMouseClicked(v->vm.stop());
+        timeLine.getTimeLineController().getTime().setMin(0);
+        timeLine.maxTimeLineProperty().bind(vm.maxTimeLineProperty());
+        timeLine.timeStampProperty().bind(vm.timeStampProperty());
     }
 
     private void bindDashboardProperties() {
