@@ -106,13 +106,14 @@ private void addLis(){
         timeLine.getTimeLineController().getStop().setOnMouseClicked(v->vm.stop());
         timeLine.getTimeLineController().getTime().setMin(0);
         timeLine.maxTimeLineProperty().bind(vm.maxTimeLineProperty());
-        timeLine.timeStampProperty().bind(vm.timeStampProperty());
-       /* timeLine.timeStampProperty().addListener(()->{
-            //graph.getGraphController().getFeatureA().getData().clear();
-      //     new Thread(()->vm.getAppModel().addValueInTime( graph.getNameOfFeatureA().getValue(),attributeA)).run();
-            vm.getAppModel().addValueInTime( graph.getNameOfFeatureA().getValue(),attributeA);
-             });*/
 
+        timeLine.timeStampProperty().bindBidirectional(vm.timeStampProperty());
+        timeLine.speedProperty().bindBidirectional(vm.speedProperty());
+        timeLine.getTimeLineController().getTime().setOnMousePressed(v->{vm.setTimeStamp(timeLine.getTimeLineController().getTime().getValue());
+        });
+        timeLine.getTimeLineController().getTime().setOnMouseDragged(v->{
+            vm.setTimeStamp(timeLine.getTimeLineController().getTime().getValue());
+        });
 
     }
 

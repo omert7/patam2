@@ -13,7 +13,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -31,7 +30,10 @@ public class AppViewModel {
     private FloatProperty minThrottle, maxThrottle, minRudder, maxRudder;
     private FloatProperty minElevator, maxElevator, minAileron, maxAileron;
     private DoubleProperty maxTimeLine;
+
     private StringProperty nameofFeatureA, nameofFeatureB,nameFromList;
+
+    private DoubleProperty speed;
 
     Thread startThread;
 
@@ -52,10 +54,12 @@ public class AppViewModel {
         //list
         ObservableList<String> observableList = FXCollections.observableArrayList();
         this.listView = new SimpleListProperty<>(observableList);
-        //
+
+        this.speed = new SimpleDoubleProperty(1.0);
         this.maxTimeLine = new SimpleDoubleProperty();
         this.timeStamp = new SimpleDoubleProperty();
         this.appModel = am;
+        this.appModel.speedProperty().bind(this.speed);
         this.timeStamp.bindBidirectional(am.timestampProperty());
         this.timeStamp.addListener(v -> updateParams());
         //graph initialize
@@ -77,17 +81,17 @@ public class AppViewModel {
 
         } else {
             int time = (int) (this.timeStamp.getValue() * 10);
+
             this.yaw.setValue(this.appModel.getTimeSeriesAnomaly().getValAtSpecificTime(time, this.appModel.getYawIndex()));
             this.pitch.setValue(this.appModel.getTimeSeriesAnomaly().getValAtSpecificTime(time, this.appModel.getPitchIndex()));
             this.roll.setValue(this.appModel.getTimeSeriesAnomaly().getValAtSpecificTime(time, this.appModel.getRollIndex()));
-            this.heading.setValue(this.appModel.getTimeSeriesAnomaly().getValAtSpecificTime(time, this.appModel.getHeadingIndex()));
+            this.heading.setValue(180 - this.appModel.getTimeSeriesAnomaly().getValAtSpecificTime(time, this.appModel.getHeadingIndex()));
             this.altitude.setValue(this.appModel.getTimeSeriesAnomaly().getValAtSpecificTime(time, this.appModel.getAltitudeIndex()));
             this.airspeed.setValue(this.appModel.getTimeSeriesAnomaly().getValAtSpecificTime(time, this.appModel.getAirspeedIndex()));
             this.throttle.setValue(this.appModel.getTimeSeriesAnomaly().getValAtSpecificTime(time, this.appModel.getThrottleIndex()));
             this.rudder.setValue(this.appModel.getTimeSeriesAnomaly().getValAtSpecificTime(time, this.appModel.getRudderIndex()));
             this.aileron.setValue(this.appModel.getTimeSeriesAnomaly().getValAtSpecificTime(time, this.appModel.getAileronIndex()));
             this.elevator.setValue(this.appModel.getTimeSeriesAnomaly().getValAtSpecificTime(time, this.appModel.getElevatorIndex()));
-
         }
     }
 /*private XYChart.Series drawGraph(String s){
@@ -163,7 +167,6 @@ public boolean isOnflight(){
 
     }
     private void createSettings() {
-        // call pause
         resetFlightProp();
         FlightSettings fs = new FlightSettings(settingFile.getValue());
 
@@ -178,6 +181,7 @@ public boolean isOnflight(){
             this.minThrottle.setValue(fs.getFlightFeatureHashMap().get("throttle").getMin());
             this.maxRudder.setValue(fs.getFlightFeatureHashMap().get("rudder").getMax());
             this.minRudder.setValue(fs.getFlightFeatureHashMap().get("rudder").getMin());
+            this.speed.setValue(fs.getSimulatorSpeed());
             myGoodAlert("Settings.json");
         } catch (Exception exception) {
             myErrorAlert("Choose Flight Settings.json file ERROR", exception.toString());
@@ -221,13 +225,14 @@ public boolean isOnflight(){
         try {
             reader = new BufferedReader(new FileReader(this.csvFile.getValue()));
             String line = reader.readLine();
-            int counter=1;
+            int counter = 1;
             while (line != null) {
                 String[] s;
                 s = line.split(",");
 
-                if (s.length!=42){
-                    return ("flight csv row: " + counter +" expected to have 42 column");
+
+                if (s.length != 42) {
+                    return "flight csv row: " + counter + " expected to have 42 column";
                 }
                 // read next line
                 counter++;
@@ -256,7 +261,7 @@ public boolean isOnflight(){
         this.roll.set(0);
         this.altitude.set(0);
         this.timeStamp.set(0);
-
+        this.speed.set(1);
     }
 
 
@@ -268,8 +273,7 @@ public boolean isOnflight(){
     public void play() {
         if (!appModel.isReady()) {
             myErrorAlert("Start ERROR", "Flight is missing at least 1 of the followings:\n1) Settings.json file\n2) flight.csv file");
-        }
-        else if (this.startThread!=null && this.startThread.isAlive()){
+        } else if (this.startThread != null && this.startThread.isAlive()) {
             myErrorAlert("Start Error", "Flight is Running\n" +
                     "please press 'Pause' Or 'Stop' flight and run again");
         } else {
@@ -279,9 +283,9 @@ public boolean isOnflight(){
                     this.appModel.play();
                 });
                 this.startThread.start();
-            }catch (Exception e){
+            } catch (Exception e) {
                 myErrorAlert("Start ERROR", e.getMessage() + "\nPlease make sure simulator is set\n" +
-                        "IP: " + this.appModel.getSp().getIp() + "\nPORT: " +this.appModel.getSp().getPort() + "\n*" +
+                        "IP: " + this.appModel.getSp().getIp() + "\nPORT: " + this.appModel.getSp().getPort() + "\n*" +
                         "Parameters are taken from the settings file given by you");
             }
         }
@@ -293,23 +297,24 @@ public boolean isOnflight(){
             this.startThread.interrupt();
     }
 
-    public void runNext(double value){
+    public void runNext(double value) {
         double newTimeStamp = (this.timeStamp.getValue() + value) >= this.maxTimeLine.getValue() ?
-                this.maxTimeLine.getValue(): this.timeStamp.getValue() + value;
+                this.maxTimeLine.getValue() : this.timeStamp.getValue() + value;
         setTimeStamp(newTimeStamp);
 
     }
 
-    public void runBack(double value){
+    public void runBack(double value) {
         double val = this.timeStamp.getValue() - value;
-        if (val<=0){
+        if (val <= 0) {
             setTimeStamp(0);
-        }else{
+        } else {
             setTimeStamp(val);
         }
 
     }
-    public void stop(){
+
+    public void stop() {
         if (this.startThread != null)
             this.startThread.interrupt();
         resetFlightProp();
@@ -653,6 +658,7 @@ public boolean isOnflight(){
 
 
 
+
     public StringProperty getNameFromList() {
         return nameFromList;
     }
@@ -662,5 +668,17 @@ public boolean isOnflight(){
         this.nameFromList = nameFromList;
     }
 
+
+    public double getSpeed() {
+        return speed.get();
+    }
+
+    public DoubleProperty speedProperty() {
+        return speed;
+    }
+
+    public void setSpeed(double speed) {
+        this.speed.set(speed);
+    }
 
 }

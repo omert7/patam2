@@ -10,6 +10,8 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Slider;
 import javafx.scene.text.Text;
 
+import java.util.HashMap;
+
 public class TimeLineController {
     @FXML
     private Slider time;
@@ -31,25 +33,48 @@ public class TimeLineController {
     private final double nextValue = 15;
     private final double backValue = 15;
     private DoubleProperty maxTimeLine;
+
+    private DoubleProperty dSpeed;
+
     // Add a public no-args constructor
     public TimeLineController() {
     }
 
     @FXML
     private void initialize() {
-//        textTimeStamp.setText("00:00:00 / 00:00:00");
         ObservableList<String> options =
                 FXCollections.observableArrayList(
                         "x0.5",
-                        "x1",
+                        "x1.0",
                         "x1.5",
-                        "x2"
+                        "x2.0"
                 );
+
         this.maxTimeLine = new SimpleDoubleProperty(0);
+        this.dSpeed = new SimpleDoubleProperty();
+        this.dSpeed.addListener(v -> {
+            String value = "x1.0";
+            if (this.dSpeed.getValue() == 1.0) {
+                value = "x1.0";
+            } else if
+            (this.dSpeed.getValue() == 1.5) {
+                value = "x1.5";
+            } else if
+            (this.dSpeed.getValue() == 0.5) {
+                value = "x0.5";
+            } else if (this.dSpeed.getValue() == 2.0) {
+                value = "x2.0";
+            }
+            this.speed.setValue(value);
+        });
+        this.speed.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
+            String s =  this.speed.getValue().replace("x", "");
+            double nv = Double.parseDouble(s);
+            this.dSpeed.setValue(nv);
+        });
 
         speed.getItems().addAll(options);
         speed.getSelectionModel().select(1);
-
     }
 
     public Slider getTime() {
@@ -60,11 +85,11 @@ public class TimeLineController {
         this.time = time;
     }
 
-    public double getNextValue(){
+    public double getNextValue() {
         return this.nextValue;
     }
 
-    public double getBackValue(){
+    public double getBackValue() {
         return this.backValue;
     }
 
@@ -135,4 +160,18 @@ public class TimeLineController {
     public void setMaxTimeLine(double maxTimeLine) {
         this.maxTimeLine.set(maxTimeLine);
     }
+
+    public double getdSpeed() {
+        return dSpeed.get();
+    }
+
+    public DoubleProperty dSpeedProperty() {
+        return dSpeed;
+    }
+
+    public void setdSpeed(double dSpeed) {
+        this.dSpeed.set(dSpeed);
+    }
+
+
 }
