@@ -3,20 +3,25 @@ package app.viewModel;
 import app.model.AppModel;
 import app.model.FlightSettings;
 import app.model.algorithms.TimeSeries;
+import app.model.algorithms.TimeSeriesAnomalyDetector;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
-
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.HashMap;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
+
 
 public class AppViewModel {
 
     private AppModel appModel;
+
     private DoubleProperty timeStamp;
     private StringProperty algoFile, csvFile, settingFile;
     private ListProperty<String> listView;
@@ -41,7 +46,8 @@ public class AppViewModel {
 
         csvFile.addListener(v -> createTimeSeries());
         settingFile.addListener(v -> createSettings());
-
+        algoFile.addListener(v->loadAlgo());
+        
         ObservableList<String> observableList = FXCollections.observableArrayList();
         this.listView = new SimpleListProperty<>(observableList);
         this.speed = new SimpleDoubleProperty(1.0);
@@ -53,6 +59,11 @@ public class AppViewModel {
         this.timeStamp.addListener(v -> updateParams());
     }
 
+    
+    
+    
+    
+    
     private void updateParams() {
         if (this.timeStamp.getValue() == 0) {
             resetFlightProp();
@@ -98,6 +109,45 @@ public class AppViewModel {
         this.altitude = new SimpleFloatProperty();
     }
 
+    private void loadAlgo()
+    {
+    	try {
+    		File f=new File(this.getAlgoFile().getValue());
+    		String s=f.getName();
+    		String path="file://"+f.toURL();
+    		URL[] urls=new URL[1];
+    		urls[0]=new URL(path);
+    		int ch=0;
+    		String name="";
+    		while(s.charAt(ch)!='.') {
+    			name+=s.charAt(ch);
+    			ch++;
+    		}
+    		URLClassLoader urlClassLoader = URLClassLoader.newInstance(urls);
+    		Class<?> c=urlClassLoader.loadClass("app.model.algorithms."+name);
+    		TimeSeriesAnomalyDetector ad=(TimeSeriesAnomalyDetector) c.newInstance();
+    		appModel.setAnomalDetect(ad);
+    		
+    		
+    		
+    		
+
+    	} catch (MalformedURLException e) {
+    		// TODO Auto-generated catch block
+    		e.printStackTrace();
+    	} catch (ClassNotFoundException e) {
+    		// TODO Auto-generated catch block
+    		e.printStackTrace();
+    		System.out.println(e);
+    	} catch (InstantiationException e) {
+    		// TODO Auto-generated catch block
+    		e.printStackTrace();
+    	} catch (IllegalAccessException e) {
+    		// TODO Auto-generated catch block
+    		e.printStackTrace();
+    	}
+    	
+    }
     private void createSettings() {
         resetFlightProp();
         FlightSettings fs = new FlightSettings(settingFile.getValue());
@@ -128,10 +178,12 @@ public class AppViewModel {
         if (check.equals("OK")) {
             TimeSeries ts = new TimeSeries(s);
             int dataSize = ts.data.size();
-            this.appModel.setTimeSeries(ts);
+            this.appModel.setTimeSeriesAnomaly(this.csvFile.getValue());
+            this.appModel.setTimeSeriesAnomaly(s);
             this.listView.clear();
-            this.listView.addAll(appModel.getTimeSeries().namesOfFeatures);
+            this.listView.addAll(appModel.getTimeSeriesAnomaly().namesOfFeatures);
             this.maxTimeLine.setValue((dataSize / 10 + ((double) dataSize % 10 / 10) + 0.1));
+            this.listView.addAll(appModel.getTimeSeriesAnomaly().namesOfFeatures);
             resetFlightProp();
             myGoodAlert("csv flight");
         } else {
@@ -197,7 +249,7 @@ public class AppViewModel {
 
 
     public void setTimeSeries(String timeSeries) {
-        this.appModel.setTimeSeries(new TimeSeries(timeSeries));
+        this.appModel.setTimeSeriesAnomaly((timeSeries));
     }
 
 

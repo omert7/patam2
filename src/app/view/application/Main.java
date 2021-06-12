@@ -26,11 +26,19 @@ public class Main extends Application {
             scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
             primaryStage.setScene(scene);
             primaryStage.show();
-            new Thread(() -> {
+      /*    new Thread(() -> {
                 try {
                     while (true) {
+<<<<<<< HEAD
                         Thread.sleep(1000);
+=======
+<<<<<<< HEAD
+                        Thread.sleep(3000);
+>>>>>>> 942f472e5c08763ceede4f536190506436cdebd0
 //                        System.out.println(vm.getMaxTimeLine());
+=======
+                        Thread.sleep(1000);
+>>>>>>> stash
 //                    double ele = ThreadLocalRandom.current().nextDouble(0, 150);
 //                    double ail = ThreadLocalRandom.current().nextDouble(0, 150);
 //                    vm.setRoll(ThreadLocalRandom.current().nextDouble(0, 150));
@@ -45,6 +53,7 @@ public class Main extends Application {
 //                        System.out.println(vm.getTimeStamp());
 //                        vm.setTimeStamp(14);
 //                        System.out.println(vm.getAppModel().getTimestamp());
+<<<<<<< HEAD
 
 //                        System.out.println(vm.getTimeStamp());
                         System.out.println("#@!#@!##@!#@!'");
@@ -52,13 +61,21 @@ public class Main extends Application {
                         System.out.println(vm.getAppModel().getSpeed());
                         System.out.println(vm.getAppModel().getSp().getSpeed());
                         System.out.println("#@!#@!##@!#@!'");
+=======
+<<<<<<< HEAD
+                        System.out.println(view.getTimeLine().getTimeLineController().getTime().getMax());
+=======
+                       
+                       vm.setAirspeed(vm.getAirspeed()+15);
+>>>>>>> stash
+>>>>>>> 942f472e5c08763ceede4f536190506436cdebd0
                     }
                 } catch (InterruptedException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
 
-            }).start();
+            }).start();*/
 
         } catch (Exception e) {
             e.printStackTrace();

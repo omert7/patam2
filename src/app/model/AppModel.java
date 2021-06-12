@@ -1,21 +1,22 @@
 package app.model;
 
-
+import app.Commands.anomalyDetection;
 import app.model.algorithms.TimeSeries;
 import javafx.beans.property.DoubleProperty;
+import app.model.algorithms.TimeSeriesAnomalyDetector;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleFloatProperty;
 
 public class AppModel{
     private FlightSettings flightSettings;
-    private TimeSeries timeSeries;
+    private TimeSeries timeSeriesTest,timeSeriesAnomaly;
     private SimulatorPlayer sp;
     private FloatProperty timestamp;
     private int aileronIndex,throttleIndex,rudderIndex,elevatorIndex,
             yawIndex,pitchIndex,headingIndex,altitudeIndex,airspeedIndex,rollIndex;
     private DoubleProperty speed;
-
+    private TimeSeriesAnomalyDetector anomalDetect;
 
     public AppModel() {
         this.timestamp = new SimpleFloatProperty();
@@ -25,7 +26,7 @@ public class AppModel{
     }
 
     public boolean isReady() {
-        return (timeSeries != null && flightSettings != null);
+        return (timeSeriesTest != null && flightSettings != null&& timeSeriesAnomaly!=null);
     }
 
     public FlightSettings getFlightSettings() {
@@ -52,16 +53,33 @@ public class AppModel{
         this.rollIndex = this.flightSettings.getFlightFeatureHashMap().get("roll").getFeatureIndex();
     }
 
-    public TimeSeries getTimeSeries() {
-        return timeSeries;
+    public TimeSeries getTimeSeriesTest() {
+		return timeSeriesTest;
+	}
+
+	public TimeSeries getTimeSeriesAnomaly() {
+		return timeSeriesAnomaly;
+	}
+
+	public void setTimeSeriesTest(String timeSeries) {
+        this.timeSeriesTest =new TimeSeries(timeSeries) ;
     }
 
-    public void setTimeSeries(TimeSeries timeSeries) {
-        this.timeSeries = timeSeries;
-        this.sp.setTimeSeries(this.timeSeries);
+	public void setTimeSeriesAnomaly(String timeSeries) {
+        this.timeSeriesTest = new TimeSeries(timeSeries);
+        this.sp.setTimeSeries(this.timeSeriesAnomaly);
     }
 
-    public void play() {
+
+    public TimeSeriesAnomalyDetector getAnomalDetect() {
+		return anomalDetect;
+	}
+
+	public void setAnomalDetect(TimeSeriesAnomalyDetector anomalDetect) {
+		this.anomalDetect = anomalDetect;
+	}
+
+	public void play() {
         sp.play();
     }
 

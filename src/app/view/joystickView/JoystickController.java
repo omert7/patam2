@@ -69,6 +69,11 @@ public class JoystickController implements Initializable {
         maxThrottle.addListener(v -> {   this.throttle.setMax(this.maxThrottle.getValue());});
         maxRudder.addListener(v ->   {   this.rudder.setMax(this.maxRudder.getValue());});
         minRudder.addListener(v ->   {   this.rudder.setMin(this.minRudder.getValue());});
+        /*maxAileron.addListener(v-> paint());
+        minAileron.addListener(v-> paint());
+        maxElevator.addListener(v-> paint());
+        minElevator.addListener(v-> paint());*/
+        
         this.elevator.addListener(v -> paint());
         this.aileron.addListener(v -> paint());
     }
@@ -80,7 +85,7 @@ public class JoystickController implements Initializable {
         gc.clearRect(0, 0, joy.getWidth(), joy.getHeight());
         gc.strokeRect(0, 0, joy.getWidth(), joy.getHeight());
         gc.strokeOval(this.getAli() - 30, this.getEle() - 30, 60, 60);
-        System.out.println("test: " + this.getAli()  + "  " + this.getEle() );
+        System.out.println("paint!");
 
     }
 
