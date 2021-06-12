@@ -54,7 +54,33 @@ public class DashboardController implements Initializable {
     }
     public void updateImages() {
     	 heading.setRotate(dpHeading.getValue());
-         airspeed.setRotate(dpAirspeed.getValue());
+        if(dpAirspeed.getValue()<40) {
+            airspeed.setRotate(dpAirspeed.getValue());
+        }
+        else if( dpAirspeed.getValue()<=60) {
+            airspeed.setRotate(dpAirspeed.getValue()+20);
+        }
+        else if( dpAirspeed.getValue()<=80) {
+            airspeed.setRotate(dpAirspeed.getValue()+30);
+        }
+        else if( dpAirspeed.getValue()<=100) {
+            airspeed.setRotate(dpAirspeed.getValue()+50);
+        }
+        else if( dpAirspeed.getValue()<=120) {
+            airspeed.setRotate(dpAirspeed.getValue()+70);
+        }
+        else if( dpAirspeed.getValue()<=140) {
+            airspeed.setRotate(dpAirspeed.getValue()+80);
+        }
+        else if( dpAirspeed.getValue()<=160) {
+            airspeed.setRotate(dpAirspeed.getValue()+90);
+        }
+        else if( dpAirspeed.getValue()<=180) {
+            airspeed.setRotate(dpAirspeed.getValue()+95);
+        }
+        else if( dpAirspeed.getValue()==200) {
+            airspeed.setRotate(dpAirspeed.getValue()+100);
+        }
     }
     public void updateText() {
     	 roll.setText(dpRoll.getValue().toString());

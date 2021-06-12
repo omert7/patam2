@@ -1,34 +1,104 @@
 package app.model;
 
 
+import app.AnomalyReport;
 import app.Commands.anomalyDetection;
+import app.CorrelatedFeaturesLine;
+import app.model.algorithms.HybridAlgo;
+import app.model.algorithms.LinearRegression;
 import app.model.algorithms.TimeSeries;
 import app.model.algorithms.TimeSeriesAnomalyDetector;
+import app.model.statlib.Line;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
 
+import java.util.List;
 import java.util.Observable;
 
 public class AppModel{
     private FlightSettings flightSettings;
-    private TimeSeries timeSeriesTest,timeSeriesAnomaly;
+    private TimeSeries timeSeriesTrain;
+    private TimeSeries timeSeriesAnomaly;
     private SimulatorPlayer sp;
     private FloatProperty timestamp;
     private int aileronIndex,throttleIndex,rudderIndex,elevatorIndex,
             yawIndex,pitchIndex,headingIndex,altitudeIndex,airspeedIndex,rollIndex;
     private TimeSeriesAnomalyDetector anomalDetect;
 
-
+    private List<AnomalyReport> listAno;
     public AppModel() {
         this.timestamp = new SimpleFloatProperty();
         this.sp = new SimulatorPlayer();
     }
 
     public boolean isReady() {
-        return (timeSeriesTest != null && flightSettings != null&& timeSeriesAnomaly!=null);
+        return ( timeSeriesTrain != null && flightSettings != null&& timeSeriesAnomaly!=null);
     }
+
+
+
+
+    public void addValueTilTime(String atribute, XYChart.Series s) {
+        if(s!=null|| !atribute.equals("")) {
+            int time = (int) (this.timestamp.getValue() * 10);
+            for (int i = 1; i <= time; i++) {
+                double temp = timeSeriesAnomaly.getValAtSpecificTime(i, atribute);
+                s.getData().add(new XYChart.Data(i, temp));
+            }
+
+        }
+    }
+    public XYChart.Series addValueTilTime(String atribute) {
+        XYChart.Series s=new XYChart.Series();
+            int time = (int) (this.timestamp.getValue() * 10);
+            for (int i = 1; i <= time; i++) {
+                double temp = timeSeriesAnomaly.getValAtSpecificTime(i, atribute);
+                s.getData().add(new XYChart.Data(i, temp));
+            }
+    return s;
+
+    }
+    public void addValueAtTime(String atribute, XYChart.Series s) {
+        if(s!=null|| !atribute.equals("")) {
+               int time = (int) (this.timestamp.getValue() * 10);
+                double temp = timeSeriesAnomaly.getValAtSpecificTime(time, atribute);
+                s.getData().add(new XYChart.Data(time, temp));
+
+
+        }
+    }
+
+
+
+
+    public void paint(String atribute) {///TODO paint
+
+        if(this.anomalDetect.getClass()==LinearRegression.class) {
+
+            LinearRegression line =(LinearRegression)this.anomalDetect;
+
+            //get the reg Line
+            CorrelatedFeaturesLine  corr=line.hashMap.get(atribute);
+
+            //		LineChart ll = new LineChart(corr.lin_reg.a, corr.lin_reg.b);
+
+
+        }else if(this.anomalDetect.getClass()==HybridAlgo.class)
+        {
+
+        }
+        else {
+            //zScore
+
+        }
+
+    }
+
 
     public FlightSettings getFlightSettings() {
         return flightSettings;
@@ -39,6 +109,7 @@ public class AppModel{
         this.sp.setFlightSettings(flightSettings);
         loadIndexes();
         this.timestamp.bindBidirectional(sp.timeStampProperty());
+        this.timeSeriesTrain=new TimeSeries(flightSettings.getValidFlightPath());
     }
 
     private void loadIndexes(){
@@ -53,33 +124,37 @@ public class AppModel{
         this.airspeedIndex = this.flightSettings.getFlightFeatureHashMap().get("airspeed").getFeatureIndex();
         this.rollIndex = this.flightSettings.getFlightFeatureHashMap().get("roll").getFeatureIndex();
     }
-   
-    public TimeSeries getTimeSeriesTest() {
-		return timeSeriesTest;
-	}
 
-	public TimeSeries getTimeSeriesAnomaly() {
-		return timeSeriesAnomaly;
-	}
-
-	public void setTimeSeriesTest(String timeSeries) {
-        this.timeSeriesTest =new TimeSeries(timeSeries) ;
+    public TimeSeries getTimeSeriesTrain() {
+        return timeSeriesTrain;
     }
-	public void setTimeSeriesAnomaly(String timeSeries) {
-        this.timeSeriesTest = new TimeSeries(timeSeries);
+
+    public void setTimeSeriesTrain(String timeSeries) {
+        this.timeSeriesTrain =new TimeSeries(timeSeries) ;
+
+    }
+    public TimeSeries getTimeSeriesAnomaly() {
+        return timeSeriesAnomaly;
+    }
+
+    public void setTimeSeriesAnomaly(String timeSeries) {
+        this.timeSeriesAnomaly = new TimeSeries(timeSeries);
         this.sp.setTimeSeries(this.timeSeriesAnomaly);
     }
 
 
     public TimeSeriesAnomalyDetector getAnomalDetect() {
-		return anomalDetect;
-	}
+        return anomalDetect;
+    }
 
-	public void setAnomalDetect(TimeSeriesAnomalyDetector anomalDetect) {
-		this.anomalDetect = anomalDetect;
-	}
+    public void setAnomalDetect(TimeSeriesAnomalyDetector anomalDetect) {
+        this.anomalDetect = anomalDetect;
+        this.anomalDetect.learnNormal(timeSeriesTrain);
+        this.listAno=this.anomalDetect.detect(timeSeriesAnomaly);
 
-	public void play() {
+    }
+
+    public void play() {
         sp.play();
     }
 

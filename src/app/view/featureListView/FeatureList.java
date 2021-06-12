@@ -2,6 +2,8 @@ package app.view.featureListView;
 
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.fxml.FXMLLoader;
 
 import javafx.scene.layout.AnchorPane;
@@ -11,6 +13,8 @@ public class FeatureList extends AnchorPane {
     private ListProperty<String> listViewP;
     private FeatureListController featureListController;
 
+    private StringProperty nameOfFeature;
+
     public FeatureList() {
         super();
         try {
@@ -18,9 +22,10 @@ public class FeatureList extends AnchorPane {
             FXMLLoader fxl = new FXMLLoader();
             AnchorPane fList = fxl.load(getClass().getResource("FeatureList.fxml").openStream());
             FeatureListController featureController = fxl.getController();
-
+            nameOfFeature=new SimpleStringProperty(featureController.getNameOfFeature().getValue());
             listViewP = new SimpleListProperty<>();
             featureController.getListViewP().bind(listViewP);
+            featureController.getNameOfFeature().bindBidirectional(nameOfFeature);
 
             this.getChildren().add(fList);
         } catch (Exception e) {
@@ -43,6 +48,14 @@ public class FeatureList extends AnchorPane {
 
     public void setFeatureListController(FeatureListController featureListController) {
         this.featureListController = featureListController;
+    }
+
+    public StringProperty getNameOfFeature() {
+        return nameOfFeature;
+    }
+
+    public void setNameOfFeature(StringProperty nameOfFeature) {
+        this.nameOfFeature = nameOfFeature;
     }
 
 

@@ -2,8 +2,8 @@
   "ip": "127.0.0.1",
   "port": 5400,
   "samplingRatePerSec": 10,
-  "chosenAlgorithmPath": "/home/omert/algo",
-  "trainFlightCsvPath": "/home/omert/reg_flight.csv",
+  "chosenAlgorithmPath": "out/production/patam2/app/model/algorithms/ZScore.class",
+  "trainFlightCsvPath": "src/files/reg_flight.csv",
 
   "featuresSettings": [
     {

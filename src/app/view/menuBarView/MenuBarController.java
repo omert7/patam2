@@ -66,7 +66,7 @@ public class MenuBarController {
         FileChooser fc = new FileChooser();
         fc.getExtensionFilters().add(new ExtensionFilter("Anomaly detector files", "*.class"));
         String currentPath = Paths.get(".").toAbsolutePath().normalize().toString();
-        currentPath= currentPath+"/bin/app/model/algorithms";
+        currentPath= currentPath+"/out/production/patam2/app/model/algorithms";
         fc.setInitialDirectory(new File(currentPath));
         File f = fc.showOpenDialog(null);
         if (f != null) {

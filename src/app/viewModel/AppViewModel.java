@@ -2,11 +2,11 @@ package app.viewModel;
 
 import app.model.AppModel;
 import app.model.FlightSettings;
-import app.model.algorithms.TimeSeries;
 import app.model.algorithms.TimeSeriesAnomalyDetector;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import java.io.BufferedReader;
@@ -17,9 +17,6 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.sql.Time;
-import java.util.Observable;
-import java.util.Observer;
 
 
 public class AppViewModel {
@@ -34,6 +31,7 @@ public class AppViewModel {
     private FloatProperty minThrottle, maxThrottle, minRudder, maxRudder;
     private FloatProperty minElevator, maxElevator, minAileron, maxAileron;
     private DoubleProperty maxTimeLine;
+    private StringProperty nameofFeatureA, nameofFeatureB,nameFromList;
 
     Thread startThread;
 
@@ -50,22 +48,29 @@ public class AppViewModel {
         csvFile.addListener(v -> createTimeSeries());
         settingFile.addListener(v -> createSettings());
         algoFile.addListener(v->loadAlgo());
-        
+
+        //list
         ObservableList<String> observableList = FXCollections.observableArrayList();
         this.listView = new SimpleListProperty<>(observableList);
-
+        //
         this.maxTimeLine = new SimpleDoubleProperty();
         this.timeStamp = new SimpleDoubleProperty();
         this.appModel = am;
         this.timeStamp.bindBidirectional(am.timestampProperty());
         this.timeStamp.addListener(v -> updateParams());
+        //graph initialize
+        this.nameofFeatureB=new SimpleStringProperty();
+        this.nameofFeatureA=new SimpleStringProperty();
+        nameFromList=new SimpleStringProperty();
+        nameFromList.addListener(v->nameofFeatureA.setValue(nameFromList.getValue()));
+
     }
 
-    
-    
-    
-    
-    
+
+
+
+
+
     private void updateParams() {
         if (this.timeStamp.getValue() == 0) {
             resetFlightProp();
@@ -82,9 +87,16 @@ public class AppViewModel {
             this.rudder.setValue(this.appModel.getTimeSeriesAnomaly().getValAtSpecificTime(time, this.appModel.getRudderIndex()));
             this.aileron.setValue(this.appModel.getTimeSeriesAnomaly().getValAtSpecificTime(time, this.appModel.getAileronIndex()));
             this.elevator.setValue(this.appModel.getTimeSeriesAnomaly().getValAtSpecificTime(time, this.appModel.getElevatorIndex()));
+
         }
     }
+/*private XYChart.Series drawGraph(String s){
 
+        if(startThread!=null){
+           return appModel.addValueInTime(s);
+        }
+    return null;
+}*/
     private void initJoyStickProperties() {
         this.aileron = new SimpleFloatProperty();
         this.elevator = new SimpleFloatProperty();
@@ -100,7 +112,10 @@ public class AppViewModel {
         this.minAileron = new SimpleFloatProperty();
         this.maxAileron = new SimpleFloatProperty();
     }
+public boolean isOnflight(){
+        return (this.startThread!=null&&this.startThread.isAlive());
 
+}
     private void initDashBoardProperties() {
         //dashboard
         this.airspeed = new SimpleFloatProperty();
@@ -113,42 +128,39 @@ public class AppViewModel {
 
     private void loadAlgo()
     {
-    	try {
-    		File f=new File(this.getAlgoFile().getValue());
-    		String s=f.getName();
-    		String path="file://"+f.toURL();
-    		URL[] urls=new URL[1];
-    		urls[0]=new URL(path);
-    		int ch=0;
-    		String name="";
-    		while(s.charAt(ch)!='.') {
-    			name+=s.charAt(ch);
-    			ch++;
-    		}
-    		URLClassLoader urlClassLoader = URLClassLoader.newInstance(urls);
-    		Class<?> c=urlClassLoader.loadClass("app.model.algorithms."+name);
-    		TimeSeriesAnomalyDetector ad=(TimeSeriesAnomalyDetector) c.newInstance();
-    		appModel.setAnomalDetect(ad);
-    		
-    		
-    		
-    		
+        try {
+            File f=new File(this.getAlgoFile().getValue());
+            String s=f.getName();
+            String path="file://"+f.toURL();
+            URL[] urls=new URL[1];
+            urls[0]=new URL(path);
+            int ch=0;
+            String name="";
+            while(s.charAt(ch)!='.') {
+                name+=s.charAt(ch);
+                ch++;
+            }
+            URLClassLoader urlClassLoader = URLClassLoader.newInstance(urls);
+            Class<?> c=urlClassLoader.loadClass("app.model.algorithms."+name);
+            TimeSeriesAnomalyDetector ad=(TimeSeriesAnomalyDetector) c.newInstance();
+            appModel.setAnomalDetect(ad);
 
-    	} catch (MalformedURLException e) {
-    		// TODO Auto-generated catch block
-    		e.printStackTrace();
-    	} catch (ClassNotFoundException e) {
-    		// TODO Auto-generated catch block
-    		e.printStackTrace();
-    		System.out.println(e);
-    	} catch (InstantiationException e) {
-    		// TODO Auto-generated catch block
-    		e.printStackTrace();
-    	} catch (IllegalAccessException e) {
-    		// TODO Auto-generated catch block
-    		e.printStackTrace();
-    	}
-    	
+
+
+
+
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+
+            e.printStackTrace();
+            System.out.println(e);
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
     }
     private void createSettings() {
         // call pause
@@ -178,10 +190,8 @@ public class AppViewModel {
         String s = this.csvFile.getValue();
         String check = checkCsvFile();
         if (check.equals("OK")) {
-            TimeSeries ts = new TimeSeries(s);
-            int dataSize = ts.data.size();
-            this.appModel.setTimeSeriesAnomaly(this.csvFile.getValue());
             this.appModel.setTimeSeriesAnomaly(s);
+            int dataSize =  this.appModel.getTimeSeriesAnomaly().data.size();
             this.listView.clear();
             this.listView.addAll(appModel.getTimeSeriesAnomaly().namesOfFeatures);
             this.maxTimeLine.setValue((dataSize / 10 + ((double) dataSize % 10 / 10) + 0.1));
@@ -217,7 +227,7 @@ public class AppViewModel {
                 s = line.split(",");
 
                 if (s.length!=42){
-                    return "flight csv row: " + counter +" expected to have 42 column";
+                    return ("flight csv row: " + counter +" expected to have 42 column");
                 }
                 // read next line
                 counter++;
@@ -602,7 +612,55 @@ public class AppViewModel {
         return maxTimeLine;
     }
 
+
+    public StringProperty getNameofFeatureA() {
+        return nameofFeatureA;
+    }
+
+
+
+
+
+
+    public void setNameofFeatureA(StringProperty nameofFeatureA) {
+        this.nameofFeatureA = nameofFeatureA;
+    }
+
+
+
+
+
+
+    public StringProperty getNameofFeatureB() {
+        return nameofFeatureB;
+    }
+
+
+
+
+
+
+    public void setNameofFeatureB(StringProperty nameofFeatureB) {
+        this.nameofFeatureB = nameofFeatureB;
+    }
+
     public void setMaxTimeLine(double maxTimeLine) {
         this.maxTimeLine.set(maxTimeLine);
     }
+
+
+
+
+
+
+    public StringProperty getNameFromList() {
+        return nameFromList;
+    }
+
+
+    public void setNameFromList(StringProperty nameFromList) {
+        this.nameFromList = nameFromList;
+    }
+
+
 }

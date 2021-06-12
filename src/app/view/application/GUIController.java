@@ -7,7 +7,10 @@ import app.view.joystickView.Joystick;
 import app.view.menuBarView.MenuBar;
 import app.view.timeLineView.TimeLine;
 import app.viewModel.AppViewModel;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.XYChart;
 
 
 public class GUIController {
@@ -26,6 +29,10 @@ public class GUIController {
     @FXML
     private TimeLine timeLine;
 
+
+   public  XYChart.Series<Number, Number> attributeA ;
+    public  XYChart.Series<Number, Number> attributeB;// = new XYChart.Series<Number, Number>();
+
     public GUIController() {
     }
 
@@ -36,6 +43,8 @@ public class GUIController {
         bindMenuBarProperties();
         bindFeatureListProperties();
         bindTimeLineProperties();
+        bindGraphProperties();
+        addLis();
     }
 
     private void bindMenuBarProperties() {
@@ -44,9 +53,50 @@ public class GUIController {
         menuBar.getsSettingFile().bindBidirectional(vm.getSettingFile());
     }
 
+    private void bindGraphProperties() {
+        attributeA= new XYChart.Series<Number, Number>();
+        attributeA.setName("feature A values");
+        vm.getNameofFeatureA().set(graph.getNameOfFeatureA().getValue());
+        vm.getNameofFeatureB().set(graph.getNameOfFeatureB().getValue());
+        graph.getNameOfFeatureA().bindBidirectional(vm.getNameofFeatureA());
+        graph.getNameOfFeatureB().bindBidirectional(vm.getNameofFeatureB());
+        graph.getGraphController().getFeatureA().getData().add(attributeA);
+        graph.getGraphController().getAnomalyDetec().setAnimated(false);
+
+
+    }
+
     private void bindFeatureListProperties() {
         featureList.getListViewP().bind(vm.getListView());
+        featureList.getNameOfFeature().bindBidirectional(vm.getNameFromList());
+
     }
+private void addLis(){
+        timeLine.timeStampProperty().addListener(
+            v -> {
+                    vm.getAppModel().addValueAtTime( graph.getNameOfFeatureA().getValue(),attributeA);
+            });
+
+
+    vm.getNameofFeatureA().addListener(v->{
+      if(vm.isOnflight()){
+          vm.pause();
+
+          graph.getGraphController().getFeatureA().getData().clear();
+         /* attributeA.getData().removeAll();
+          attributeA.getData().clear();*/
+          attributeA=  vm.getAppModel().addValueTilTime( graph.getNameOfFeatureA().getValue());
+          graph.getGraphController().getFeatureA().getData().add(attributeA);
+          //vm.play();
+        }
+      else{
+          System.out.println("you are not running");
+      }
+    });
+
+
+}
+
 
     private void bindTimeLineProperties() {
         timeLine.getTimeLineController().getPlay().setOnMouseClicked(v -> vm.play());
@@ -57,9 +107,16 @@ public class GUIController {
         timeLine.getTimeLineController().getTime().setMin(0);
         timeLine.maxTimeLineProperty().bind(vm.maxTimeLineProperty());
         timeLine.timeStampProperty().bind(vm.timeStampProperty());
+       /* timeLine.timeStampProperty().addListener(()->{
+            //graph.getGraphController().getFeatureA().getData().clear();
+      //     new Thread(()->vm.getAppModel().addValueInTime( graph.getNameOfFeatureA().getValue(),attributeA)).run();
+            vm.getAppModel().addValueInTime( graph.getNameOfFeatureA().getValue(),attributeA);
+             });*/
+
+
     }
 
-    private void bindDashboardProperties() {
+        private void bindDashboardProperties() {
         dashboard.altitudeProperty().bind(vm.altitudeProperty());
         dashboard.yawProperty().bind(vm.yawProperty());
         dashboard.pitchProperty().bind(vm.pitchProperty());

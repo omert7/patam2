@@ -83,39 +83,39 @@ public class SimulatorPlayer {
         socket = new Socket(this.ip, (int) this.port);
     }
 
-        public String getIp () {
-            return ip;
-        }
-
-        public void setIp (String ip){
-            this.ip = ip;
-        }
-
-        public long getPort () {
-            return port;
-        }
-
-        public void setPort ( long port){
-            this.port = port;
-        }
-
-        public double getSpeed () {
-            return speed;
-        }
-
-        public void setSpeed ( double speed){
-            this.speed = speed;
-        }
-
-        public Double getTimeStamp () {
-            return timeStamp.get();
-        }
-
-        public DoubleProperty timeStampProperty () {
-            return timeStamp;
-        }
-
-        public void setTimeStamp (Double timeStamp){
-            this.timeStamp.set(timeStamp);
-        }
+    public String getIp () {
+        return ip;
     }
+
+    public void setIp (String ip){
+        this.ip = ip;
+    }
+
+    public long getPort () {
+        return port;
+    }
+
+    public void setPort ( long port){
+        this.port = port;
+    }
+
+    public double getSpeed () {
+        return speed;
+    }
+
+    public void setSpeed ( double speed){
+        this.speed = speed;
+    }
+
+    public Double getTimeStamp () {
+        return timeStamp.get();
+    }
+
+    public DoubleProperty timeStampProperty () {
+        return timeStamp;
+    }
+
+    public void setTimeStamp (Double timeStamp){
+        this.timeStamp.set(timeStamp);
+    }
+}
