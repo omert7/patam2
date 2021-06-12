@@ -12,6 +12,8 @@ import javafx.fxml.FXML;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
 
+import java.util.HashMap;
+
 
 public class GUIController {
 
@@ -29,10 +31,10 @@ public class GUIController {
     @FXML
     private TimeLine timeLine;
 
-
+private HashMap<String,XYChart.Series<Number, Number> > seriesHashMap;
    public  XYChart.Series<Number, Number> attributeA ;
     public  XYChart.Series<Number, Number> attributeB;// = new XYChart.Series<Number, Number>();
-
+    private XYChart.Series seriesPoint;
     public GUIController() {
     }
 
@@ -54,14 +56,13 @@ public class GUIController {
     }
 
     private void bindGraphProperties() {
-        attributeA= new XYChart.Series<Number, Number>();
-        attributeA.setName("feature A values");
+        seriesHashMap=new HashMap<>();
+        seriesPoint=new XYChart.Series<>();
         vm.getNameofFeatureA().set(graph.getNameOfFeatureA().getValue());
         vm.getNameofFeatureB().set(graph.getNameOfFeatureB().getValue());
         graph.getNameOfFeatureA().bindBidirectional(vm.getNameofFeatureA());
         graph.getNameOfFeatureB().bindBidirectional(vm.getNameofFeatureB());
-        graph.getGraphController().getFeatureA().getData().add(attributeA);
-        graph.getGraphController().getAnomalyDetec().setAnimated(false);
+        graph.getGraphController().getFeatureA().getData().add(seriesPoint);
 
 
     }
@@ -72,22 +73,43 @@ public class GUIController {
 
     }
 private void addLis(){
-        timeLine.timeStampProperty().addListener(
+       timeLine.timeStampProperty().addListener(
             v -> {
-                    vm.getAppModel().addValueAtTime( graph.getNameOfFeatureA().getValue(),attributeA);
+                if(!vm.getNameofFeatureA().getValue().equals(""))
+                {
+                    vm.getAppModel().addValueAtTime(vm.getNameofFeatureA().getValue(), seriesPoint);
+                }
+
+                  /* if(seriesHashMap.get( vm.getNameofFeatureA().getValue())==null)
+                    {
+                        seriesHashMap.put(vm.getNameofFeatureA().getValue(),seriesPoint);
+                    }
+                  else{
+                      vm.getAppModel().addValueTilTime(vm.getNameofFeatureA().getValue(), seriesPoint);
+                    }
+                   vm.getAppModel().addValueAtTime(vm.getNameofFeatureA().getValue(), seriesPoint);
+
+
+                }*/
             });
 
 
     vm.getNameofFeatureA().addListener(v->{
       if(vm.isOnflight()){
           vm.pause();
+          XYChart.Series s=new XYChart.Series();
+          if(seriesHashMap.get( vm.getNameofFeatureA().getValue())==null)
+          {
+
+               vm.getAppModel().addValueTilTime(vm.getNameofFeatureA().getValue(),s);
+              seriesHashMap.put(vm.getNameofFeatureA().getValue(),s);
+
+          }
 
           graph.getGraphController().getFeatureA().getData().clear();
-         /* attributeA.getData().removeAll();
-          attributeA.getData().clear();*/
-          attributeA=  vm.getAppModel().addValueTilTime( graph.getNameOfFeatureA().getValue());
-          graph.getGraphController().getFeatureA().getData().add(attributeA);
-          //vm.play();
+         graph.getGraphController().getFeatureA().getData().add(s);
+          seriesPoint=s;
+         vm.play();
         }
       else{
           System.out.println("you are not running");

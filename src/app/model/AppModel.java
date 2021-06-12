@@ -9,6 +9,7 @@ import app.CorrelatedFeaturesLine;
 import app.model.algorithms.HybridAlgo;
 import app.model.algorithms.LinearRegression;
 import app.model.algorithms.TimeSeries;
+import javafx.application.Platform;
 import javafx.beans.property.DoubleProperty;
 import app.model.algorithms.TimeSeriesAnomalyDetector;
 import app.model.statlib.Line;
@@ -53,36 +54,45 @@ public class AppModel{
 
 
 
-    public void addValueTilTime(String atribute, XYChart.Series s) {
-        if(s!=null|| !atribute.equals("")) {
+
+    public void addValueTilTime(String atribute, XYChart.Series s)
+    {
+        Platform.runLater( ()->{ s.getData().clear();
             int time = (int) (this.timestamp.getValue() * 10);
             for (int i = 1; i <= time; i++) {
                 double temp = timeSeriesAnomaly.getValAtSpecificTime(i, atribute);
                 s.getData().add(new XYChart.Data(i, temp));
-            }
-
-        }
-    }
-    public XYChart.Series addValueTilTime(String atribute) {
-        XYChart.Series s=new XYChart.Series();
-            int time = (int) (this.timestamp.getValue() * 10);
-            for (int i = 1; i <= time; i++) {
-                double temp = timeSeriesAnomaly.getValAtSpecificTime(i, atribute);
-                s.getData().add(new XYChart.Data(i, temp));
-            }
-    return s;
+            }} );
 
     }
+
+
+
+
     public void addValueAtTime(String atribute, XYChart.Series s) {
-        if(s!=null|| !atribute.equals("")) {
-               int time = (int) (this.timestamp.getValue() * 10);
-                double temp = timeSeriesAnomaly.getValAtSpecificTime(time, atribute);
-                s.getData().add(new XYChart.Data(time, temp));
+        Platform.runLater(()->{
+
+            int time = (int) (this.timestamp.getValue() * 10);
+            double temp = timeSeriesAnomaly.getValAtSpecificTime(time, atribute);
+            s.getData().add(new XYChart.Data(time, temp));
 
 
-        }
+        });
+
     }
 
+    public XYChart.Series addValueAtTime2(String atribute, XYChart.Series s)
+    {
+
+
+           int time = (int) (this.timestamp.getValue() * 10);
+           double temp = timeSeriesAnomaly.getValAtSpecificTime(time, atribute);
+           s.getData().add(new XYChart.Data(time, temp));
+
+
+           return s;
+
+    }
 
 
 
