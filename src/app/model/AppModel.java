@@ -2,10 +2,10 @@ package app.model;
 
 
 import app.model.algorithms.TimeSeries;
+import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.FloatProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleFloatProperty;
-
-import java.util.Observable;
 
 public class AppModel{
     private FlightSettings flightSettings;
@@ -14,12 +14,14 @@ public class AppModel{
     private FloatProperty timestamp;
     private int aileronIndex,throttleIndex,rudderIndex,elevatorIndex,
             yawIndex,pitchIndex,headingIndex,altitudeIndex,airspeedIndex,rollIndex;
-
+    private DoubleProperty speed;
 
 
     public AppModel() {
         this.timestamp = new SimpleFloatProperty();
         this.sp = new SimulatorPlayer();
+        this.speed = new SimpleDoubleProperty(1.0);
+        sp.speedProperty().bind(this.speed);
     }
 
     public boolean isReady() {
@@ -49,6 +51,7 @@ public class AppModel{
         this.airspeedIndex = this.flightSettings.getFlightFeatureHashMap().get("airspeed").getFeatureIndex();
         this.rollIndex = this.flightSettings.getFlightFeatureHashMap().get("roll").getFeatureIndex();
     }
+
     public TimeSeries getTimeSeries() {
         return timeSeries;
     }
@@ -161,5 +164,17 @@ public class AppModel{
 
     public void setRollIndex(int rollIndex) {
         this.rollIndex = rollIndex;
+    }
+
+    public double getSpeed() {
+        return speed.get();
+    }
+
+    public DoubleProperty speedProperty() {
+        return speed;
+    }
+
+    public void setSpeed(double speed) {
+        this.speed.set(speed);
     }
 }

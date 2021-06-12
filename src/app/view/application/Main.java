@@ -29,7 +29,7 @@ public class Main extends Application {
             new Thread(() -> {
                 try {
                     while (true) {
-                        Thread.sleep(3000);
+                        Thread.sleep(1000);
 //                        System.out.println(vm.getMaxTimeLine());
 //                    double ele = ThreadLocalRandom.current().nextDouble(0, 150);
 //                    double ail = ThreadLocalRandom.current().nextDouble(0, 150);
@@ -45,7 +45,13 @@ public class Main extends Application {
 //                        System.out.println(vm.getTimeStamp());
 //                        vm.setTimeStamp(14);
 //                        System.out.println(vm.getAppModel().getTimestamp());
-                        System.out.println(view.getTimeLine().getTimeLineController().getTime().getMax());
+
+//                        System.out.println(vm.getTimeStamp());
+                        System.out.println("#@!#@!##@!#@!'");
+                        System.out.println(vm.getSpeed());
+                        System.out.println(vm.getAppModel().getSpeed());
+                        System.out.println(vm.getAppModel().getSp().getSpeed());
+                        System.out.println("#@!#@!##@!#@!'");
                     }
                 } catch (InterruptedException e) {
                     // TODO Auto-generated catch block

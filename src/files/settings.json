@@ -1,7 +1,7 @@
 {
   "ip": "127.0.0.1",
   "port": 5400,
-  "samplingRatePerSec": 10,
+  "samplingRatePerSec": 20,
   "chosenAlgorithmPath": "/home/omert/algo",
   "trainFlightCsvPath": "/home/omert/reg_flight.csv",
 

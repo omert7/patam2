@@ -32,7 +32,7 @@ public class MenuBarController {
         sSettingFile = new SimpleStringProperty("");
         sCsvFile = new SimpleStringProperty("");
         sAlgoFile = new SimpleStringProperty("");
-  
+
     }
 
     @FXML
@@ -40,7 +40,7 @@ public class MenuBarController {
         FileChooser fc = new FileChooser();
         fc.getExtensionFilters().add(new ExtensionFilter("json files", "*.json"));
         String currentPath = Paths.get(".").toAbsolutePath().normalize().toString();
-        currentPath= currentPath+"/src/files";
+        currentPath = currentPath + "/src/files";
         fc.setInitialDirectory(new File(currentPath));
         File f = fc.showOpenDialog(null);
         if (f != null) {
@@ -53,7 +53,7 @@ public class MenuBarController {
         FileChooser fc = new FileChooser();
         fc.getExtensionFilters().add(new ExtensionFilter(" csv files", "*.csv"));
         String currentPath = Paths.get(".").toAbsolutePath().normalize().toString();
-        currentPath= currentPath+"/src/files";
+        currentPath = currentPath + "/src/files";
         fc.setInitialDirectory(new File(currentPath));
         File f = fc.showOpenDialog(null);
         if (f != null) {
@@ -66,7 +66,7 @@ public class MenuBarController {
         FileChooser fc = new FileChooser();
         fc.getExtensionFilters().add(new ExtensionFilter("Anomaly detector files", "*.java"));
         String currentPath = Paths.get(".").toAbsolutePath().normalize().toString();
-        currentPath= currentPath+"/src/files";
+        currentPath = currentPath + "/src/files";
         fc.setInitialDirectory(new File(currentPath));
         File f = fc.showOpenDialog(null);
         if (f != null) {

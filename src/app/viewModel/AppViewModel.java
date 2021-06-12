@@ -8,9 +8,11 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.HashMap;
 
 public class AppViewModel {
 
@@ -23,6 +25,7 @@ public class AppViewModel {
     private FloatProperty minThrottle, maxThrottle, minRudder, maxRudder;
     private FloatProperty minElevator, maxElevator, minAileron, maxAileron;
     private DoubleProperty maxTimeLine;
+    private DoubleProperty speed;
 
     Thread startThread;
 
@@ -41,10 +44,11 @@ public class AppViewModel {
 
         ObservableList<String> observableList = FXCollections.observableArrayList();
         this.listView = new SimpleListProperty<>(observableList);
-
+        this.speed = new SimpleDoubleProperty(1.0);
         this.maxTimeLine = new SimpleDoubleProperty();
         this.timeStamp = new SimpleDoubleProperty();
         this.appModel = am;
+        this.appModel.speedProperty().bind(this.speed);
         this.timeStamp.bindBidirectional(am.timestampProperty());
         this.timeStamp.addListener(v -> updateParams());
     }
@@ -58,7 +62,7 @@ public class AppViewModel {
             this.yaw.setValue(this.appModel.getTimeSeries().getValAtSpecificTime(time, this.appModel.getYawIndex()));
             this.pitch.setValue(this.appModel.getTimeSeries().getValAtSpecificTime(time, this.appModel.getPitchIndex()));
             this.roll.setValue(this.appModel.getTimeSeries().getValAtSpecificTime(time, this.appModel.getRollIndex()));
-            this.heading.setValue(this.appModel.getTimeSeries().getValAtSpecificTime(time, this.appModel.getHeadingIndex()));
+            this.heading.setValue(180 - this.appModel.getTimeSeries().getValAtSpecificTime(time, this.appModel.getHeadingIndex()));
             this.altitude.setValue(this.appModel.getTimeSeries().getValAtSpecificTime(time, this.appModel.getAltitudeIndex()));
             this.airspeed.setValue(this.appModel.getTimeSeries().getValAtSpecificTime(time, this.appModel.getAirspeedIndex()));
             this.throttle.setValue(this.appModel.getTimeSeries().getValAtSpecificTime(time, this.appModel.getThrottleIndex()));
@@ -95,7 +99,6 @@ public class AppViewModel {
     }
 
     private void createSettings() {
-        // call pause
         resetFlightProp();
         FlightSettings fs = new FlightSettings(settingFile.getValue());
 
@@ -110,6 +113,7 @@ public class AppViewModel {
             this.minThrottle.setValue(fs.getFlightFeatureHashMap().get("throttle").getMin());
             this.maxRudder.setValue(fs.getFlightFeatureHashMap().get("rudder").getMax());
             this.minRudder.setValue(fs.getFlightFeatureHashMap().get("rudder").getMin());
+            this.speed.setValue(fs.getSimulatorSpeed());
             myGoodAlert("Settings.json");
         } catch (Exception exception) {
             myErrorAlert("Choose Flight Settings.json file ERROR", exception.toString());
@@ -153,13 +157,13 @@ public class AppViewModel {
         try {
             reader = new BufferedReader(new FileReader(this.csvFile.getValue()));
             String line = reader.readLine();
-            int counter=1;
+            int counter = 1;
             while (line != null) {
                 String[] s;
                 s = line.split(",");
 
-                if (s.length!=42){
-                    return "flight csv row: " + counter +" expected to have 42 column";
+                if (s.length != 42) {
+                    return "flight csv row: " + counter + " expected to have 42 column";
                 }
                 // read next line
                 counter++;
@@ -175,7 +179,7 @@ public class AppViewModel {
 
     private void resetFlightProp() {
         //joystick
-        this.aileron.set(centerCircle.getValue()); ///TODO fix
+        this.aileron.set(centerCircle.getValue());
         this.elevator.set(centerCircle.getValue());
         this.throttle.set((minThrottle.getValue() + maxThrottle.getValue()) / 2);
         this.rudder.set((minRudder.getValue() + maxRudder.getValue()) / 2);
@@ -187,9 +191,8 @@ public class AppViewModel {
         this.pitch.set(0);
         this.roll.set(0);
         this.altitude.set(0);
-
         this.timeStamp.set(0);
-
+        this.speed.set(1);
     }
 
 
@@ -201,8 +204,7 @@ public class AppViewModel {
     public void play() {
         if (!appModel.isReady()) {
             myErrorAlert("Start ERROR", "Flight is missing at least 1 of the followings:\n1) Settings.json file\n2) flight.csv file");
-        }
-        else if (this.startThread!=null && this.startThread.isAlive()){
+        } else if (this.startThread != null && this.startThread.isAlive()) {
             myErrorAlert("Start Error", "Flight is Running\n" +
                     "please press 'Pause' Or 'Stop' flight and run again");
         } else {
@@ -212,9 +214,9 @@ public class AppViewModel {
                     this.appModel.play();
                 });
                 this.startThread.start();
-            }catch (Exception e){
+            } catch (Exception e) {
                 myErrorAlert("Start ERROR", e.getMessage() + "\nPlease make sure simulator is set\n" +
-                        "IP: " + this.appModel.getSp().getIp() + "\nPORT: " +this.appModel.getSp().getPort() + "\n*" +
+                        "IP: " + this.appModel.getSp().getIp() + "\nPORT: " + this.appModel.getSp().getPort() + "\n*" +
                         "Parameters are taken from the settings file given by you");
             }
         }
@@ -226,23 +228,24 @@ public class AppViewModel {
             this.startThread.interrupt();
     }
 
-    public void runNext(double value){
+    public void runNext(double value) {
         double newTimeStamp = (this.timeStamp.getValue() + value) >= this.maxTimeLine.getValue() ?
-                this.maxTimeLine.getValue(): this.timeStamp.getValue() + value;
+                this.maxTimeLine.getValue() : this.timeStamp.getValue() + value;
         setTimeStamp(newTimeStamp);
 
     }
 
-    public void runBack(double value){
+    public void runBack(double value) {
         double val = this.timeStamp.getValue() - value;
-        if (val<=0){
+        if (val <= 0) {
             setTimeStamp(0);
-        }else{
+        } else {
             setTimeStamp(val);
         }
 
     }
-    public void stop(){
+
+    public void stop() {
         if (this.startThread != null)
             this.startThread.interrupt();
         resetFlightProp();
@@ -547,5 +550,17 @@ public class AppViewModel {
 
     public void setMaxTimeLine(double maxTimeLine) {
         this.maxTimeLine.set(maxTimeLine);
+    }
+
+    public double getSpeed() {
+        return speed.get();
+    }
+
+    public DoubleProperty speedProperty() {
+        return speed;
+    }
+
+    public void setSpeed(double speed) {
+        this.speed.set(speed);
     }
 }
