@@ -11,6 +11,9 @@ import javafx.scene.layout.AnchorPane;
 public class Graph extends AnchorPane {
 	private StringProperty nameOfFeatureA;
 	private StringProperty nameOfFeatureB;
+	private StringProperty spLabelCoralFeatureA;
+	private StringProperty spLabelCoralFeatureB;
+	private StringProperty spAnomalyClass;
 
 	private GraphController graphController;
 
@@ -22,9 +25,18 @@ public class Graph extends AnchorPane {
 			AnchorPane graph=fxl.load(getClass().getResource("Graph.fxml").openStream());
 			graphController=fxl.getController();
 			nameOfFeatureA=new SimpleStringProperty(graphController.getGraphNameOfFeatureA().getValue());
+			spLabelCoralFeatureA=new SimpleStringProperty(graphController.getSpLabelCoralFeatureA().getValue());
 			nameOfFeatureB=new SimpleStringProperty(graphController.getGraphNameOfFeatureB().getValue());
+			spLabelCoralFeatureB=new SimpleStringProperty(graphController.getSpLabelCoralFeatureB().getValue());
+			spAnomalyClass=new SimpleStringProperty(graphController.getSpAnomalyClassProperty().getValue());
+
 			graphController.getGraphNameOfFeatureA().bindBidirectional(nameOfFeatureA);
 			graphController.getGraphNameOfFeatureB().bindBidirectional(nameOfFeatureB);
+
+			graphController.getSpLabelCoralFeatureA().bindBidirectional(spLabelCoralFeatureA);
+			graphController.getSpLabelCoralFeatureB().bindBidirectional(spLabelCoralFeatureB);
+			graphController.getSpAnomalyClassProperty().bindBidirectional(spAnomalyClass);
+
 			this.getChildren().add(graph);
 		}
 		catch(Exception e){
@@ -58,7 +70,28 @@ public class Graph extends AnchorPane {
 	}
 
 
+	public StringProperty getSpLabelCoralFeatureA() {
+		return spLabelCoralFeatureA;
+	}
+
+	public void setSpLabelCoralFeatureA(String spLabelCoralFeatureA) {
+		this.spLabelCoralFeatureA.set(spLabelCoralFeatureA);
+	}
 
 
+	public StringProperty getSpLabelCoralFeatureB() {
+		return spLabelCoralFeatureB;
+	}
 
+	public void setSpLabelCoralFeatureB(String spLabelCoralFeatureB) {
+		this.spLabelCoralFeatureB.set(spLabelCoralFeatureB);
+	}
+
+	public StringProperty getSpAnomalyClassProperty() {
+		return spAnomalyClass;
+	}
+
+	public void setSpAnomalyClass(String spAnomalyClass) {
+		this.spAnomalyClass.set(spAnomalyClass);
+	}
 }

@@ -2,9 +2,6 @@ package app.model;
 
 
 
-import app.AnomalyReport;
-
-import app.Commands.anomalyDetection;
 import app.CorrelatedFeaturesLine;
 import app.model.algorithms.HybridAlgo;
 import app.model.algorithms.LinearRegression;
@@ -12,19 +9,14 @@ import app.model.algorithms.TimeSeries;
 import javafx.application.Platform;
 import javafx.beans.property.DoubleProperty;
 import app.model.algorithms.TimeSeriesAnomalyDetector;
-import app.model.statlib.Line;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleFloatProperty;
 
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-import javafx.scene.chart.LineChart;
-import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 
+import java.util.HashMap;
 import java.util.List;
-import java.util.Observable;
 
 
 public class AppModel{
@@ -38,7 +30,7 @@ public class AppModel{
     private DoubleProperty speed;
     private TimeSeriesAnomalyDetector anomalDetect;
 
-    private List<AnomalyReport> listAno;
+    private HashMap<String, List<Integer>> mapAnomaly;
 
     public AppModel() {
         this.timestamp = new SimpleFloatProperty();
@@ -175,7 +167,7 @@ public class AppModel{
     public void setAnomalDetect(TimeSeriesAnomalyDetector anomalDetect) {
         this.anomalDetect = anomalDetect;
         this.anomalDetect.learnNormal(timeSeriesTrain);
-        this.listAno=this.anomalDetect.detect(timeSeriesAnomaly);
+        this.mapAnomaly=this.anomalDetect.detect(timeSeriesAnomaly);
 
     }
 

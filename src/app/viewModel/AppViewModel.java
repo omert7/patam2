@@ -32,7 +32,7 @@ public class AppViewModel {
     private DoubleProperty maxTimeLine;
 
     private StringProperty nameofFeatureA, nameofFeatureB,nameFromList;
-
+    private StringProperty spLabelCoralFeatureA,spLabelCoralFeatureB,spAnomalyClass;
     private DoubleProperty speed;
 
     Thread startThread;
@@ -40,7 +40,10 @@ public class AppViewModel {
     public AppViewModel(AppModel am) {
         //joystick
         initJoyStickProperties();
+        //dashbord
         initDashBoardProperties();
+        //graph
+        graphInit();
 
         //menu button
         algoFile = new SimpleStringProperty();
@@ -62,16 +65,24 @@ public class AppViewModel {
         this.appModel.speedProperty().bind(this.speed);
         this.timeStamp.bindBidirectional(am.timestampProperty());
         this.timeStamp.addListener(v -> updateParams());
-        //graph initialize
-        this.nameofFeatureB=new SimpleStringProperty();
-        this.nameofFeatureA=new SimpleStringProperty();
-        nameFromList=new SimpleStringProperty();
-        nameFromList.addListener(v->nameofFeatureA.setValue(nameFromList.getValue()));
+
+
 
     }
 
 
 
+private void graphInit(){
+
+    this.nameofFeatureB=new SimpleStringProperty();
+    this.nameofFeatureA=new SimpleStringProperty();
+    this.spAnomalyClass=new SimpleStringProperty();
+    nameFromList=new SimpleStringProperty();
+    nameFromList.addListener(v->nameofFeatureA.setValue(nameFromList.getValue()));
+    spLabelCoralFeatureA=new SimpleStringProperty("");
+    spLabelCoralFeatureB=new SimpleStringProperty("");
+    spAnomalyClass=new SimpleStringProperty("");
+}
 
 
 
@@ -144,6 +155,7 @@ public boolean isOnflight(){
                 name+=s.charAt(ch);
                 ch++;
             }
+            this.spAnomalyClass.setValue(name+" Algorithem.");
             URLClassLoader urlClassLoader = URLClassLoader.newInstance(urls);
             Class<?> c=urlClassLoader.loadClass("app.model.algorithms."+name);
             TimeSeriesAnomalyDetector ad=(TimeSeriesAnomalyDetector) c.newInstance();
@@ -656,7 +668,13 @@ public boolean isOnflight(){
 
 
 
+    public StringProperty getSpAnomalyClassProperty() {
+        return spAnomalyClass;
+    }
 
+    public void setSpAnomalyClass(String spAnomalyClass) {
+        this.spAnomalyClass.set(spAnomalyClass);
+    }
 
 
     public StringProperty getNameFromList() {
@@ -680,5 +698,20 @@ public boolean isOnflight(){
     public void setSpeed(double speed) {
         this.speed.set(speed);
     }
+    public StringProperty getSpLabelCoralFeatureA() {
+        return spLabelCoralFeatureA;
+    }
 
+    public void setSpLabelCoralFeatureA(String spLabelCoralFeatureA) {
+        this.spLabelCoralFeatureA.set(spLabelCoralFeatureA);
+    }
+
+
+    public StringProperty getSpLabelCoralFeatureB() {
+        return spLabelCoralFeatureB;
+    }
+
+    public void setSpLabelCoralFeatureB(String spLabelCoralFeatureB) {
+        this.spLabelCoralFeatureB.set(spLabelCoralFeatureB);
+    }
 }

@@ -4,7 +4,6 @@ package app.model.algorithms;
 import app.CorrelatedFeaturesLine;
 import app.model.statlib.Point;
 import app.model.statlib.Line;
-import app.AnomalyReport;
 import app.model.statlib.StatLib;
 
 import java.util.ArrayList;
@@ -69,10 +68,10 @@ public class LinearRegression implements TimeSeriesAnomalyDetector {
     }
 
     @Override
-    public List<AnomalyReport> detect(TimeSeries ts) {
+    public   HashMap<String, List<Integer>> detect(TimeSeries ts) {
         //we know that in dataCoral we have connection between dataCoral.get(i)
         Point temp;
-        List<AnomalyReport> list = new ArrayList<AnomalyReport>();
+        HashMap<String, List<Integer>> map = new HashMap<>();
         //first we create the point by what we know that correlated
         for(String f: ts.namesOfFeatures) 
         {
@@ -85,12 +84,24 @@ public class LinearRegression implements TimeSeriesAnomalyDetector {
                 temp = new Point(fcorrelate1[z], fcorrelate2[z]);
                 if (StatLib.dev(temp, hashMap.get(f).lin_reg) > hashMap.get(f).threshold ) {
                     //we find error
-                    list.add(new AnomalyReport(f + "-" + correlate2, z + 1));
+
+                    List<Integer> tempList;
+                    if(map.get(f)==null)
+                    {
+                        tempList= new ArrayList<>();
+
+                    }
+                    else{
+                        tempList=map.get(f);
+                    }
+                    tempList.add(z+1);
+                    map.put( f, tempList);
+
                 }
             	}
         	}
         }
-        return list;
+        return map;
     }
 
     
@@ -124,7 +135,7 @@ public class LinearRegression implements TimeSeriesAnomalyDetector {
 
     }
 
-    static public ArrayList<time> GroupByTime(List<AnomalyReport> ListAnomalyReport) {
+   /* static public ArrayList<time> GroupByTime(List<AnomalyReport> ListAnomalyReport) {
         ArrayList<time> list = new ArrayList<time>();
         int i = 0;
         int countList = 0;
@@ -143,6 +154,6 @@ public class LinearRegression implements TimeSeriesAnomalyDetector {
 
         return list;
     }
-
+*/
 
 }

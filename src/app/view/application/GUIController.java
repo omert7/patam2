@@ -63,7 +63,9 @@ private HashMap<String,XYChart.Series<Number, Number> > seriesHashMap;
         graph.getNameOfFeatureA().bindBidirectional(vm.getNameofFeatureA());
         graph.getNameOfFeatureB().bindBidirectional(vm.getNameofFeatureB());
         graph.getGraphController().getFeatureA().getData().add(seriesPoint);
-
+        graph.getGraphController().getSpLabelCoralFeatureA().bindBidirectional(vm.getSpLabelCoralFeatureA());
+        graph.getGraphController().getSpLabelCoralFeatureB().bindBidirectional(vm.getSpLabelCoralFeatureB());
+        graph.getGraphController().getSpAnomalyClassProperty().bindBidirectional(vm.getSpAnomalyClassProperty());
 
     }
 

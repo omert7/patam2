@@ -7,7 +7,6 @@ import java.util.List;
 
 import app.model.statlib.Line;
 import app.model.statlib.Point;
-import app.AnomalyReport;
 import app.CorrelatedFeatureCircle;
 import app.CorrelatedFeaturesLine;
 import app.model.statlib.StatLib;
@@ -80,28 +79,42 @@ public class HybridAlgo implements TimeSeriesAnomalyDetector {
     }
 
     @Override
-    public List<AnomalyReport> detect(TimeSeries ts) {
+    public  HashMap<String, List<Integer>> detect(TimeSeries ts) {
 
-        List<AnomalyReport> list = new ArrayList<AnomalyReport>();
+        HashMap<String, List<Integer>> map = new HashMap<>();
         Point temp;
         for(String f: ts.namesOfFeatures) 
         {
         	
-        if(hashMapC.containsKey(f))
-        {
-        	 float[] fcorrelate1 = ts.dataOfFeatureByName(f);
-             String correlate2 = new String(hashMapC.get(f).feature2);
-             float[] fcorrelate2 = ts.dataOfFeatureByName(correlate2);
-             for (int z = 0; z < fcorrelate1.length; z++) {
-
-                 temp = new Point(fcorrelate1[z], fcorrelate2[z]);
-                 if(!hashMapC.get(f).c.contains(temp)) 
+            if(hashMapC.containsKey(f))
+            {
+                 float[] fcorrelate1 = ts.dataOfFeatureByName(f);
+                 String correlate2 = new String(hashMapC.get(f).feature2);
+                 float[] fcorrelate2 = ts.dataOfFeatureByName(correlate2);
+                 for (int z = 0; z < fcorrelate1.length; z++)
                  {
-                     list.add(new AnomalyReport(f + "-" + correlate2, z + 1));        
+
+                     temp = new Point(fcorrelate1[z], fcorrelate2[z]);
+                     if(!hashMapC.get(f).c.contains(temp))
+                     {
+                         List<Integer> tempList;
+                         if(map.get(f)==null)
+                         {
+                             tempList= new ArrayList<>();
+
+                         }
+                         else{
+                             tempList=map.get(f);
+                         }
+                         tempList.add(z+1);
+                         map.put( f, tempList);
+
+                     }
+
                  }
              }
            
-        }
+
         else if(hashMapL.containsKey(f))
         {
               
@@ -116,7 +129,17 @@ public class HybridAlgo implements TimeSeriesAnomalyDetector {
                        temp = new Point(fcorrelate1[z], fcorrelate2[z]);
                        if (StatLib.dev(temp, hashMapL.get(f).lin_reg) > hashMapL.get(f).threshold + 0.015f) {
                            //we find error
-                           list.add(new AnomalyReport(f + "-" + correlate2, z + 1));
+                           List<Integer> tempList;
+                           if(map.get(f)==null)
+                           {
+                               tempList= new ArrayList<>();
+
+                           }
+                           else{
+                               tempList=map.get(f);
+                           }
+                           tempList.add(z+1);
+                           map.put( f, tempList);
                        }
                    }
                
@@ -129,12 +152,23 @@ public class HybridAlgo implements TimeSeriesAnomalyDetector {
         	{
                 tempZScore = ZScore.findZScore(ts.dataOfFeatureByName(f), j);
                 if (tempZScore > hashMapZ.get(f))//we detect problem
-                    list.add(new AnomalyReport(f, j + 1));
-            	}
+                { List<Integer> tempList;
+                    if(map.get(f)==null)
+                    {
+                        tempList= new ArrayList<>();
+
+                    }
+                    else{
+                        tempList=map.get(f);
+                    }
+                    tempList.add(j+1);
+                    map.put( f, tempList);}
+
+            }
         	}
         }
         
-        return list;
+        return map;
     }
 
 }

@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+
 import app.model.statlib.StatLib;
-import app.AnomalyReport;
 
 
 public class ZScore implements TimeSeriesAnomalyDetector {
@@ -63,10 +63,10 @@ public class ZScore implements TimeSeriesAnomalyDetector {
     }
 
     @Override
-    public List<AnomalyReport> detect(TimeSeries ts) {
+    public  HashMap<String, List<Integer>> detect(TimeSeries ts) {
         // TODO Auto-generated method stub
         float tempZScore;
-        List<AnomalyReport> list = new ArrayList<AnomalyReport>();
+        HashMap<String, List<Integer>> map = new HashMap<String, List<Integer>>();
         int totalTime = ts.totalTime;
         for (String key : hashMap.keySet()) {
 
@@ -74,14 +74,24 @@ public class ZScore implements TimeSeriesAnomalyDetector {
                 tempZScore = findZScore(ts.dataOfFeatureByName(key), j);
                 if (tempZScore > hashMap.get(key))//we detect problem
                 {
-                    list.add(new AnomalyReport(key, j + 1));
+                    List<Integer> temp;
+                    if(map.get(key)==null)
+                    {
+                         temp= new ArrayList<>();
+
+                    }
+                    else{
+                        temp=map.get(key);
+                    }
+                   temp.add(j+1);
+                    map.put( key, temp);
                 }
 
             }
 
         }
 
-        return list;
+        return map;
     }
 
 

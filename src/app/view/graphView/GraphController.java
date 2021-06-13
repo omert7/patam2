@@ -14,10 +14,12 @@ public class GraphController {
 	@FXML private LineChart<Number, Number> anomalyDetec;
 
 
-	@FXML private Label labelFeatureA,labelFeatureB,labelFeatureB1,labelFeatureA1;
+	@FXML private Label labelFeatureA,labelFeatureB,labelCoralFeatureA,labelCoralFeatureB,anomalyClass;
 	private StringProperty graphNameOfFeatureA;
 	private StringProperty graphNameOfFeatureB;
-
+	private StringProperty spLabelCoralFeatureA;
+	private StringProperty spLabelCoralFeatureB;
+	private StringProperty spAnomalyClass;
 	// Add a public no-args constructor
 	public GraphController()
 	{
@@ -29,6 +31,9 @@ public class GraphController {
 
 		graphNameOfFeatureA=new SimpleStringProperty("");
 		graphNameOfFeatureB=new SimpleStringProperty("");
+		spLabelCoralFeatureA=new SimpleStringProperty("");
+		spLabelCoralFeatureB=new SimpleStringProperty("");
+		spAnomalyClass=new SimpleStringProperty("");
 
 		graphNameOfFeatureA.addListener(v->{
 
@@ -37,6 +42,15 @@ public class GraphController {
 		});
 		graphNameOfFeatureB.addListener(v->{
 			labelFeatureB.setText(graphNameOfFeatureB.getValue());
+		});
+		spLabelCoralFeatureA.addListener(v->{
+			labelCoralFeatureA.setText(spLabelCoralFeatureA.getValue());
+		});
+		spLabelCoralFeatureB.addListener(v->{
+			labelCoralFeatureB.setText(spLabelCoralFeatureB.getValue());
+		});
+		spAnomalyClass.addListener(v->{
+			anomalyClass.setText(spAnomalyClass.getValue());
 		});
 
 	}
@@ -84,5 +98,28 @@ public class GraphController {
 
 
 
+	public StringProperty getSpLabelCoralFeatureA() {
+		return spLabelCoralFeatureA;
+	}
 
+	public void setSpLabelCoralFeatureA(String spLabelCoralFeatureA) {
+		this.spLabelCoralFeatureA.set(spLabelCoralFeatureA);
+	}
+
+
+	public StringProperty getSpLabelCoralFeatureB() {
+		return spLabelCoralFeatureB;
+	}
+
+	public void setSpLabelCoralFeatureB(String spLabelCoralFeatureB) {
+		this.spLabelCoralFeatureB.set(spLabelCoralFeatureB);
+	}
+
+	public StringProperty getSpAnomalyClassProperty() {
+		return spAnomalyClass;
+	}
+
+	public void setSpAnomalyClass(String spAnomalyClass) {
+		this.spAnomalyClass.set(spAnomalyClass);
+	}
 }
