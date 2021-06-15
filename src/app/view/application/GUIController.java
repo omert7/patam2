@@ -152,7 +152,9 @@ private void addLis(){
                          //seriesHashMapTimeAnomaly.replace(vm.getNameofFeatureA().getValue(),anomalTimes);
                      }
 
-
+                    else{
+                         anomal=seriesHashMapAnomaly.get( vm.getNameofFeatureA().getValue());
+                     }
                      graph.getGraphController().getAnomalyDetec().getData().clear();
                      graph.getGraphController().getAnomalyDetec().getData().add(anomal);
                     // graph.getGraphController().getAnomalyDetec().getData().add(anomalTimes);
@@ -172,6 +174,9 @@ private void addLis(){
                       //   seriesHashMapTimeAnomaly.replace(vm.getNameofFeatureA().getValue(),anomalTimes);
 
 
+                     }
+                     else{
+                         anomal=seriesHashMapAnomaly.get( vm.getNameofFeatureA().getValue());
                      }
 
                      graph.getGraphController().getAnomalyDetec().getData().clear();
