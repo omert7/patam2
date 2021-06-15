@@ -8,7 +8,7 @@ public class Line {
         this.b = b;
     }
 
-    public float f(float x) {
+    public float valueInTime(float x) {
         return ((a * x) + b);
     }
 

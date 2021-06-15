@@ -3,17 +3,16 @@ package app.model;
 
 
 import app.CorrelatedFeaturesLine;
-import app.model.algorithms.HybridAlgo;
-import app.model.algorithms.LinearRegression;
-import app.model.algorithms.TimeSeries;
+import app.model.algorithms.*;
 import javafx.application.Platform;
 import javafx.beans.property.DoubleProperty;
-import app.model.algorithms.TimeSeriesAnomalyDetector;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleFloatProperty;
 
+import javafx.scene.Node;
 import javafx.scene.chart.XYChart;
+import javafx.scene.paint.Color;
 
 import java.util.HashMap;
 import java.util.List;
@@ -60,7 +59,50 @@ public class AppModel{
 
 
 
+    public void addAnomalyValueAtTime(String atribute, XYChart.Series s) {
+        Platform.runLater(()->{
+            float temp;
+            int time = (int) (this.timestamp.getValue() * 10);
+            if(this.getAnomalDetect().getClass()== LinearRegression.class){
+                 temp = ((LinearRegression )(this.anomalDetect)).getHashMap().get(atribute).lin_reg.valueInTime(time);
+                if( this.mapAnomaly.get(atribute).contains(time) ){
+                    //anomaly now!
+                    Node line = s.getNode().lookup(".chart-series-line");
+                    //set some styles
+                    line.setStyle("-fx-stroke: #ff0000; -fx-stroke-width: 1px; -fx-effect: null; -fx-stroke-dash-array: 10 10 10 10;");
 
+                }else
+                {
+                    Node line = s.getNode().lookup(".chart-series-line");
+                    //set some styles
+                    line.setStyle("-fx-stroke: #43ff02; -fx-stroke-width: 1px; -fx-effect: null; -fx-stroke-dash-array: 10 10 10 10;");
+
+                }
+            }
+           else
+            {//z score now
+
+                temp = time;
+            }
+
+            if( this.mapAnomaly.get(atribute).contains(time) ){
+                Node line = s.getNode().lookup(".chart-series-line");
+                //set some styles
+                line.setStyle("-fx-stroke: #43ff02; -fx-stroke-width: 1px; -fx-effect: null; -fx-stroke-dash-array: 10 10 10 10;");
+
+            }else{
+                Node line = s.getNode().lookup(".chart-series-line");
+                //set some styles
+                line.setStyle("-fx-stroke: #ff0000; -fx-stroke-width: 1px; -fx-effect: null; -fx-stroke-dash-array: 10 10 10 10;");
+
+            }
+
+            s.getData().add(new XYChart.Data(time, temp));
+
+
+        });
+
+    }
     public void addValueAtTime(String atribute, XYChart.Series s) {
         Platform.runLater(()->{
 
@@ -73,43 +115,28 @@ public class AppModel{
 
     }
 
-    public XYChart.Series addValueAtTime2(String atribute, XYChart.Series s)
-    {
+    public void addLine(String atribute, XYChart.Series s) {
+        Platform.runLater(()->{
+            float temp;
+            int time = (int) (this.timestamp.getValue() * 10);
+             temp = ((LinearRegression )(this.anomalDetect)).getHashMap().get(atribute).lin_reg.valueInTime(0);
+             s.getData().add(new XYChart.Data(1, temp));
+            temp=((LinearRegression )(this.anomalDetect)).getHashMap().get(atribute).lin_reg.valueInTime(2000);
+            s.getData().add(new XYChart.Data(2000, temp));
+        });
 
-
-           int time = (int) (this.timestamp.getValue() * 10);
-           double temp = timeSeriesAnomaly.getValAtSpecificTime(time, atribute);
-           s.getData().add(new XYChart.Data(time, temp));
-
-
-           return s;
+    }
+    public void addZScoreLine(String atribute, XYChart.Series s) {
+        Platform.runLater(()->{
+            float temp;
+            int time = (int) (this.timestamp.getValue() * 10);
+            temp = ((ZScore)(this.anomalDetect)).getHashMap().get(atribute);
+            s.getData().add(new XYChart.Data(1, temp));
+            s.getData().add(new XYChart.Data(2000, temp));
+        });
 
     }
 
-
-
-    public void paint(String atribute) {///TODO paint
-
-        if(this.anomalDetect.getClass()==LinearRegression.class) {
-
-            LinearRegression line =(LinearRegression)this.anomalDetect;
-
-            //get the reg Line
-            CorrelatedFeaturesLine  corr=line.hashMap.get(atribute);
-
-            //		LineChart ll = new LineChart(corr.lin_reg.a, corr.lin_reg.b);
-
-
-        }else if(this.anomalDetect.getClass()==HybridAlgo.class)
-        {
-
-        }
-        else {
-            //zScore
-
-        }
-
-    }
 
 
     public FlightSettings getFlightSettings() {

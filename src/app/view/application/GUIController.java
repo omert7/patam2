@@ -1,5 +1,7 @@
 package app.view.application;
 
+import app.model.algorithms.LinearRegression;
+import app.model.algorithms.ZScore;
 import app.view.dashboardView.Dashboard;
 import app.view.featureListView.FeatureList;
 import app.view.graphView.Graph;
@@ -31,10 +33,15 @@ public class GUIController {
     @FXML
     private TimeLine timeLine;
 
-private HashMap<String,XYChart.Series<Number, Number> > seriesHashMap;
-   public  XYChart.Series<Number, Number> attributeA ;
-    public  XYChart.Series<Number, Number> attributeB;// = new XYChart.Series<Number, Number>();
-    private XYChart.Series seriesPoint;
+    private HashMap<String,XYChart.Series<Number, Number> > seriesHashMap;
+    private HashMap<String,XYChart.Series<Number, Number> > seriesHashMapB;
+    private HashMap<String,XYChart.Series<Number, Number> > seriesHashMapAnomaly;
+    private HashMap<String,XYChart.Series<Number, Number> > seriesHashMapTimeAnomaly;
+
+    private XYChart.Series seriesPointA;
+    private XYChart.Series seriesPointB;
+    private XYChart.Series seriesPointAnomaly;
+    private XYChart.Series seriesTimeAnomaly;
     public GUIController() {
     }
 
@@ -56,13 +63,24 @@ private HashMap<String,XYChart.Series<Number, Number> > seriesHashMap;
     }
 
     private void bindGraphProperties() {
+        //map of many serries
         seriesHashMap=new HashMap<>();
-        seriesPoint=new XYChart.Series<>();
+        seriesHashMapB=new HashMap<>();
+        seriesHashMapTimeAnomaly=new HashMap<>();
+        seriesHashMapAnomaly=new HashMap<>();
+        //series
+        seriesPointA=new XYChart.Series<>();
+        seriesPointB=new XYChart.Series<>();
+        seriesPointAnomaly=new XYChart.Series<>();
+        seriesTimeAnomaly=new XYChart.Series<>();
         vm.getNameofFeatureA().set(graph.getNameOfFeatureA().getValue());
         vm.getNameofFeatureB().set(graph.getNameOfFeatureB().getValue());
         graph.getNameOfFeatureA().bindBidirectional(vm.getNameofFeatureA());
         graph.getNameOfFeatureB().bindBidirectional(vm.getNameofFeatureB());
-        graph.getGraphController().getFeatureA().getData().add(seriesPoint);
+        graph.getGraphController().getFeatureA().getData().add(seriesPointA);
+        graph.getGraphController().getFeatureB().getData().add(seriesPointB);
+        graph.getGraphController().getAnomalyDetec().getData().add(seriesPointAnomaly);
+        graph.getGraphController().getAnomalyDetec().getData().add(seriesTimeAnomaly);
         graph.getGraphController().getSpLabelCoralFeatureA().bindBidirectional(vm.getSpLabelCoralFeatureA());
         graph.getGraphController().getSpLabelCoralFeatureB().bindBidirectional(vm.getSpLabelCoralFeatureB());
         graph.getGraphController().getSpAnomalyClassProperty().bindBidirectional(vm.getSpAnomalyClassProperty());
@@ -74,31 +92,97 @@ private HashMap<String,XYChart.Series<Number, Number> > seriesHashMap;
         featureList.getNameOfFeature().bindBidirectional(vm.getNameFromList());
 
     }
+
+
+
+
+
 private void addLis(){
        timeLine.timeStampProperty().addListener(
             v -> {
                 if(!vm.getNameofFeatureA().getValue().equals(""))
                 {
-                    vm.getAppModel().addValueAtTime(vm.getNameofFeatureA().getValue(), seriesPoint);
+                        vm.getAppModel().addValueAtTime(vm.getNameofFeatureA().getValue(), seriesPointA);
+
+                   if(
+                            this.vm.getAppModel().getAnomalDetect()!=null &&
+                            this.vm.getAppModel().getAnomalDetect().getClass()== LinearRegression.class)
+                    {
+                        vm.getAppModel().addValueAtTime(vm.getNameofFeatureB().getValue(), seriesPointB);
+
+                    }
+                    vm.getAppModel().addAnomalyValueAtTime(vm.getNameofFeatureA().getValue(), seriesTimeAnomaly);
                 }
 
-                  /* if(seriesHashMap.get( vm.getNameofFeatureA().getValue())==null)
-                    {
-                        seriesHashMap.put(vm.getNameofFeatureA().getValue(),seriesPoint);
-                    }
-                  else{
-                      vm.getAppModel().addValueTilTime(vm.getNameofFeatureA().getValue(), seriesPoint);
-                    }
-                   vm.getAppModel().addValueAtTime(vm.getNameofFeatureA().getValue(), seriesPoint);
 
 
-                }*/
             });
-
-
-    vm.getNameofFeatureA().addListener(v->{
-      if(vm.isOnflight()){
+       vm.getNameofFeatureA().addListener(v->{
+           boolean lock=false;
+      if(vm.isOnflight()) {
           vm.pause();
+          lock=true;
+      }
+          // change feature B
+                 if(    this.vm.getAppModel().getAnomalDetect()!=null &&
+                      this.vm.getAppModel().getAnomalDetect().getClass()== LinearRegression.class)
+                 {
+
+                          XYChart.Series z=new XYChart.Series();
+                          if(seriesHashMapB.get( vm.getNameofFeatureA().getValue())==null)
+                          {
+
+                              vm.getAppModel().addValueTilTime(vm.getNameofFeatureB().getValue(),z);
+                              seriesHashMapB.put(vm.getNameofFeatureB().getValue(),z);
+
+                          }
+
+                        graph.getGraphController().getFeatureB().getData().clear();
+                          graph.getGraphController().getFeatureB().getData().add(z);
+                          seriesPointB=z;
+                  // adding the anomaly graph
+                     XYChart.Series anomal=new XYChart.Series();
+                     XYChart.Series anomalTimes=new XYChart.Series();
+                     if(seriesHashMapAnomaly.get( vm.getNameofFeatureA().getValue())==null)
+                     {
+
+                         vm.getAppModel().addLine(vm.getNameofFeatureA().getValue(),anomal);
+                         vm.getAppModel().addAnomalyValueAtTime(vm.getNameofFeatureA().getValue(),anomalTimes);
+                    //     seriesHashMapAnomaly.put(vm.getNameofFeatureA().getValue(),anomal);
+                         //seriesHashMapTimeAnomaly.replace(vm.getNameofFeatureA().getValue(),anomalTimes);
+                     }
+
+
+                     graph.getGraphController().getAnomalyDetec().getData().clear();
+                     graph.getGraphController().getAnomalyDetec().getData().add(anomal);
+                    // graph.getGraphController().getAnomalyDetec().getData().add(anomalTimes);
+                     seriesPointAnomaly=anomal;
+                  //   seriesTimeAnomaly=anomalTimes;
+              }
+              else if(    this.vm.getAppModel().getAnomalDetect()!=null &&
+                             this.vm.getAppModel().getAnomalDetect().getClass()== ZScore.class){
+                     XYChart.Series anomal=new XYChart.Series();
+                     XYChart.Series anomalTimes=new XYChart.Series();
+                     if(seriesHashMapAnomaly.get( vm.getNameofFeatureA().getValue())==null)
+                     {
+
+                         vm.getAppModel().addZScoreLine(vm.getNameofFeatureA().getValue(),anomal);
+                         seriesHashMapAnomaly.put(vm.getNameofFeatureA().getValue(),anomal);
+                        // vm.getAppModel().addAnomalyValueAtTime(vm.getNameofFeatureA().getValue(),anomalTimes);
+                      //   seriesHashMapTimeAnomaly.replace(vm.getNameofFeatureA().getValue(),anomalTimes);
+
+
+                     }
+
+                     graph.getGraphController().getAnomalyDetec().getData().clear();
+                     graph.getGraphController().getAnomalyDetec().getData().add(anomal);
+                  //   graph.getGraphController().getAnomalyDetec().getData().add(anomalTimes);
+                     seriesPointAnomaly=anomal;
+                  //   seriesTimeAnomaly=anomalTimes;
+                     }
+
+
+          //graph A leave it alone!
           XYChart.Series s=new XYChart.Series();
           if(seriesHashMap.get( vm.getNameofFeatureA().getValue())==null)
           {
@@ -110,7 +194,8 @@ private void addLis(){
 
           graph.getGraphController().getFeatureA().getData().clear();
          graph.getGraphController().getFeatureA().getData().add(s);
-          seriesPoint=s;
+          seriesPointA=s;
+          if(lock){
          vm.play();
         }
       else{

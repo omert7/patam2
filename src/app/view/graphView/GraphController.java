@@ -122,4 +122,7 @@ public class GraphController {
 	public void setSpAnomalyClass(String spAnomalyClass) {
 		this.spAnomalyClass.set(spAnomalyClass);
 	}
+
+
+
 }

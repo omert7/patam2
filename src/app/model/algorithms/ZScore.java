@@ -11,9 +11,9 @@ import app.model.statlib.StatLib;
 public class ZScore implements TimeSeriesAnomalyDetector {
 
 
-   public HashMap<String, Float> hashMap;
+   private HashMap<String, Float> hashMap;
 
-    //fix Zscore!
+
 
     public ZScore() {
 
@@ -95,4 +95,11 @@ public class ZScore implements TimeSeriesAnomalyDetector {
     }
 
 
+    public HashMap<String, Float> getHashMap() {
+        return hashMap;
+    }
+
+    public void setHashMap(HashMap<String, Float> hashMap) {
+        this.hashMap = hashMap;
+    }
 }

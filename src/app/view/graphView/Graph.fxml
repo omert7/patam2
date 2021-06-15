@@ -7,7 +7,7 @@
 <?import javafx.scene.text.Font?>
 
 <AnchorPane prefHeight="495.0" prefWidth="764.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.view.graphView.GraphController">
-    <LineChart fx:id="featureA" axisSortingPolicy="NONE" layoutX="125.0" layoutY="16.0" prefHeight="152.0" prefWidth="208.0">
+    <LineChart fx:id="featureA" axisSortingPolicy="NONE" layoutX="113.0" layoutY="42.0" prefHeight="152.0" prefWidth="208.0">
         <xAxis>
             <NumberAxis side="BOTTOM" upperBound="1500.0" />
         </xAxis>
@@ -17,7 +17,7 @@
         </yAxis>
     </LineChart>
 
-    <LineChart fx:id="featureB" animated="false" layoutX="452.0" layoutY="16.0" prefHeight="152.0" prefWidth="208.0">
+    <LineChart fx:id="featureB" animated="false" layoutX="452.0" layoutY="29.0" prefHeight="152.0" prefWidth="208.0">
         <xAxis>
             <!--   <CategoryAxis label="Time" side="BOTTOM" /> -->
             <NumberAxis side="BOTTOM" upperBound="1500.0" />
@@ -36,23 +36,23 @@
             <NumberAxis side="LEFT" />
         </yAxis>
     </LineChart>
-    <Label fx:id="labelFeatureA" layoutX="55.0" layoutY="62.0" scaleShape="false" text="Label">
+    <Label fx:id="labelFeatureA" layoutX="37.0" layoutY="27.0" scaleShape="false" text="Label">
         <font>
             <Font name="Aharoni Bold" size="20.0" />
         </font></Label>
-    <Label layoutX="214.0" layoutY="166.0" prefWidth="49.0" text="Time">
+    <Label layoutX="205.0" layoutY="181.0" prefWidth="49.0" text="Time">
         <font>
             <Font size="20.0" />
         </font></Label>
-    <Label fx:id="labelFeatureB" layoutX="389.0" layoutY="62.0" scaleShape="false" text="Label">
+    <Label fx:id="labelFeatureB" layoutX="445.0" layoutY="1.0" scaleShape="false" text="Label">
         <font>
             <Font name="Aharoni Bold" size="20.0" />
         </font></Label>
-    <Label layoutX="543.0" layoutY="166.0" text="Time">
+    <Label layoutX="545.0" layoutY="181.0" text="Time">
         <font>
             <Font size="20.0" />
         </font></Label>
-    <Label fx:id="labelCoralFeatureA" layoutX="113.0" layoutY="317.0" scaleShape="false" text="Label">
+    <Label fx:id="labelCoralFeatureA" layoutX="105.0" layoutY="332.0" scaleShape="false" text="Label">
       <font>
          <Font size="20.0" />
       </font></Label>

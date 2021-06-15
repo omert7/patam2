@@ -54,6 +54,8 @@ public class StatLib {
         float cov1 = cov(x, y);
         float s1 = (float) Math.pow(var(x), 0.5);
         float s2 = (float) Math.pow(var(y), 0.5);
+        if(s1==0||s2==0)
+            return 0;
         return (cov1 / (s1 * s2));
 
 
@@ -86,7 +88,7 @@ public class StatLib {
 
     // returns the deviation between point p and the line
     public static float dev(Point p, Line l) {
-        float Fx = l.f(p.x);
+        float Fx = l.valueInTime(p.x);
         float dis = Fx - p.y;
         return Math.abs(dis);
     }

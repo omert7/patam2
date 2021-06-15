@@ -2,6 +2,7 @@ package app.viewModel;
 
 import app.model.AppModel;
 import app.model.FlightSettings;
+import app.model.algorithms.LinearRegression;
 import app.model.algorithms.TimeSeriesAnomalyDetector;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
@@ -78,7 +79,17 @@ private void graphInit(){
     this.nameofFeatureA=new SimpleStringProperty();
     this.spAnomalyClass=new SimpleStringProperty();
     nameFromList=new SimpleStringProperty();
-    nameFromList.addListener(v->nameofFeatureA.setValue(nameFromList.getValue()));
+    nameFromList.addListener(v ->
+            {
+                nameofFeatureA.setValue(nameFromList.getValue());
+                if( appModel.getAnomalDetect()!=null && appModel.getAnomalDetect().getClass()== LinearRegression.class) {
+                    String str=((LinearRegression) appModel.getAnomalDetect()).getHashMap().get(this.nameofFeatureA.getValue()).feature2;
+                        if (str!=null)
+                            nameofFeatureB.setValue(str);
+                }
+            });
+
+
     spLabelCoralFeatureA=new SimpleStringProperty("");
     spLabelCoralFeatureB=new SimpleStringProperty("");
     spAnomalyClass=new SimpleStringProperty("");
@@ -162,9 +173,6 @@ public boolean isOnflight(){
             appModel.setAnomalDetect(ad);
 
 
-
-
-
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
@@ -211,7 +219,6 @@ public boolean isOnflight(){
             this.listView.clear();
             this.listView.addAll(appModel.getTimeSeriesAnomaly().namesOfFeatures);
             this.maxTimeLine.setValue((dataSize / 10 + ((double) dataSize % 10 / 10) + 0.1));
-            this.listView.addAll(appModel.getTimeSeriesAnomaly().namesOfFeatures);
             resetFlightProp();
             myGoodAlert("csv flight");
         } else {

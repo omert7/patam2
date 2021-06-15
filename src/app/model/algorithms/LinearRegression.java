@@ -14,7 +14,7 @@ import java.util.List;
 public class LinearRegression implements TimeSeriesAnomalyDetector {
 
    // ArrayList<CorrelatedFeaturesLine> dataCoral;
-    public HashMap<String, CorrelatedFeaturesLine> hashMap;
+    private HashMap<String, CorrelatedFeaturesLine> hashMap;
    
     public LinearRegression() {
         //dataCoral = new ArrayList<CorrelatedFeaturesLine>();
@@ -34,7 +34,8 @@ public class LinearRegression implements TimeSeriesAnomalyDetector {
         int size = ts.data.get(0).length;//size of our rows
         Point[] temp;
         Line lin_reg;
-        for (i = 0; i < size; i++) {
+        for (i = 0; i < size; i++)
+        {
             maxp = -1;
             x = i;
             y = i;
@@ -104,7 +105,14 @@ public class LinearRegression implements TimeSeriesAnomalyDetector {
         return map;
     }
 
-    
+    public HashMap<String, CorrelatedFeaturesLine> getHashMap() {
+        return hashMap;
+    }
+
+    public void setHashMap(HashMap<String, CorrelatedFeaturesLine> hashMap) {
+        this.hashMap = hashMap;
+    }
+
     static public class time {
         public long startTime;
         public long endTime;
