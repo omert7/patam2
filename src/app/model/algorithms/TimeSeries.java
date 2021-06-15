@@ -99,6 +99,34 @@ public class TimeSeries {
 
     }
 
+    public float getMaxByFeature(String s){
+        float t[]=this.dataOfFeatureByName(s);
+        float max=t[0];
+        for (float value:t) {
+            if(max<value){
+                max=value;
+            }
+        }
+        return max;
+
+
+    }
+
+    public float getMinByFeature(String s){
+        float t[]=this.dataOfFeatureByName(s);
+        float min=t[0];
+        for (float value:t) {
+            if(min>value){
+                min=value;
+            }
+        }
+        return min;
+
+
+    }
+
+
+
     public float getValAtSpecificTime(int time, String request)
     //we get key and feature name
     //we return the feature at that time

@@ -4,6 +4,7 @@ package app.model;
 
 import app.CorrelatedFeaturesLine;
 import app.model.algorithms.*;
+import app.model.statlib.Line;
 import javafx.application.Platform;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.FloatProperty;
@@ -61,45 +62,33 @@ public class AppModel{
 
     public void addAnomalyValueAtTime(String atribute, XYChart.Series s) {
         Platform.runLater(()->{
-            float temp;
+            float tempX,tempY;
             int time = (int) (this.timestamp.getValue() * 10);
-            if(this.getAnomalDetect().getClass()== LinearRegression.class){
-                 temp = ((LinearRegression )(this.anomalDetect)).getHashMap().get(atribute).lin_reg.valueInTime(time);
-                if( this.mapAnomaly.get(atribute).contains(time) ){
-                    //anomaly now!
-                    Node line = s.getNode().lookup(".chart-series-line");
-                    //set some styles
-                    line.setStyle("-fx-stroke: #ff0000; -fx-stroke-width: 1px; -fx-effect: null; -fx-stroke-dash-array: 10 10 10 10;");
+            if(time!=0 ){
 
-                }else
-                {
-                    Node line = s.getNode().lookup(".chart-series-line");
-                    //set some styles
-                    line.setStyle("-fx-stroke: #43ff02; -fx-stroke-width: 1px; -fx-effect: null; -fx-stroke-dash-array: 10 10 10 10;");
-
-                }
+            if(this.getAnomalDetect().getClass()== LinearRegression.class) {
+                tempX = this.timeSeriesAnomaly.getValAtSpecificTime(time, atribute);
+                String fe2= ((LinearRegression) (this.anomalDetect)).getHashMap().get(atribute).feature2;
+                tempY = this.timeSeriesAnomaly.getValAtSpecificTime(time, fe2);
+                s.getData().add(new XYChart.Data(tempX, tempY));
             }
-           else
-            {//z score now
+            else {
+                //zscore
+                //wont draw
+             }
+                if(this.mapAnomaly.get(atribute)!=null&&this.mapAnomaly.get(atribute).contains(time))
+                 {    //anomaly now!
+                     s.setName("Anomaly Detected!!");
 
-                temp = time;
-            }
+                    }
+                else
+                    {
+                        s.setName("Not Anomaly");
+                    }
 
-            if( this.mapAnomaly.get(atribute).contains(time) ){
-                Node line = s.getNode().lookup(".chart-series-line");
-                //set some styles
-                line.setStyle("-fx-stroke: #43ff02; -fx-stroke-width: 1px; -fx-effect: null; -fx-stroke-dash-array: 10 10 10 10;");
 
-            }else{
-                Node line = s.getNode().lookup(".chart-series-line");
-                //set some styles
-                line.setStyle("-fx-stroke: #ff0000; -fx-stroke-width: 1px; -fx-effect: null; -fx-stroke-dash-array: 10 10 10 10;");
 
             }
-
-            s.getData().add(new XYChart.Data(time, temp));
-
-
         });
 
     }
@@ -117,12 +106,18 @@ public class AppModel{
 
     public void addLine(String atribute, XYChart.Series s) {
         Platform.runLater(()->{
-            float temp;
+            float minX,maxX,minY,maxY;
             int time = (int) (this.timestamp.getValue() * 10);
-             temp = ((LinearRegression )(this.anomalDetect)).getHashMap().get(atribute).lin_reg.valueInTime(0);
-             s.getData().add(new XYChart.Data(1, temp));
-            temp=((LinearRegression )(this.anomalDetect)).getHashMap().get(atribute).lin_reg.valueInTime(2000);
-            s.getData().add(new XYChart.Data(2000, temp));
+            minX = this.timeSeriesTrain.getMinByFeature(atribute);
+            maxX= this.timeSeriesTrain.getMaxByFeature(atribute);
+           Line line= ((LinearRegression) (this.anomalDetect)).getHashMap().get(atribute).lin_reg;
+           minY=line.valueInTime(minX);
+           maxY=line.valueInTime(maxX);
+           s.getData().add(new XYChart.Data(minX,minY));
+           s.getData().add(new XYChart.Data(maxX, maxY));
+        s.setName("Regression Line");
+
+
         });
 
     }
@@ -133,6 +128,7 @@ public class AppModel{
             temp = ((ZScore)(this.anomalDetect)).getHashMap().get(atribute);
             s.getData().add(new XYChart.Data(1, temp));
             s.getData().add(new XYChart.Data(2000, temp));
+            s.setName("Z-Score Line");
         });
 
     }

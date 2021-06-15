@@ -104,14 +104,15 @@ private void addLis(){
                 {
                         vm.getAppModel().addValueAtTime(vm.getNameofFeatureA().getValue(), seriesPointA);
 
-                   if(
+                   if(  vm.isOnflight()&&
                             this.vm.getAppModel().getAnomalDetect()!=null &&
                             this.vm.getAppModel().getAnomalDetect().getClass()== LinearRegression.class)
                     {
                         vm.getAppModel().addValueAtTime(vm.getNameofFeatureB().getValue(), seriesPointB);
 
                     }
-                    vm.getAppModel().addAnomalyValueAtTime(vm.getNameofFeatureA().getValue(), seriesTimeAnomaly);
+                    if(vm.isOnflight()&&this.vm.getAppModel().getAnomalDetect()!=null )
+                        vm.getAppModel().addAnomalyValueAtTime(vm.getNameofFeatureA().getValue(), seriesTimeAnomaly);
                 }
 
 
@@ -147,19 +148,27 @@ private void addLis(){
                      {
 
                          vm.getAppModel().addLine(vm.getNameofFeatureA().getValue(),anomal);
-                         vm.getAppModel().addAnomalyValueAtTime(vm.getNameofFeatureA().getValue(),anomalTimes);
-                    //     seriesHashMapAnomaly.put(vm.getNameofFeatureA().getValue(),anomal);
-                         //seriesHashMapTimeAnomaly.replace(vm.getNameofFeatureA().getValue(),anomalTimes);
+                         seriesHashMapAnomaly.put(vm.getNameofFeatureA().getValue(),anomal);
+
+
                      }
 
                     else{
                          anomal=seriesHashMapAnomaly.get( vm.getNameofFeatureA().getValue());
+
                      }
+                    if(seriesHashMapTimeAnomaly.get( vm.getNameofFeatureA().getValue())==null){
+                        vm.getAppModel().addAnomalyValueAtTime(vm.getNameofFeatureA().getValue(),anomalTimes);
+                        seriesHashMapTimeAnomaly.replace(vm.getNameofFeatureA().getValue(),anomalTimes);
+                    }else{
+
+                        anomalTimes=seriesHashMapTimeAnomaly.get( vm.getNameofFeatureA().getValue());
+                    }
                      graph.getGraphController().getAnomalyDetec().getData().clear();
                      graph.getGraphController().getAnomalyDetec().getData().add(anomal);
-                    // graph.getGraphController().getAnomalyDetec().getData().add(anomalTimes);
+                     graph.getGraphController().getAnomalyDetec().getData().add(anomalTimes);
                      seriesPointAnomaly=anomal;
-                  //   seriesTimeAnomaly=anomalTimes;
+                     seriesTimeAnomaly=anomalTimes;
               }
               else if(    this.vm.getAppModel().getAnomalDetect()!=null &&
                              this.vm.getAppModel().getAnomalDetect().getClass()== ZScore.class){
@@ -170,20 +179,25 @@ private void addLis(){
 
                          vm.getAppModel().addZScoreLine(vm.getNameofFeatureA().getValue(),anomal);
                          seriesHashMapAnomaly.put(vm.getNameofFeatureA().getValue(),anomal);
-                        // vm.getAppModel().addAnomalyValueAtTime(vm.getNameofFeatureA().getValue(),anomalTimes);
-                      //   seriesHashMapTimeAnomaly.replace(vm.getNameofFeatureA().getValue(),anomalTimes);
 
 
                      }
                      else{
                          anomal=seriesHashMapAnomaly.get( vm.getNameofFeatureA().getValue());
-                     }
 
+                     }
+                     if(seriesHashMapTimeAnomaly.get( vm.getNameofFeatureA().getValue())==null){
+                         vm.getAppModel().addAnomalyValueAtTime(vm.getNameofFeatureA().getValue(),anomalTimes);
+                         seriesHashMapTimeAnomaly.replace(vm.getNameofFeatureA().getValue(),anomalTimes);
+                     }else{
+
+                         anomalTimes=seriesHashMapTimeAnomaly.get( vm.getNameofFeatureA().getValue());
+                     }
                      graph.getGraphController().getAnomalyDetec().getData().clear();
                      graph.getGraphController().getAnomalyDetec().getData().add(anomal);
-                  //   graph.getGraphController().getAnomalyDetec().getData().add(anomalTimes);
+                     graph.getGraphController().getAnomalyDetec().getData().add(anomalTimes);
                      seriesPointAnomaly=anomal;
-                  //   seriesTimeAnomaly=anomalTimes;
+                     seriesTimeAnomaly=anomalTimes;
                      }
 
 
