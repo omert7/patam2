@@ -57,7 +57,7 @@ public class AppModel{
     }
 
 
-
+//for big graph
     public void addAnomalyValueAtTime(String atribute, XYChart.Series s) {
         Platform.runLater(()->{
             float tempX,tempY;
@@ -72,10 +72,19 @@ public class AppModel{
                     s.getData().clear();
                 s.getData().add(new XYChart.Data(tempX, tempY));
             }
-            else {
+            else  if(this.getAnomalDetect().getClass()== ZScore.class) {
                 //zscore
-                //wont draw
-             }
+                tempX =time;
+                tempY = ((ZScore) (this.anomalDetect)).getHashMap().get(atribute);
+                s.getData().add(new XYChart.Data(tempX, tempY));
+             }else if(this.getAnomalDetect().getClass()== HybridAlgo.class){
+                tempX = this.timeSeriesAnomaly.getValAtSpecificTime(time, atribute);
+                String fe2= ((HybridAlgo) (this.anomalDetect)).hashMapC.get(atribute).feature2;
+                tempY = this.timeSeriesAnomaly.getValAtSpecificTime(time, fe2);
+                if(s.getData().size()>=40)
+                    s.getData().clear();
+                s.getData().add(new XYChart.Data(tempX, tempY));
+                }
                 if(this.mapAnomaly.get(atribute)!=null&&this.mapAnomaly.get(atribute).contains(time))
                  {    //anomaly now!
                      s.setName("Anomaly Detected!!");
@@ -92,6 +101,7 @@ public class AppModel{
         });
 
     }
+    //for small graph
     public void addValueAtTime(String atribute, XYChart.Series s) {
         Platform.runLater(()->{
 
