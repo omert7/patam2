@@ -2,19 +2,17 @@ package app.model;
 
 
 
-import app.CorrelatedFeaturesLine;
 import app.model.algorithms.*;
 import app.model.statlib.Line;
+import app.model.statlib.Point;
 import javafx.application.Platform;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleFloatProperty;
-
-import javafx.scene.Node;
 import javafx.scene.chart.XYChart;
-import javafx.scene.paint.Color;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -70,6 +68,8 @@ public class AppModel{
                 tempX = this.timeSeriesAnomaly.getValAtSpecificTime(time, atribute);
                 String fe2= ((LinearRegression) (this.anomalDetect)).getHashMap().get(atribute).feature2;
                 tempY = this.timeSeriesAnomaly.getValAtSpecificTime(time, fe2);
+                if(s.getData().size()>=40)
+                    s.getData().clear();
                 s.getData().add(new XYChart.Data(tempX, tempY));
             }
             else {
@@ -107,10 +107,16 @@ public class AppModel{
     public void addLine(String atribute, XYChart.Series s) {
         Platform.runLater(()->{
             float minX,maxX,minY,maxY;
+            Line line;
             int time = (int) (this.timestamp.getValue() * 10);
             minX = this.timeSeriesTrain.getMinByFeature(atribute);
             maxX= this.timeSeriesTrain.getMaxByFeature(atribute);
-           Line line= ((LinearRegression) (this.anomalDetect)).getHashMap().get(atribute).lin_reg;
+            if( this.getAnomalDetect().getClass()== LinearRegression.class) {
+                 line = ((LinearRegression) (this.anomalDetect)).getHashMap().get(atribute).lin_reg;
+            }
+            else{
+                 line = ((HybridAlgo) (this.anomalDetect)).hashMapL.get(atribute).lin_reg;
+            }
            minY=line.valueInTime(minX);
            maxY=line.valueInTime(maxX);
            s.getData().add(new XYChart.Data(minX,minY));
@@ -125,7 +131,12 @@ public class AppModel{
         Platform.runLater(()->{
             float temp;
             int time = (int) (this.timestamp.getValue() * 10);
-            temp = ((ZScore)(this.anomalDetect)).getHashMap().get(atribute);
+            if( this.getAnomalDetect().getClass()== ZScore.class)
+                    temp = ((ZScore)(this.anomalDetect)).getHashMap().get(atribute);
+            else{
+                //Hybrid
+                temp = ((HybridAlgo)(this.anomalDetect)).hashMapZ.get(atribute);
+            }
             s.getData().add(new XYChart.Data(1, temp));
             s.getData().add(new XYChart.Data(2000, temp));
             s.setName("Z-Score Line");
@@ -133,7 +144,31 @@ public class AppModel{
 
     }
 
+    public void paintHybrid(String atribute, XYChart.Series s) {
+        Platform.runLater(()->{
 
+                float xcenter = ( ( HybridAlgo )this.anomalDetect).hashMapC.get(atribute).c.c.x;
+                float ycenter = ( ( HybridAlgo )this.anomalDetect).hashMapC.get(atribute).c.c.y;
+                double radius =( ( HybridAlgo )this.anomalDetect).hashMapC.get(atribute).c.r;
+                ArrayList<Point> points=new ArrayList<Point>();
+                for(double angle=0;angle<360;angle+=0.5)
+                {
+                    float x=(float) (radius*Math.cos(angle)+xcenter);
+                    float y=(float) (radius*Math.sin(angle)+ycenter);
+                    points.add(new Point(x, y));
+                }
+
+                for (Point point : points) {
+                    s.getData().add(new XYChart.Data(point.x, point.y));
+                }
+                s.setName("Circle");
+
+
+
+
+
+        });
+    }
 
     public FlightSettings getFlightSettings() {
         return flightSettings;

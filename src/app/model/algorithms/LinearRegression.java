@@ -46,7 +46,7 @@ public class LinearRegression implements TimeSeriesAnomalyDetector {
 
                 if (Math.abs(t) > maxp ) {
                     y = j;
-                    maxp = t;
+                    maxp = Math.abs(t) ;
                 }
             }
 

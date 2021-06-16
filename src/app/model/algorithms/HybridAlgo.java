@@ -1,15 +1,15 @@
 package app.model.algorithms;
 
+import app.CorrelatedFeatureCircle;
+import app.CorrelatedFeaturesLine;
+import app.model.statlib.Line;
+import app.model.statlib.Point;
+import app.model.statlib.StatLib;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-
-import app.model.statlib.Line;
-import app.model.statlib.Point;
-import app.CorrelatedFeatureCircle;
-import app.CorrelatedFeaturesLine;
-import app.model.statlib.StatLib;
 
 
 public class HybridAlgo implements TimeSeriesAnomalyDetector {
@@ -47,7 +47,7 @@ public class HybridAlgo implements TimeSeriesAnomalyDetector {
 
                 if (Math.abs(t) >= maxp ) {
                     y = j;
-                    maxp = t;
+                    maxp = Math.abs(t);
                 }
             }
             

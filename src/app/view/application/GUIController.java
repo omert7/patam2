@@ -1,5 +1,6 @@
 package app.view.application;
 
+import app.model.algorithms.HybridAlgo;
 import app.model.algorithms.LinearRegression;
 import app.model.algorithms.ZScore;
 import app.view.dashboardView.Dashboard;
@@ -9,9 +10,7 @@ import app.view.joystickView.Joystick;
 import app.view.menuBarView.MenuBar;
 import app.view.timeLineView.TimeLine;
 import app.viewModel.AppViewModel;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
-import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
 
 import java.util.HashMap;
@@ -35,8 +34,13 @@ public class GUIController {
 
     private HashMap<String,XYChart.Series<Number, Number> > seriesHashMap;
     private HashMap<String,XYChart.Series<Number, Number> > seriesHashMapB;
-    private HashMap<String,XYChart.Series<Number, Number> > seriesHashMapAnomaly;
-    private HashMap<String,XYChart.Series<Number, Number> > seriesHashMapTimeAnomaly;
+    private HashMap<String,XYChart.Series<Number, Number> > seriesHashMapTimeAnomaly;//for the anomaly
+
+    private HashMap<String,XYChart.Series<Number, Number> > seriesHashMapAnomalyZ;
+    private HashMap<String,XYChart.Series<Number, Number> > seriesHashMapAnomalyLine;
+    private HashMap<String,XYChart.Series<Number, Number> > seriesHashMapAnomalyCircle;
+
+
 
     private XYChart.Series seriesPointA;
     private XYChart.Series seriesPointB;
@@ -67,7 +71,10 @@ public class GUIController {
         seriesHashMap=new HashMap<>();
         seriesHashMapB=new HashMap<>();
         seriesHashMapTimeAnomaly=new HashMap<>();
-        seriesHashMapAnomaly=new HashMap<>();
+        //draw the line circle or zscore
+        seriesHashMapAnomalyZ=new HashMap<>();
+        seriesHashMapAnomalyCircle=new HashMap<>();
+        seriesHashMapAnomalyLine=new HashMap<>();
         //series
         seriesPointA=new XYChart.Series<>();
         seriesPointB=new XYChart.Series<>();
@@ -104,15 +111,29 @@ private void addLis(){
                 {
                         vm.getAppModel().addValueAtTime(vm.getNameofFeatureA().getValue(), seriesPointA);
 
-                   if(  vm.isOnflight()&&
+                   if( (  vm.isOnflight()&&
                             this.vm.getAppModel().getAnomalDetect()!=null &&
-                            this.vm.getAppModel().getAnomalDetect().getClass()== LinearRegression.class)
+                            this.vm.getAppModel().getAnomalDetect().getClass()== LinearRegression.class)||
+                           (  this.vm.getAppModel().getAnomalDetect()!=null &&
+                                   this.vm.getAppModel().getAnomalDetect().getClass()== HybridAlgo.class
+                                   &&  ((HybridAlgo)  this.vm.getAppModel().getAnomalDetect()).hashMapL.containsKey( vm.getNameofFeatureA().getValue()))||
+                    (  this.vm.getAppModel().getAnomalDetect()!=null &&
+                            this.vm.getAppModel().getAnomalDetect().getClass()== HybridAlgo.class
+                            &&  ((HybridAlgo)  this.vm.getAppModel().getAnomalDetect()).hashMapC.containsKey( vm.getNameofFeatureA().getValue()))
+
+                   )
                     {
                         vm.getAppModel().addValueAtTime(vm.getNameofFeatureB().getValue(), seriesPointB);
+                        vm.getAppModel().addAnomalyValueAtTime(vm.getNameofFeatureA().getValue(), seriesTimeAnomaly);
 
                     }
-                    if(vm.isOnflight()&&this.vm.getAppModel().getAnomalDetect()!=null )
-                        vm.getAppModel().addAnomalyValueAtTime(vm.getNameofFeatureA().getValue(), seriesTimeAnomaly);
+                    if( (vm.isOnflight()&&
+                            this.vm.getAppModel().getAnomalDetect()!=null &&
+                            this.vm.getAppModel().getAnomalDetect().getClass()== ZScore.class)||
+                    (  this.vm.getAppModel().getAnomalDetect()!=null &&
+                            this.vm.getAppModel().getAnomalDetect().getClass()== HybridAlgo.class
+                            &&  ((HybridAlgo)  this.vm.getAppModel().getAnomalDetect()).hashMapZ.containsKey( vm.getNameofFeatureA().getValue()) ))
+                                 vm.getAppModel().addAnomalyValueAtTime(vm.getNameofFeatureA().getValue(), seriesTimeAnomaly);
                 }
 
 
@@ -126,9 +147,13 @@ private void addLis(){
       }
           // change feature B
                  if(    this.vm.getAppModel().getAnomalDetect()!=null &&
-                      this.vm.getAppModel().getAnomalDetect().getClass()== LinearRegression.class)
+                      this.vm.getAppModel().getAnomalDetect().getClass()== LinearRegression.class||
+           (  this.vm.getAppModel().getAnomalDetect()!=null &&
+                   this.vm.getAppModel().getAnomalDetect().getClass()== HybridAlgo.class
+                   &&  ((HybridAlgo)  this.vm.getAppModel().getAnomalDetect()).hashMapL.containsKey( vm.getNameofFeatureA().getValue()))
+                 )
                  {
-
+                    //linear
                           XYChart.Series z=new XYChart.Series();
                           if(seriesHashMapB.get( vm.getNameofFeatureA().getValue())==null)
                           {
@@ -144,17 +169,17 @@ private void addLis(){
                   // adding the anomaly graph
                      XYChart.Series anomal=new XYChart.Series();
                      XYChart.Series anomalTimes=new XYChart.Series();
-                     if(seriesHashMapAnomaly.get( vm.getNameofFeatureA().getValue())==null)
+                     if(seriesHashMapAnomalyLine.get( vm.getNameofFeatureA().getValue())==null)
                      {
 
                          vm.getAppModel().addLine(vm.getNameofFeatureA().getValue(),anomal);
-                         seriesHashMapAnomaly.put(vm.getNameofFeatureA().getValue(),anomal);
+                         seriesHashMapAnomalyLine.put(vm.getNameofFeatureA().getValue(),anomal);
 
 
                      }
 
                     else{
-                         anomal=seriesHashMapAnomaly.get( vm.getNameofFeatureA().getValue());
+                         anomal=seriesHashMapAnomalyLine.get( vm.getNameofFeatureA().getValue());
 
                      }
                     if(seriesHashMapTimeAnomaly.get( vm.getNameofFeatureA().getValue())==null){
@@ -171,19 +196,23 @@ private void addLis(){
                      seriesTimeAnomaly=anomalTimes;
               }
               else if(    this.vm.getAppModel().getAnomalDetect()!=null &&
-                             this.vm.getAppModel().getAnomalDetect().getClass()== ZScore.class){
+                             this.vm.getAppModel().getAnomalDetect().getClass()== ZScore.class||
+                         (  this.vm.getAppModel().getAnomalDetect()!=null &&
+                                 this.vm.getAppModel().getAnomalDetect().getClass()== HybridAlgo.class
+                         &&  ((HybridAlgo)  this.vm.getAppModel().getAnomalDetect()).hashMapZ.containsKey( vm.getNameofFeatureA().getValue()))
+                 ){
                      XYChart.Series anomal=new XYChart.Series();
                      XYChart.Series anomalTimes=new XYChart.Series();
-                     if(seriesHashMapAnomaly.get( vm.getNameofFeatureA().getValue())==null)
+                     if(seriesHashMapAnomalyZ.get( vm.getNameofFeatureA().getValue())==null)
                      {
 
                          vm.getAppModel().addZScoreLine(vm.getNameofFeatureA().getValue(),anomal);
-                         seriesHashMapAnomaly.put(vm.getNameofFeatureA().getValue(),anomal);
+                         seriesHashMapAnomalyZ.put(vm.getNameofFeatureA().getValue(),anomal);
 
 
                      }
                      else{
-                         anomal=seriesHashMapAnomaly.get( vm.getNameofFeatureA().getValue());
+                           anomal=seriesHashMapAnomalyZ.get( vm.getNameofFeatureA().getValue());
 
                      }
                      if(seriesHashMapTimeAnomaly.get( vm.getNameofFeatureA().getValue())==null){
@@ -200,7 +229,43 @@ private void addLis(){
                      seriesTimeAnomaly=anomalTimes;
                      }
 
+                else if(this.vm.getAppModel().getAnomalDetect()!=null &&
+                         this.vm.getAppModel().getAnomalDetect().getClass()== HybridAlgo.class
+                         &&  ((HybridAlgo)  this.vm.getAppModel().getAnomalDetect()).hashMapC.containsKey( vm.getNameofFeatureA().getValue())
+                 ){
 
+                     XYChart.Series anomal=new XYChart.Series();
+                     XYChart.Series anomalTimes=new XYChart.Series();
+                     if(seriesHashMapAnomalyCircle.get( vm.getNameofFeatureA().getValue())==null)
+                     {
+
+                         vm.getAppModel().paintHybrid(vm.getNameofFeatureA().getValue(),anomal);
+                         seriesHashMapAnomalyCircle.put(vm.getNameofFeatureA().getValue(),anomal);
+
+
+                     }
+                     else{
+                         anomal=seriesHashMapAnomalyCircle.get( vm.getNameofFeatureA().getValue());
+
+                     }
+                     if(seriesHashMapTimeAnomaly.get( vm.getNameofFeatureA().getValue())==null){
+                         vm.getAppModel().addAnomalyValueAtTime(vm.getNameofFeatureA().getValue(),anomalTimes);
+                         seriesHashMapTimeAnomaly.replace(vm.getNameofFeatureA().getValue(),anomalTimes);
+                     }else{
+
+                         anomalTimes=seriesHashMapTimeAnomaly.get( vm.getNameofFeatureA().getValue());
+                     }
+                     graph.getGraphController().getAnomalyDetec().getData().clear();
+                     graph.getGraphController().getAnomalyDetec().getData().add(anomal);
+                     graph.getGraphController().getAnomalyDetec().getData().add(anomalTimes);
+                     seriesPointAnomaly=anomal;
+                     seriesTimeAnomaly=anomalTimes;
+
+
+
+
+
+                 }
           //graph A leave it alone!
           XYChart.Series s=new XYChart.Series();
           if(seriesHashMap.get( vm.getNameofFeatureA().getValue())==null)
