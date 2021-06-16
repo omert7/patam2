@@ -77,14 +77,32 @@ public class AppModel{
                 tempX =time;
                 tempY = ((ZScore) (this.anomalDetect)).getHashMap().get(atribute);
                 s.getData().add(new XYChart.Data(tempX, tempY));
-             }else if(this.getAnomalDetect().getClass()== HybridAlgo.class){
-                tempX = this.timeSeriesAnomaly.getValAtSpecificTime(time, atribute);
-                String fe2= ((HybridAlgo) (this.anomalDetect)).hashMapC.get(atribute).feature2;
-                tempY = this.timeSeriesAnomaly.getValAtSpecificTime(time, fe2);
-                if(s.getData().size()>=40)
-                    s.getData().clear();
-                s.getData().add(new XYChart.Data(tempX, tempY));
-                }
+
+             }else if(this.getAnomalDetect().getClass()== HybridAlgo.class)
+             {
+                 if(((HybridAlgo) (this.anomalDetect)).hashMapC.containsKey(atribute)) {
+                     //circle
+                 tempX = this.timeSeriesAnomaly.getValAtSpecificTime(time, atribute);
+                 String fe2 = ((HybridAlgo) (this.anomalDetect)).hashMapC.get(atribute).feature2;
+                 tempY = this.timeSeriesAnomaly.getValAtSpecificTime(time, fe2);
+                 if (s.getData().size() >= 40)
+                     s.getData().clear();
+                 s.getData().add(new XYChart.Data(tempX, tempY));
+             }else  if(((HybridAlgo) (this.anomalDetect)).hashMapL.containsKey(atribute)){
+                     //linear
+                     tempX = this.timeSeriesAnomaly.getValAtSpecificTime(time, atribute);
+                     String fe2 = ((HybridAlgo) (this.anomalDetect)).hashMapL.get(atribute).feature2;
+                     tempY = this.timeSeriesAnomaly.getValAtSpecificTime(time, fe2);
+                     if (s.getData().size() >= 40)
+                         s.getData().clear();
+                     s.getData().add(new XYChart.Data(tempX, tempY));
+             }else{
+                     //zScore
+                     tempX =time;
+                     tempY = ((HybridAlgo) (this.anomalDetect)).hashMapZ.get(atribute);
+                     s.getData().add(new XYChart.Data(tempX, tempY));
+                 }
+             }
                 if(this.mapAnomaly.get(atribute)!=null&&this.mapAnomaly.get(atribute).contains(time))
                  {    //anomaly now!
                      s.setName("Anomaly Detected!!");
@@ -129,6 +147,13 @@ public class AppModel{
             }
            minY=line.valueInTime(minX);
            maxY=line.valueInTime(maxX);
+           if(Float.isNaN(minY))
+               minY=0;
+            if(Float.isNaN(maxY))
+                maxY=0;
+            if(maxY==0&&maxX==0){
+                maxX=10;
+            }
            s.getData().add(new XYChart.Data(minX,minY));
            s.getData().add(new XYChart.Data(maxX, maxY));
         s.setName("Regression Line");
@@ -172,11 +197,6 @@ public class AppModel{
                     s.getData().add(new XYChart.Data(point.x, point.y));
                 }
                 s.setName("Circle");
-
-
-
-
-
         });
     }
 

@@ -2,14 +2,15 @@ package app.viewModel;
 
 import app.model.AppModel;
 import app.model.FlightSettings;
+import app.model.algorithms.HybridAlgo;
 import app.model.algorithms.LinearRegression;
 import app.model.algorithms.TimeSeriesAnomalyDetector;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.chart.XYChart;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -86,6 +87,16 @@ private void graphInit(){
                     String str=((LinearRegression) appModel.getAnomalDetect()).getHashMap().get(this.nameofFeatureA.getValue()).feature2;
                         if (str!=null)
                             nameofFeatureB.setValue(str);
+                }else if( appModel.getAnomalDetect()!=null && appModel.getAnomalDetect().getClass()== HybridAlgo.class){
+                    if(((HybridAlgo) appModel.getAnomalDetect()).hashMapL.containsKey(nameFromList.getValue())){
+                        String str=((HybridAlgo) appModel.getAnomalDetect()).hashMapL.get(this.nameofFeatureA.getValue()).feature2;
+                        nameofFeatureB.setValue(str);
+                    }else if(((HybridAlgo) appModel.getAnomalDetect()).hashMapC.containsKey(nameFromList.getValue())){
+                        String str=((HybridAlgo) appModel.getAnomalDetect()).hashMapC.get(this.nameofFeatureA.getValue()).feature2;
+                        nameofFeatureB.setValue(str);
+                    }else{
+                        nameofFeatureB.setValue("");
+                    }
                 }
             });
 
