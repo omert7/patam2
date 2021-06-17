@@ -12,6 +12,9 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.scene.chart.XYChart;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -56,7 +59,14 @@ public class AppModel{
 
     }
 
+    public void clearGraph( XYChart.Series s)
+    {
+        Platform.runLater( ()->{
+            s.getData().clear();
 
+            } );
+
+    }
 //for big graph
     public void addAnomalyValueAtTime(String atribute, XYChart.Series s) {
         Platform.runLater(()->{
@@ -93,7 +103,7 @@ public class AppModel{
                      tempX = this.timeSeriesAnomaly.getValAtSpecificTime(time, atribute);
                      String fe2 = ((HybridAlgo) (this.anomalDetect)).hashMapL.get(atribute).feature2;
                      tempY = this.timeSeriesAnomaly.getValAtSpecificTime(time, fe2);
-                     if (s.getData().size() >= 40)
+                     if (s.getData().size() >= 50)
                          s.getData().clear();
                      s.getData().add(new XYChart.Data(tempX, tempY));
              }else{
@@ -199,7 +209,31 @@ public class AppModel{
                 s.setName("Circle");
         });
     }
+    private String checkCsvFile(String path) {
+        BufferedReader reader;
+        try {
+            reader = new BufferedReader(new FileReader(path));
+            String line = reader.readLine();
+            int counter = 1;
+            while (line != null) {
+                String[] s;
+                s = line.split(",");
 
+
+                if (s.length != 42) {
+                    return "flight csv row: " + counter + " expected to have 42 column";
+                }
+                // read next line
+                counter++;
+                line = reader.readLine();
+            }
+            reader.close();
+        } catch (IOException e) {
+            return e.getMessage();
+        }
+
+        return "OK"; // if all is good return OK
+    }
     public FlightSettings getFlightSettings() {
         return flightSettings;
     }
@@ -242,9 +276,14 @@ public class AppModel{
 
 
 
-	public void setTimeSeriesAnomaly(String timeSeries) {
-        this.timeSeriesAnomaly = new TimeSeries(timeSeries);
-        this.sp.setTimeSeries(this.timeSeriesAnomaly);
+	public String setTimeSeriesAnomaly(String timeSeries) {
+        String val=checkCsvFile(timeSeries);
+        if(val.equals("OK")) {
+            this.timeSeriesAnomaly = new TimeSeries(timeSeries);
+            this.sp.setTimeSeries(this.timeSeriesAnomaly);
+        }
+
+       return val;
     }
 
 

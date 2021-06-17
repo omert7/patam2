@@ -52,13 +52,5 @@
         <font>
             <Font size="20.0" />
         </font></Label>
-    <Label fx:id="labelCoralFeatureA" layoutX="105.0" layoutY="332.0" scaleShape="false" text="Label">
-      <font>
-         <Font size="20.0" />
-      </font></Label>
-    <Label fx:id="labelCoralFeatureB" layoutX="365.0" layoutY="463.0" text="Label">
-      <font>
-         <Font size="20.0" />
-      </font></Label>
    <Label fx:id="anomalyClass" layoutX="365.0" layoutY="208.0" textFill="#da0f0f" />
 </AnchorPane>

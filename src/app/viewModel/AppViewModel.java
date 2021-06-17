@@ -11,10 +11,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -87,16 +84,22 @@ private void graphInit(){
                     String str=((LinearRegression) appModel.getAnomalDetect()).getHashMap().get(this.nameofFeatureA.getValue()).feature2;
                         if (str!=null)
                             nameofFeatureB.setValue(str);
-                }else if( appModel.getAnomalDetect()!=null && appModel.getAnomalDetect().getClass()== HybridAlgo.class){
-                    if(((HybridAlgo) appModel.getAnomalDetect()).hashMapL.containsKey(nameFromList.getValue())){
+                }else if( appModel.getAnomalDetect()!=null && appModel.getAnomalDetect().getClass()== HybridAlgo.class)
+                {
+                        if(((HybridAlgo) appModel.getAnomalDetect()).hashMapL.containsKey(nameFromList.getValue())){
                         String str=((HybridAlgo) appModel.getAnomalDetect()).hashMapL.get(this.nameofFeatureA.getValue()).feature2;
                         nameofFeatureB.setValue(str);
                     }else if(((HybridAlgo) appModel.getAnomalDetect()).hashMapC.containsKey(nameFromList.getValue())){
                         String str=((HybridAlgo) appModel.getAnomalDetect()).hashMapC.get(this.nameofFeatureA.getValue()).feature2;
                         nameofFeatureB.setValue(str);
                     }else{
+                            //in hybrid but zScore
                         nameofFeatureB.setValue("");
                     }
+
+                }  else{
+                    //zscore
+                    nameofFeatureB.setValue("");
                 }
             });
 
@@ -223,9 +226,8 @@ public boolean isOnflight(){
     private void createTimeSeries() {
         // call pause
         String s = this.csvFile.getValue();
-        String check = checkCsvFile();
+        String check = this.appModel.setTimeSeriesAnomaly(s);;
         if (check.equals("OK")) {
-            this.appModel.setTimeSeriesAnomaly(s);
             int dataSize =  this.appModel.getTimeSeriesAnomaly().data.size();
             this.listView.clear();
             this.listView.addAll(appModel.getTimeSeriesAnomaly().namesOfFeatures);
@@ -250,31 +252,7 @@ public boolean isOnflight(){
     }
 
 
-    private String checkCsvFile() {
-        BufferedReader reader;
-        try {
-            reader = new BufferedReader(new FileReader(this.csvFile.getValue()));
-            String line = reader.readLine();
-            int counter = 1;
-            while (line != null) {
-                String[] s;
-                s = line.split(",");
 
-
-                if (s.length != 42) {
-                    return "flight csv row: " + counter + " expected to have 42 column";
-                }
-                // read next line
-                counter++;
-                line = reader.readLine();
-            }
-            reader.close();
-        } catch (IOException e) {
-            return e.getMessage();
-        }
-
-        return "OK"; // if all is good return OK
-    }
 
     private void resetFlightProp() {
         //joystick

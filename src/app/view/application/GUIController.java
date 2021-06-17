@@ -64,6 +64,8 @@ public class GUIController {
         menuBar.getsAlgoFile().bindBidirectional(vm.getAlgoFile());
         menuBar.getsCsvFile().bindBidirectional(vm.getCsvFile());
         menuBar.getsSettingFile().bindBidirectional(vm.getSettingFile());
+
+
     }
 
     private void bindGraphProperties() {
@@ -133,7 +135,13 @@ private void addLis(){
                     (  this.vm.getAppModel().getAnomalDetect()!=null &&
                             this.vm.getAppModel().getAnomalDetect().getClass()== HybridAlgo.class
                             &&  ((HybridAlgo)  this.vm.getAppModel().getAnomalDetect()).hashMapZ.containsKey( vm.getNameofFeatureA().getValue()) ))
-                                 vm.getAppModel().addAnomalyValueAtTime(vm.getNameofFeatureA().getValue(), seriesTimeAnomaly);
+                    {
+                      vm.getAppModel().clearGraph(seriesPointB);
+                        vm.getAppModel().addAnomalyValueAtTime(vm.getNameofFeatureA().getValue(), seriesTimeAnomaly);
+
+
+                    }
+
                 }
 
 

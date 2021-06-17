@@ -3,9 +3,7 @@ package app.view.graphView;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
-import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
-import javafx.scene.chart.NumberAxis;
 import javafx.scene.control.Label;
 
 public class GraphController {
@@ -14,7 +12,7 @@ public class GraphController {
 	@FXML private LineChart<Number, Number> anomalyDetec;
 
 
-	@FXML private Label labelFeatureA,labelFeatureB,labelCoralFeatureA,labelCoralFeatureB,anomalyClass;
+	@FXML private Label labelFeatureA,labelFeatureB,anomalyClass;
 	private StringProperty graphNameOfFeatureA;
 	private StringProperty graphNameOfFeatureB;
 	private StringProperty spLabelCoralFeatureA;
@@ -43,12 +41,7 @@ public class GraphController {
 		graphNameOfFeatureB.addListener(v->{
 			labelFeatureB.setText(graphNameOfFeatureB.getValue());
 		});
-		spLabelCoralFeatureA.addListener(v->{
-			labelCoralFeatureA.setText(spLabelCoralFeatureA.getValue());
-		});
-		spLabelCoralFeatureB.addListener(v->{
-			labelCoralFeatureB.setText(spLabelCoralFeatureB.getValue());
-		});
+
 		spAnomalyClass.addListener(v->{
 			anomalyClass.setText(spAnomalyClass.getValue());
 		});
