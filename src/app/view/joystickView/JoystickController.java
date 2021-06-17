@@ -1,17 +1,15 @@
 package app.view.joystickView;
 
-import java.net.URL;
-import java.util.ResourceBundle;
-
-import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.FloatProperty;
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Slider;
+
+import java.net.URL;
+import java.util.ResourceBundle;
 
 public class JoystickController implements Initializable {
 
@@ -38,7 +36,7 @@ public class JoystickController implements Initializable {
         maxThrottle = new SimpleFloatProperty(1);
         minRudder = new SimpleFloatProperty(-1);
         maxRudder = new SimpleFloatProperty(1);
-        centerCircle = new SimpleFloatProperty((float) (joy.getHeight() / 2));
+        centerCircle = new SimpleFloatProperty((float) (0));
         minElevator = new SimpleFloatProperty(-1);
         maxElevator = new SimpleFloatProperty(1);
         minAileron = new SimpleFloatProperty(-1);
@@ -80,7 +78,7 @@ public class JoystickController implements Initializable {
 
 
     public void paint() {
-
+        System.out.println("paint: "+getAileron()+" "+getElevator());
         GraphicsContext gc = joy.getGraphicsContext2D();
         gc.clearRect(0, 0, joy.getWidth(), joy.getHeight());
         gc.strokeRect(0, 0, joy.getWidth(), joy.getHeight());

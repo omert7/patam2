@@ -49,7 +49,8 @@ public class AppViewModel {
         csvFile = new SimpleStringProperty();
         settingFile = new SimpleStringProperty();
 
-        csvFile.addListener(v -> createTimeSeries());
+        csvFile.addListener(v -> {createTimeSeries();
+        });
         settingFile.addListener(v -> createSettings());
         algoFile.addListener(v->loadAlgo());
 
@@ -270,6 +271,7 @@ public boolean isOnflight(){
         this.altitude.set(0);
         this.timeStamp.set(0);
         this.speed.set(1);
+
     }
 
 

@@ -246,6 +246,7 @@ public class AppModel{
         this.timeSeriesTrain=new TimeSeries(flightSettings.getValidFlightPath());
     }
 
+
     private void loadIndexes(){
         this.aileronIndex = this.flightSettings.getFlightFeatureHashMap().get("aileron").getFeatureIndex();
         this.throttleIndex = this.flightSettings.getFlightFeatureHashMap().get("throttle").getFeatureIndex();

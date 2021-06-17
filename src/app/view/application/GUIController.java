@@ -304,7 +304,13 @@ private void addLis(){
         timeLine.getTimeLineController().getPause().setOnMouseClicked(v -> vm.pause());
         timeLine.getTimeLineController().getNext().setOnMouseClicked(v->vm.runNext(timeLine.getTimeLineController().getNextValue()));
         timeLine.getTimeLineController().getBack().setOnMouseClicked(v->vm.runBack(timeLine.getTimeLineController().getBackValue()));
-        timeLine.getTimeLineController().getStop().setOnMouseClicked(v->vm.stop());
+        timeLine.getTimeLineController().getStop().setOnMouseClicked(v->{
+            vm.stop();
+            this.getVm().getAppModel().clearGraph(seriesPointA);
+            this.getVm().getAppModel().clearGraph(seriesPointB);
+            this.getVm().getAppModel().clearGraph(seriesTimeAnomaly);
+            this.getVm().getAppModel().clearGraph(seriesPointAnomaly);
+        });
         timeLine.getTimeLineController().getTime().setMin(0);
         timeLine.maxTimeLineProperty().bind(vm.maxTimeLineProperty());
 
