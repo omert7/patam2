@@ -1,4 +1,4 @@
-package app.model;
+package app.viewModel;
 
 public class FlightFeature { //TODO change to float
     private String featureName;

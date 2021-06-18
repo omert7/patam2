@@ -1,10 +1,10 @@
 package app.model;
 
 
-
 import app.model.algorithms.*;
 import app.model.statlib.Line;
 import app.model.statlib.Point;
+import app.viewModel.FlightSettings;
 import javafx.application.Platform;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.FloatProperty;
@@ -20,14 +20,14 @@ import java.util.HashMap;
 import java.util.List;
 
 
-public class AppModel{
+public class AppModel {
     private FlightSettings flightSettings;
     private TimeSeries timeSeriesTrain;
     private TimeSeries timeSeriesAnomaly;
     private SimulatorPlayer sp;
     private FloatProperty timestamp;
-    private int aileronIndex,throttleIndex,rudderIndex,elevatorIndex,
-            yawIndex,pitchIndex,headingIndex,altitudeIndex,airspeedIndex,rollIndex;
+    private int aileronIndex, throttleIndex, rudderIndex, elevatorIndex,
+            yawIndex, pitchIndex, headingIndex, altitudeIndex, airspeedIndex, rollIndex;
     private DoubleProperty speed;
     private TimeSeriesAnomalyDetector anomalDetect;
 
@@ -41,97 +41,90 @@ public class AppModel{
     }
 
     public boolean isReady() {
-        return ( timeSeriesTrain != null && flightSettings != null&& timeSeriesAnomaly!=null);
+        return (timeSeriesTrain != null && flightSettings != null && timeSeriesAnomaly != null);
     }
 
 
-
-
-
-    public void addValueTilTime(String atribute, XYChart.Series s)
-    {
-        Platform.runLater( ()->{ s.getData().clear();
+    public void addValueTilTime(String atribute, XYChart.Series s) {
+        Platform.runLater(() -> {
+            s.getData().clear();
             int time = (int) (this.timestamp.getValue() * 10);
             for (int i = 1; i <= time; i++) {
                 double temp = timeSeriesAnomaly.getValAtSpecificTime(i, atribute);
                 s.getData().add(new XYChart.Data(i, temp));
-            }} );
+            }
+        });
 
     }
 
-    public void clearGraph( XYChart.Series s)
-    {
-        Platform.runLater( ()->{
+    public void clearGraph(XYChart.Series s) {
+        Platform.runLater(() -> {
             s.getData().clear();
 
-            } );
+        });
 
     }
-//for big graph
+
+    //for big graph
     public void addAnomalyValueAtTime(String atribute, XYChart.Series s) {
-        Platform.runLater(()->{
-            float tempX,tempY;
+        Platform.runLater(() -> {
+            float tempX, tempY;
             int time = (int) (this.timestamp.getValue() * 10);
-            if(time!=0 ){
+            if (time != 0) {
 
-            if(this.getAnomalDetect().getClass()== LinearRegression.class) {
-                tempX = this.timeSeriesAnomaly.getValAtSpecificTime(time, atribute);
-                String fe2= ((LinearRegression) (this.anomalDetect)).getHashMap().get(atribute).feature2;
-                tempY = this.timeSeriesAnomaly.getValAtSpecificTime(time, fe2);
-                if(s.getData().size()>=40)
-                    s.getData().clear();
-                s.getData().add(new XYChart.Data(tempX, tempY));
-            }
-            else  if(this.getAnomalDetect().getClass()== ZScore.class) {
-                //zscore
-                tempX =time;
-                tempY = ((ZScore) (this.anomalDetect)).getHashMap().get(atribute);
-                s.getData().add(new XYChart.Data(tempX, tempY));
+                if (this.getAnomalDetect().getClass() == LinearRegression.class) {
+                    tempX = this.timeSeriesAnomaly.getValAtSpecificTime(time, atribute);
+                    String fe2 = ((LinearRegression) (this.anomalDetect)).getHashMap().get(atribute).feature2;
+                    tempY = this.timeSeriesAnomaly.getValAtSpecificTime(time, fe2);
+                    if (s.getData().size() >= 40)
+                        s.getData().clear();
+                    s.getData().add(new XYChart.Data(tempX, tempY));
+                } else if (this.getAnomalDetect().getClass() == ZScore.class) {
+                    //zscore
+                    tempX = time;
+                    tempY = ((ZScore) (this.anomalDetect)).getHashMap().get(atribute);
+                    s.getData().add(new XYChart.Data(tempX, tempY));
 
-             }else if(this.getAnomalDetect().getClass()== HybridAlgo.class)
-             {
-                 if(((HybridAlgo) (this.anomalDetect)).hashMapC.containsKey(atribute)) {
-                     //circle
-                 tempX = this.timeSeriesAnomaly.getValAtSpecificTime(time, atribute);
-                 String fe2 = ((HybridAlgo) (this.anomalDetect)).hashMapC.get(atribute).feature2;
-                 tempY = this.timeSeriesAnomaly.getValAtSpecificTime(time, fe2);
-                 if (s.getData().size() >= 40)
-                     s.getData().clear();
-                 s.getData().add(new XYChart.Data(tempX, tempY));
-             }else  if(((HybridAlgo) (this.anomalDetect)).hashMapL.containsKey(atribute)){
-                     //linear
-                     tempX = this.timeSeriesAnomaly.getValAtSpecificTime(time, atribute);
-                     String fe2 = ((HybridAlgo) (this.anomalDetect)).hashMapL.get(atribute).feature2;
-                     tempY = this.timeSeriesAnomaly.getValAtSpecificTime(time, fe2);
-                     if (s.getData().size() >= 50)
-                         s.getData().clear();
-                     s.getData().add(new XYChart.Data(tempX, tempY));
-             }else{
-                     //zScore
-                     tempX =time;
-                     tempY = ((HybridAlgo) (this.anomalDetect)).hashMapZ.get(atribute);
-                     s.getData().add(new XYChart.Data(tempX, tempY));
-                 }
-             }
-                if(this.mapAnomaly.get(atribute)!=null&&this.mapAnomaly.get(atribute).contains(time))
-                 {    //anomaly now!
-                     s.setName("Anomaly Detected!!");
-
+                } else if (this.getAnomalDetect().getClass() == HybridAlgo.class) {
+                    if (((HybridAlgo) (this.anomalDetect)).hashMapC.containsKey(atribute)) {
+                        //circle
+                        tempX = this.timeSeriesAnomaly.getValAtSpecificTime(time, atribute);
+                        String fe2 = ((HybridAlgo) (this.anomalDetect)).hashMapC.get(atribute).feature2;
+                        tempY = this.timeSeriesAnomaly.getValAtSpecificTime(time, fe2);
+                        if (s.getData().size() >= 40)
+                            s.getData().clear();
+                        s.getData().add(new XYChart.Data(tempX, tempY));
+                    } else if (((HybridAlgo) (this.anomalDetect)).hashMapL.containsKey(atribute)) {
+                        //linear
+                        tempX = this.timeSeriesAnomaly.getValAtSpecificTime(time, atribute);
+                        String fe2 = ((HybridAlgo) (this.anomalDetect)).hashMapL.get(atribute).feature2;
+                        tempY = this.timeSeriesAnomaly.getValAtSpecificTime(time, fe2);
+                        if (s.getData().size() >= 50)
+                            s.getData().clear();
+                        s.getData().add(new XYChart.Data(tempX, tempY));
+                    } else {
+                        //zScore
+                        tempX = time;
+                        tempY = ((HybridAlgo) (this.anomalDetect)).hashMapZ.get(atribute);
+                        s.getData().add(new XYChart.Data(tempX, tempY));
                     }
-                else
-                    {
-                        s.setName("Not Anomaly");
-                    }
+                }
+                if (this.mapAnomaly.get(atribute) != null && this.mapAnomaly.get(atribute).contains(time)) {    //anomaly now!
+                    s.setName("Anomaly Detected!!");
 
+                } else {
+                    s.setName("Not Anomaly");
+                }
 
 
             }
         });
 
     }
+
     //for small graph
     public void addValueAtTime(String atribute, XYChart.Series s) {
-        Platform.runLater(()->{
+        Platform.runLater(() -> {
 
             int time = (int) (this.timestamp.getValue() * 10);
             double temp = timeSeriesAnomaly.getValAtSpecificTime(time, atribute);
@@ -143,44 +136,44 @@ public class AppModel{
     }
 
     public void addLine(String atribute, XYChart.Series s) {
-        Platform.runLater(()->{
-            float minX,maxX,minY,maxY;
+        Platform.runLater(() -> {
+            float minX, maxX, minY, maxY;
             Line line;
             int time = (int) (this.timestamp.getValue() * 10);
             minX = this.timeSeriesTrain.getMinByFeature(atribute);
-            maxX= this.timeSeriesTrain.getMaxByFeature(atribute);
-            if( this.getAnomalDetect().getClass()== LinearRegression.class) {
-                 line = ((LinearRegression) (this.anomalDetect)).getHashMap().get(atribute).lin_reg;
+            maxX = this.timeSeriesTrain.getMaxByFeature(atribute);
+            if (this.getAnomalDetect().getClass() == LinearRegression.class) {
+                line = ((LinearRegression) (this.anomalDetect)).getHashMap().get(atribute).lin_reg;
+            } else {
+                line = ((HybridAlgo) (this.anomalDetect)).hashMapL.get(atribute).lin_reg;
             }
-            else{
-                 line = ((HybridAlgo) (this.anomalDetect)).hashMapL.get(atribute).lin_reg;
+            minY = line.valueInTime(minX);
+            maxY = line.valueInTime(maxX);
+            if (Float.isNaN(minY))
+                minY = 0;
+            if (Float.isNaN(maxY))
+                maxY = 0;
+            if (maxY == 0 && maxX == 0) {
+                maxX = 10;
             }
-           minY=line.valueInTime(minX);
-           maxY=line.valueInTime(maxX);
-           if(Float.isNaN(minY))
-               minY=0;
-            if(Float.isNaN(maxY))
-                maxY=0;
-            if(maxY==0&&maxX==0){
-                maxX=10;
-            }
-           s.getData().add(new XYChart.Data(minX,minY));
-           s.getData().add(new XYChart.Data(maxX, maxY));
-        s.setName("Regression Line");
+            s.getData().add(new XYChart.Data(minX, minY));
+            s.getData().add(new XYChart.Data(maxX, maxY));
+            s.setName("Regression Line");
 
 
         });
 
     }
+
     public void addZScoreLine(String atribute, XYChart.Series s) {
-        Platform.runLater(()->{
+        Platform.runLater(() -> {
             float temp;
             int time = (int) (this.timestamp.getValue() * 10);
-            if( this.getAnomalDetect().getClass()== ZScore.class)
-                    temp = ((ZScore)(this.anomalDetect)).getHashMap().get(atribute);
-            else{
+            if (this.getAnomalDetect().getClass() == ZScore.class)
+                temp = ((ZScore) (this.anomalDetect)).getHashMap().get(atribute);
+            else {
                 //Hybrid
-                temp = ((HybridAlgo)(this.anomalDetect)).hashMapZ.get(atribute);
+                temp = ((HybridAlgo) (this.anomalDetect)).hashMapZ.get(atribute);
             }
             s.getData().add(new XYChart.Data(1, temp));
             s.getData().add(new XYChart.Data(2000, temp));
@@ -190,25 +183,25 @@ public class AppModel{
     }
 
     public void paintHybrid(String atribute, XYChart.Series s) {
-        Platform.runLater(()->{
+        Platform.runLater(() -> {
 
-                float xcenter = ( ( HybridAlgo )this.anomalDetect).hashMapC.get(atribute).c.c.x;
-                float ycenter = ( ( HybridAlgo )this.anomalDetect).hashMapC.get(atribute).c.c.y;
-                double radius =( ( HybridAlgo )this.anomalDetect).hashMapC.get(atribute).c.r;
-                ArrayList<Point> points=new ArrayList<Point>();
-                for(double angle=0;angle<360;angle+=0.5)
-                {
-                    float x=(float) (radius*Math.cos(angle)+xcenter);
-                    float y=(float) (radius*Math.sin(angle)+ycenter);
-                    points.add(new Point(x, y));
-                }
+            float xcenter = ((HybridAlgo) this.anomalDetect).hashMapC.get(atribute).c.c.x;
+            float ycenter = ((HybridAlgo) this.anomalDetect).hashMapC.get(atribute).c.c.y;
+            double radius = ((HybridAlgo) this.anomalDetect).hashMapC.get(atribute).c.r;
+            ArrayList<Point> points = new ArrayList<Point>();
+            for (double angle = 0; angle < 360; angle += 0.5) {
+                float x = (float) (radius * Math.cos(angle) + xcenter);
+                float y = (float) (radius * Math.sin(angle) + ycenter);
+                points.add(new Point(x, y));
+            }
 
-                for (Point point : points) {
-                    s.getData().add(new XYChart.Data(point.x, point.y));
-                }
-                s.setName("Circle");
+            for (Point point : points) {
+                s.getData().add(new XYChart.Data(point.x, point.y));
+            }
+            s.setName("Circle");
         });
     }
+
     private String checkCsvFile(String path) {
         BufferedReader reader;
         try {
@@ -234,6 +227,7 @@ public class AppModel{
 
         return "OK"; // if all is good return OK
     }
+
     public FlightSettings getFlightSettings() {
         return flightSettings;
     }
@@ -243,14 +237,14 @@ public class AppModel{
         this.sp.setFlightSettings(flightSettings);
         loadIndexes();
         this.timestamp.bindBidirectional(sp.timeStampProperty());
-        this.timeSeriesTrain=new TimeSeries(flightSettings.getValidFlightPath());
+        this.timeSeriesTrain = new TimeSeries(flightSettings.getValidFlightPath());
     }
 
 
-    private void loadIndexes(){
+    private void loadIndexes() {
         this.aileronIndex = this.flightSettings.getFlightFeatureHashMap().get("aileron").getFeatureIndex();
         this.throttleIndex = this.flightSettings.getFlightFeatureHashMap().get("throttle").getFeatureIndex();
-        this.rudderIndex =this.flightSettings.getFlightFeatureHashMap().get("rudder").getFeatureIndex();
+        this.rudderIndex = this.flightSettings.getFlightFeatureHashMap().get("rudder").getFeatureIndex();
         this.elevatorIndex = this.flightSettings.getFlightFeatureHashMap().get("elevator").getFeatureIndex();
         this.yawIndex = this.flightSettings.getFlightFeatureHashMap().get("yaw").getFeatureIndex();
         this.pitchIndex = this.flightSettings.getFlightFeatureHashMap().get("pitch").getFeatureIndex();
@@ -262,29 +256,27 @@ public class AppModel{
 
 
     public TimeSeries getTimeSeriesAnomaly() {
-		return timeSeriesAnomaly;
-	}
+        return timeSeriesAnomaly;
+    }
 
     public TimeSeries getTimeSeriesTrain() {
         return timeSeriesTrain;
     }
 
     public void setTimeSeriesTrain(String timeSeries) {
-        this.timeSeriesTrain =new TimeSeries(timeSeries) ;
+        this.timeSeriesTrain = new TimeSeries(timeSeries);
 
     }
 
 
-
-
-	public String setTimeSeriesAnomaly(String timeSeries) {
-        String val=checkCsvFile(timeSeries);
-        if(val.equals("OK")) {
+    public String setTimeSeriesAnomaly(String timeSeries) {
+        String val = checkCsvFile(timeSeries);
+        if (val.equals("OK")) {
             this.timeSeriesAnomaly = new TimeSeries(timeSeries);
             this.sp.setTimeSeries(this.timeSeriesAnomaly);
         }
 
-       return val;
+        return val;
     }
 
 
@@ -295,7 +287,7 @@ public class AppModel{
     public void setAnomalDetect(TimeSeriesAnomalyDetector anomalDetect) {
         this.anomalDetect = anomalDetect;
         this.anomalDetect.learnNormal(timeSeriesTrain);
-        this.mapAnomaly=this.anomalDetect.detect(timeSeriesAnomaly);
+        this.mapAnomaly = this.anomalDetect.detect(timeSeriesAnomaly);
 
     }
 

@@ -1,7 +1,7 @@
 package app.model.algorithms;
 
 
-import app.CorrelatedFeaturesLine;
+import app.model.CorrelatedFeaturesLine;
 import app.model.statlib.Point;
 import app.model.statlib.Line;
 import app.model.statlib.StatLib;
@@ -13,19 +13,19 @@ import java.util.List;
 
 public class LinearRegression implements TimeSeriesAnomalyDetector {
 
-   // ArrayList<CorrelatedFeaturesLine> dataCoral;
+    // ArrayList<CorrelatedFeaturesLine> dataCoral;
     private HashMap<String, CorrelatedFeaturesLine> hashMap;
-   
+
     public LinearRegression() {
         //dataCoral = new ArrayList<CorrelatedFeaturesLine>();
-        hashMap=new HashMap<String, CorrelatedFeaturesLine>();
-      
-        
+        hashMap = new HashMap<String, CorrelatedFeaturesLine>();
+
+
     }
 
     @Override
     public void learnNormal(TimeSeries ts) {
-    	
+
         //we want to find the best pearson
         //between colom i and colom j
         float maxp, t, maxdev, threshold;
@@ -34,8 +34,7 @@ public class LinearRegression implements TimeSeriesAnomalyDetector {
         int size = ts.data.get(0).length;//size of our rows
         Point[] temp;
         Line lin_reg;
-        for (i = 0; i < size; i++)
-        {
+        for (i = 0; i < size; i++) {
             maxp = -1;
             x = i;
             y = i;
@@ -44,9 +43,9 @@ public class LinearRegression implements TimeSeriesAnomalyDetector {
                 arrayY = ts.dataOfFeaturerByNum(j);
                 t = StatLib.pearson(arrayX, arrayY);
 
-                if (Math.abs(t) > maxp ) {
+                if (Math.abs(t) > maxp) {
                     y = j;
-                    maxp = Math.abs(t) ;
+                    maxp = Math.abs(t);
                 }
             }
 
@@ -61,46 +60,43 @@ public class LinearRegression implements TimeSeriesAnomalyDetector {
                 }
                 threshold = Math.abs(threshold);
                 //dataCoral.add(new CorrelatedFeaturesLine(ts.namesOfFeatures.get(x), ts.namesOfFeatures.get(y), maxp, lin_reg, threshold));
-               hashMap.put(ts.namesOfFeatures.get(x),new CorrelatedFeaturesLine(ts.namesOfFeatures.get(x), ts.namesOfFeatures.get(y), maxp, lin_reg, threshold));
-           
+                hashMap.put(ts.namesOfFeatures.get(x), new CorrelatedFeaturesLine(ts.namesOfFeatures.get(x), ts.namesOfFeatures.get(y), maxp, lin_reg, threshold));
+
             }
 
         }
     }
 
     @Override
-    public   HashMap<String, List<Integer>> detect(TimeSeries ts) {
+    public HashMap<String, List<Integer>> detect(TimeSeries ts) {
         //we know that in dataCoral we have connection between dataCoral.get(i)
         Point temp;
         HashMap<String, List<Integer>> map = new HashMap<>();
         //first we create the point by what we know that correlated
-        for(String f: ts.namesOfFeatures) 
-        {
-        	if(hashMap.containsKey(f)) {
-        	float[] fcorrelate1 = ts.dataOfFeatureByName(f);
-            String correlate2 = new String(hashMap.get(f).feature2);
-            float[] fcorrelate2 = ts.dataOfFeatureByName(correlate2);
-            for (int z = 0; z < fcorrelate1.length; z++) {
+        for (String f : ts.namesOfFeatures) {
+            if (hashMap.containsKey(f)) {
+                float[] fcorrelate1 = ts.dataOfFeatureByName(f);
+                String correlate2 = new String(hashMap.get(f).feature2);
+                float[] fcorrelate2 = ts.dataOfFeatureByName(correlate2);
+                for (int z = 0; z < fcorrelate1.length; z++) {
 
-                temp = new Point(fcorrelate1[z], fcorrelate2[z]);
-                if (StatLib.dev(temp, hashMap.get(f).lin_reg) > hashMap.get(f).threshold ) {
-                    //we find error
+                    temp = new Point(fcorrelate1[z], fcorrelate2[z]);
+                    if (StatLib.dev(temp, hashMap.get(f).lin_reg) > hashMap.get(f).threshold) {
+                        //we find error
 
-                    List<Integer> tempList;
-                    if(map.get(f)==null)
-                    {
-                        tempList= new ArrayList<>();
+                        List<Integer> tempList;
+                        if (map.get(f) == null) {
+                            tempList = new ArrayList<>();
+
+                        } else {
+                            tempList = map.get(f);
+                        }
+                        tempList.add(z + 1);
+                        map.put(f, tempList);
 
                     }
-                    else{
-                        tempList=map.get(f);
-                    }
-                    tempList.add(z+1);
-                    map.put( f, tempList);
-
                 }
-            	}
-        	}
+            }
         }
         return map;
     }

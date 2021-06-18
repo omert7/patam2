@@ -1,7 +1,6 @@
 package app.viewModel;
 
 import app.model.AppModel;
-import app.model.FlightSettings;
 import app.model.algorithms.HybridAlgo;
 import app.model.algorithms.LinearRegression;
 import app.model.algorithms.TimeSeriesAnomalyDetector;
@@ -30,8 +29,8 @@ public class AppViewModel {
     private FloatProperty minElevator, maxElevator, minAileron, maxAileron;
     private DoubleProperty maxTimeLine;
 
-    private StringProperty nameofFeatureA, nameofFeatureB,nameFromList;
-    private StringProperty spLabelCoralFeatureA,spLabelCoralFeatureB,spAnomalyClass;
+    private StringProperty nameofFeatureA, nameofFeatureB, nameFromList;
+    private StringProperty spLabelCoralFeatureA, spLabelCoralFeatureB, spAnomalyClass;
     private DoubleProperty speed;
 
     Thread startThread;
@@ -49,10 +48,11 @@ public class AppViewModel {
         csvFile = new SimpleStringProperty();
         settingFile = new SimpleStringProperty();
 
-        csvFile.addListener(v -> {createTimeSeries();
+        csvFile.addListener(v -> {
+            createTimeSeries();
         });
         settingFile.addListener(v -> createSettings());
-        algoFile.addListener(v->loadAlgo());
+        algoFile.addListener(v -> loadAlgo());
 
         //list
         ObservableList<String> observableList = FXCollections.observableArrayList();
@@ -67,49 +67,45 @@ public class AppViewModel {
         this.timeStamp.addListener(v -> updateParams());
 
 
-
     }
 
 
+    private void graphInit() {
 
-private void graphInit(){
-
-    this.nameofFeatureB=new SimpleStringProperty();
-    this.nameofFeatureA=new SimpleStringProperty();
-    this.spAnomalyClass=new SimpleStringProperty();
-    nameFromList=new SimpleStringProperty();
-    nameFromList.addListener(v ->
-            {
-                nameofFeatureA.setValue(nameFromList.getValue());
-                if( appModel.getAnomalDetect()!=null && appModel.getAnomalDetect().getClass()== LinearRegression.class) {
-                    String str=((LinearRegression) appModel.getAnomalDetect()).getHashMap().get(this.nameofFeatureA.getValue()).feature2;
-                        if (str!=null)
-                            nameofFeatureB.setValue(str);
-                }else if( appModel.getAnomalDetect()!=null && appModel.getAnomalDetect().getClass()== HybridAlgo.class)
-                {
-                        if(((HybridAlgo) appModel.getAnomalDetect()).hashMapL.containsKey(nameFromList.getValue())){
-                        String str=((HybridAlgo) appModel.getAnomalDetect()).hashMapL.get(this.nameofFeatureA.getValue()).feature2;
-                        nameofFeatureB.setValue(str);
-                    }else if(((HybridAlgo) appModel.getAnomalDetect()).hashMapC.containsKey(nameFromList.getValue())){
-                        String str=((HybridAlgo) appModel.getAnomalDetect()).hashMapC.get(this.nameofFeatureA.getValue()).feature2;
-                        nameofFeatureB.setValue(str);
-                    }else{
-                            //in hybrid but zScore
-                        nameofFeatureB.setValue("");
-                    }
-
-                }  else{
-                    //zscore
+        this.nameofFeatureB = new SimpleStringProperty();
+        this.nameofFeatureA = new SimpleStringProperty();
+        this.spAnomalyClass = new SimpleStringProperty();
+        nameFromList = new SimpleStringProperty();
+        nameFromList.addListener(v ->
+        {
+            nameofFeatureA.setValue(nameFromList.getValue());
+            if (appModel.getAnomalDetect() != null && appModel.getAnomalDetect().getClass() == LinearRegression.class) {
+                String str = ((LinearRegression) appModel.getAnomalDetect()).getHashMap().get(this.nameofFeatureA.getValue()).feature2;
+                if (str != null)
+                    nameofFeatureB.setValue(str);
+            } else if (appModel.getAnomalDetect() != null && appModel.getAnomalDetect().getClass() == HybridAlgo.class) {
+                if (((HybridAlgo) appModel.getAnomalDetect()).hashMapL.containsKey(nameFromList.getValue())) {
+                    String str = ((HybridAlgo) appModel.getAnomalDetect()).hashMapL.get(this.nameofFeatureA.getValue()).feature2;
+                    nameofFeatureB.setValue(str);
+                } else if (((HybridAlgo) appModel.getAnomalDetect()).hashMapC.containsKey(nameFromList.getValue())) {
+                    String str = ((HybridAlgo) appModel.getAnomalDetect()).hashMapC.get(this.nameofFeatureA.getValue()).feature2;
+                    nameofFeatureB.setValue(str);
+                } else {
+                    //in hybrid but zScore
                     nameofFeatureB.setValue("");
                 }
-            });
+
+            } else {
+                //zscore
+                nameofFeatureB.setValue("");
+            }
+        });
 
 
-    spLabelCoralFeatureA=new SimpleStringProperty("");
-    spLabelCoralFeatureB=new SimpleStringProperty("");
-    spAnomalyClass=new SimpleStringProperty("");
-}
-
+        spLabelCoralFeatureA = new SimpleStringProperty("");
+        spLabelCoralFeatureB = new SimpleStringProperty("");
+        spAnomalyClass = new SimpleStringProperty("");
+    }
 
 
     private void updateParams() {
@@ -131,13 +127,7 @@ private void graphInit(){
             this.elevator.setValue(this.appModel.getTimeSeriesAnomaly().getValAtSpecificTime(time, this.appModel.getElevatorIndex()));
         }
     }
-/*private XYChart.Series drawGraph(String s){
 
-        if(startThread!=null){
-           return appModel.addValueInTime(s);
-        }
-    return null;
-}*/
     private void initJoyStickProperties() {
         this.aileron = new SimpleFloatProperty();
         this.elevator = new SimpleFloatProperty();
@@ -153,10 +143,12 @@ private void graphInit(){
         this.minAileron = new SimpleFloatProperty();
         this.maxAileron = new SimpleFloatProperty();
     }
-public boolean isOnflight(){
-        return (this.startThread!=null&&this.startThread.isAlive());
 
-}
+    public boolean isInflight() {
+        return (this.startThread != null && this.startThread.isAlive());
+
+    }
+
     private void initDashBoardProperties() {
         //dashboard
         this.airspeed = new SimpleFloatProperty();
@@ -167,24 +159,23 @@ public boolean isOnflight(){
         this.altitude = new SimpleFloatProperty();
     }
 
-    private void loadAlgo()
-    {
+    private void loadAlgo() {
         try {
-            File f=new File(this.getAlgoFile().getValue());
-            String s=f.getName();
-            String path="file://"+f.toURL();
-            URL[] urls=new URL[1];
-            urls[0]=new URL(path);
-            int ch=0;
-            String name="";
-            while(s.charAt(ch)!='.') {
-                name+=s.charAt(ch);
+            File f = new File(this.getAlgoFile().getValue());
+            String s = f.getName();
+            String path = "file://" + f.toURL();
+            URL[] urls = new URL[1];
+            urls[0] = new URL(path);
+            int ch = 0;
+            String name = "";
+            while (s.charAt(ch) != '.') {
+                name += s.charAt(ch);
                 ch++;
             }
-            this.spAnomalyClass.setValue(name+" Algorithem.");
+            this.spAnomalyClass.setValue(name + " Algorithem.");
             URLClassLoader urlClassLoader = URLClassLoader.newInstance(urls);
-            Class<?> c=urlClassLoader.loadClass("app.model.algorithms."+name);
-            TimeSeriesAnomalyDetector ad=(TimeSeriesAnomalyDetector) c.newInstance();
+            Class<?> c = urlClassLoader.loadClass("app.model.algorithms." + name);
+            TimeSeriesAnomalyDetector ad = (TimeSeriesAnomalyDetector) c.newInstance();
             appModel.setAnomalDetect(ad);
 
 
@@ -201,6 +192,7 @@ public boolean isOnflight(){
         }
 
     }
+
     private void createSettings() {
         resetFlightProp();
         FlightSettings fs = new FlightSettings(settingFile.getValue());
@@ -227,9 +219,10 @@ public boolean isOnflight(){
     private void createTimeSeries() {
         // call pause
         String s = this.csvFile.getValue();
-        String check = this.appModel.setTimeSeriesAnomaly(s);;
+        String check = this.appModel.setTimeSeriesAnomaly(s);
+        ;
         if (check.equals("OK")) {
-            int dataSize =  this.appModel.getTimeSeriesAnomaly().data.size();
+            int dataSize = this.appModel.getTimeSeriesAnomaly().data.size();
             this.listView.clear();
             this.listView.addAll(appModel.getTimeSeriesAnomaly().namesOfFeatures);
             this.maxTimeLine.setValue((dataSize / 10 + ((double) dataSize % 10 / 10) + 0.1));
@@ -251,8 +244,6 @@ public boolean isOnflight(){
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Managed To Load " + fileName + " File", ButtonType.OK);
         alert.show();
     }
-
-
 
 
     private void resetFlightProp() {
@@ -633,26 +624,14 @@ public boolean isOnflight(){
     }
 
 
-
-
-
-
     public void setNameofFeatureA(StringProperty nameofFeatureA) {
         this.nameofFeatureA = nameofFeatureA;
     }
 
 
-
-
-
-
     public StringProperty getNameofFeatureB() {
         return nameofFeatureB;
     }
-
-
-
-
 
 
     public void setNameofFeatureB(StringProperty nameofFeatureB) {
@@ -662,8 +641,6 @@ public boolean isOnflight(){
     public void setMaxTimeLine(double maxTimeLine) {
         this.maxTimeLine.set(maxTimeLine);
     }
-
-
 
 
     public StringProperty getSpAnomalyClassProperty() {
@@ -696,6 +673,7 @@ public boolean isOnflight(){
     public void setSpeed(double speed) {
         this.speed.set(speed);
     }
+
     public StringProperty getSpLabelCoralFeatureA() {
         return spLabelCoralFeatureA;
     }

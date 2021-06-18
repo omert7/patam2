@@ -8,9 +8,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
-import app.CorrelatedFeature;
-import app.model.statlib.StatLib;
-
 
 public class TimeSeries {
 
@@ -99,12 +96,12 @@ public class TimeSeries {
 
     }
 
-    public float getMaxByFeature(String s){
-        float t[]=this.dataOfFeatureByName(s);
-        float max=t[0];
-        for (float value:t) {
-            if(max<value){
-                max=value;
+    public float getMaxByFeature(String s) {
+        float t[] = this.dataOfFeatureByName(s);
+        float max = t[0];
+        for (float value : t) {
+            if (max < value) {
+                max = value;
             }
         }
         return max;
@@ -112,19 +109,18 @@ public class TimeSeries {
 
     }
 
-    public float getMinByFeature(String s){
-        float t[]=this.dataOfFeatureByName(s);
-        float min=t[0];
-        for (float value:t) {
-            if(min>value){
-                min=value;
+    public float getMinByFeature(String s) {
+        float t[] = this.dataOfFeatureByName(s);
+        float min = t[0];
+        for (float value : t) {
+            if (min > value) {
+                min = value;
             }
         }
         return min;
 
 
     }
-
 
 
     public float getValAtSpecificTime(int time, String request)
@@ -147,7 +143,7 @@ public class TimeSeries {
 
         if (request == -1) {
             return -1;
-        } else return data.get(time - 1)[request-1];
+        } else return data.get(time - 1)[request - 1];
 
     }
 

@@ -1,5 +1,6 @@
-package app.model;
+package app.viewModel;
 
+import java.io.File;
 import java.io.FileReader;
 import java.util.*;
 
@@ -39,6 +40,9 @@ public class FlightSettings {
         this.validFlightPath = (String) jo.get("trainFlightCsvPath");
         this.simulatorPort = (long) jo.get("port");
         this.simulatorSpeed = (((Long) jo.get("samplingRatePerSec")).doubleValue()) / 10; // divide by 10 for x per sec
+
+        if (!(new File(this.validFlightPath).isFile()))
+            throw new Exception("trainFlightCsvPath: " + this.validFlightPath + " does not exists");
 
         if (this.simulatorSpeed != 0.5 && this.simulatorSpeed != 1.0 && this.simulatorSpeed != 1.5 && this.simulatorSpeed != 2.0) {
             throw new Exception("samplingRatePerSec is Not Valid!\n Please set 5 / 10 / 15 / 20 as samplingRatePerSec");

@@ -1,8 +1,10 @@
 package app.model;
 
 import app.model.algorithms.TimeSeries;
+import app.viewModel.FlightSettings;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;

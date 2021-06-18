@@ -1,7 +1,7 @@
 package app.tests;
 
 import app.model.AppModel;
-import app.model.FlightSettings;
+import app.viewModel.FlightSettings;
 import app.viewModel.AppViewModel;
 
 public class Tests {
