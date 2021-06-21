@@ -78,7 +78,6 @@ public class JoystickController implements Initializable {
 
 
     public void paint() {
-        System.out.println("paint: "+getAileron()+" "+getElevator());
         GraphicsContext gc = joy.getGraphicsContext2D();
         gc.clearRect(0, 0, joy.getWidth(), joy.getHeight());
         gc.strokeRect(0, 0, joy.getWidth(), joy.getHeight());
