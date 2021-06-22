@@ -129,6 +129,9 @@ public class TimeSeries {
     {
 
         int sPlace = featurePlace(request);
+        if (time-1 < 0){
+            return 0;
+        }
         if (sPlace == -1) {
             return -1;
         } else return data.get(time - 1)[sPlace];

@@ -248,19 +248,21 @@ public class AppViewModel {
 
     private void resetFlightProp() {
         //joystick
+        this.timeStamp.set(0);
+
         this.aileron.set(centerCircle.getValue());
         this.elevator.set(centerCircle.getValue());
         this.throttle.set((minThrottle.getValue() + maxThrottle.getValue()) / 2);
         this.rudder.set((minRudder.getValue() + maxRudder.getValue()) / 2);
 
         //dashboard
+
         this.airspeed.set(0);
         this.heading.set(0);
         this.yaw.set(0);
         this.pitch.set(0);
         this.roll.set(0);
         this.altitude.set(0);
-        this.timeStamp.set(0);
         this.speed.set(1);
 
     }

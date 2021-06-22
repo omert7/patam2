@@ -39,9 +39,6 @@ public class MenuBarController {
     void xmlFileChooser(ActionEvent event) {
         FileChooser fc = new FileChooser();
         fc.getExtensionFilters().add(new ExtensionFilter("json files", "*.json"));
-        String currentPath = Paths.get(".").toAbsolutePath().normalize().toString();
-        currentPath = currentPath + "/src/files";
-        fc.setInitialDirectory(new File(currentPath));
         File f = fc.showOpenDialog(null);
         if (f != null) {
             sSettingFile.setValue(f.getPath());
@@ -52,9 +49,6 @@ public class MenuBarController {
     void csvFileChooser(ActionEvent event) {
         FileChooser fc = new FileChooser();
         fc.getExtensionFilters().add(new ExtensionFilter(" csv files", "*.csv"));
-        String currentPath = Paths.get(".").toAbsolutePath().normalize().toString();
-        currentPath = currentPath + "/src/files";
-        fc.setInitialDirectory(new File(currentPath));
         File f = fc.showOpenDialog(null);
         if (f != null) {
             sCsvFile.setValue(f.getPath());
@@ -65,9 +59,6 @@ public class MenuBarController {
     void algoFileChooser(ActionEvent event) {
         FileChooser fc = new FileChooser();
         fc.getExtensionFilters().add(new ExtensionFilter("Anomaly detector files", "*.class"));
-        String currentPath = Paths.get(".").toAbsolutePath().normalize().toString();
-        currentPath= currentPath+"/out/production/patam2/app/model/algorithms";
-        fc.setInitialDirectory(new File(currentPath));
         File f = fc.showOpenDialog(null);
         if (f != null) {
             sAlgoFile.setValue(f.getPath());
